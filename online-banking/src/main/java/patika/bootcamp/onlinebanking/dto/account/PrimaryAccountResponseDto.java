@@ -7,13 +7,12 @@ import javax.persistence.Enumerated;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
 
 @Getter
 @Setter
-public class PrimaryAccounResponseDto {
+public class PrimaryAccountResponseDto {
 	
 	private String accountNumber;
 	private BigDecimal accountBalance = BigDecimal.ZERO;
@@ -22,5 +21,4 @@ public class PrimaryAccounResponseDto {
 	private CurrencyUnit currencyUnit;
 	
 	private CustomerResponseDto customerResponseDto;
-	private CreditCardResponseDto creditCardResponseDto; 
 }

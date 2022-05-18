@@ -13,5 +13,4 @@ public class CreatePrimaryAccountRequestDto {
 	@Enumerated(EnumType.STRING)
 	private CurrencyUnit currencyUnit;
 	private Long customerId;
-	private Long creditCardId;
 }

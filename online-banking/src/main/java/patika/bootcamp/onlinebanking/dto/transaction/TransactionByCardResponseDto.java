@@ -18,7 +18,7 @@ public class TransactionByCardResponseDto {
 	private String recipientLastName;
 	private String recipientCardNo;
 	
-	private Date transacionDate;
+	private Date transactionDate;
 	private Boolean useAllBalance;
 	private BigDecimal amount;
 	

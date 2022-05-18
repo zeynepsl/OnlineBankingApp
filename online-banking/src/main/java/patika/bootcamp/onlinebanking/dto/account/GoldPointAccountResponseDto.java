@@ -9,9 +9,11 @@ import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
 
 @Getter
 @Setter
-public class SavingsAccountResponseDto {
+public class GoldPointAccountResponseDto {
 	private String accountNumber;
-	private BigDecimal accountBalance = BigDecimal.ZERO;
+	private BigDecimal accountBalance;
 	private CurrencyUnit currencyUnit;
+	
 	private CustomerResponseDto customerResponseDto;
+	private Double percentage = 0.1;
 }
