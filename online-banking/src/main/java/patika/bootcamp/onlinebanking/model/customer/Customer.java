@@ -25,7 +25,7 @@ import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 @Setter
 public class Customer extends BaseExtendedModel{
 	private String email;
-	private String identity;
+	private String identityNumber;
 	private String phoneNumber;
 	private String password;
 	
@@ -34,6 +34,7 @@ public class Customer extends BaseExtendedModel{
 	
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
+	
 	private boolean isActive = true;
 	private boolean isConfirmedByAdmin = false;
 	

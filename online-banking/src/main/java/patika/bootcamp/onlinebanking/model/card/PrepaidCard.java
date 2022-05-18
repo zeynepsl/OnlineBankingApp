@@ -19,7 +19,7 @@ public class PrepaidCard extends Card{
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-	private BigDecimal minBalance;
-	private BigDecimal maxBalance;
+	private BigDecimal minBalance = BigDecimal.valueOf(300);
+	private BigDecimal maxBalance = BigDecimal.valueOf(1000);
 	
 }
