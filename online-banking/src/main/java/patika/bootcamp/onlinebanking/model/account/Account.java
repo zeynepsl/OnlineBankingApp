@@ -15,7 +15,7 @@ import patika.bootcamp.onlinebanking.model.BaseExtendedModel;
 public abstract class Account extends BaseExtendedModel{
 	
 	private String accountNumber;
-	private BigDecimal accountBalance;
+	private BigDecimal accountBalance = BigDecimal.ZERO;
 	
 	@Enumerated(EnumType.STRING)
 	private CurrencyUnit currencyUnit;

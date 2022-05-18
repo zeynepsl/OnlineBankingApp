@@ -1,38 +1,30 @@
-package patika.bootcamp.onlinebanking.model.transaction;
+package patika.bootcamp.onlinebanking.dto.transaction;
 
 import java.math.BigDecimal;
-import java.util.Date;
-
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.BaseModel;
 import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
+import patika.bootcamp.onlinebanking.model.transaction.ModeOfPayment;
 
 @Getter
 @Setter
-@MappedSuperclass
-public abstract class Transaction extends BaseModel{
+public class CreateTransactionByCardRequestDto {
 	private String senderAccountNumber;
 	
 	@Enumerated(EnumType.STRING)
 	private CurrencyUnit senderCurrencyUnit;
-	//private BigDecimal senderAccountBalance;//bunu accountNUmber dan da alabiliriz
 	
 	private String recipientFirstName;
 	private String recipientLastName;
-	
-	@Temporal(TemporalType.DATE)
-	private Date transactionDate = new Date();
+	private String recipientCardNo;
 	
 	private Boolean useAllBalance = false;
 	private BigDecimal amount;
 	
 	@Enumerated(EnumType.STRING)
 	private ModeOfPayment modeOfPayment;
+
 }

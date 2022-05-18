@@ -11,5 +11,6 @@ import patika.bootcamp.onlinebanking.model.BaseExtendedModel;
 @Setter
 @MappedSuperclass
 public abstract class Card extends BaseExtendedModel{
+	private String cardNo;
 	private BigDecimal accountBalance;
 }

@@ -21,6 +21,4 @@ public class CreditCard extends Card{
 	@OneToOne
 	@JoinColumn(name = "primary_account_id")
 	private PrimaryAccount primaryAccount;
-	
-	
 }
