@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CustomerServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.PrimaryAccount;
 import patika.bootcamp.onlinebanking.model.account.SavingsAccount;
+import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.repository.customer.CustomerRepository;
 import patika.bootcamp.onlinebanking.service.CustomerService;
@@ -37,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public CustomerResponseDto get(Long id) throws BaseException{
+	public CustomerResponseDto get(Long id) throws BaseException {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
 		return customerConverter.toCustomerResponseDto(customer);
@@ -48,20 +51,22 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
 		if (doHaveMoneyInAnyAccount(customer)) {
-			throw new CustomerServiceOperationException.CustomerCanNotDeleted("Customer not deleted because Customer has money in the primary account or savvings account");
+			throw new CustomerServiceOperationException.CustomerCanNotDeleted(
+					"Customer not deleted because Customer has money in the primary account or savvings account");
 		}
-		if(isThereDebtAmountOnCreditCard(customer)) {
-			throw new CustomerServiceOperationException.CustomerCanNotDeleted("Customer not deleted because Customer has debt in the credit card");
-		}	
-		if(!customer.isActive()) {
+		if (isThereDebtAmountOnCreditCard(customer)) {
+			throw new CustomerServiceOperationException.CustomerCanNotDeleted(
+					"Customer not deleted because Customer has debt in the credit card");
+		}
+		if (!customer.isActive()) {
 			throw new CustomerServiceOperationException.CustomerAlreadyDeleted("this customer already deleted");
 		}
-		if(hardDelete) {
+		if (hardDelete) {
 			customerRepository.delete(customer);
 			log.info("customer deleted from db");
 			return;
 		}
-		
+
 		customer.setActive(false);
 		customer.setDeletedAt(new Date());
 		customer.setDeletedBy("Zeynep Salman");
@@ -69,24 +74,40 @@ public class CustomerServiceImpl implements CustomerService {
 		customerRepository.save(customer);
 	}
 
-	private boolean isThereDebtAmountOnCreditCard(Customer customer) {
-		if(customer.getCreditCard().getAmountOfDebt().compareTo(BigDecimal.valueOf(0)) > 0) {
-			return true;
+	public boolean isThereDebtAmountOnCreditCard(Customer customer) {
+		CreditCard creditCard = customer.getCreditCard();
+		if(creditCard == null) {
+			return false;
 		}
+		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
+		if (amountOfDebt != null) {
+			if (amountOfDebt.compareTo(BigDecimal.valueOf(0)) > 0) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 
-	private boolean doHaveMoneyInAnyAccount(Customer customer) {
+	public boolean doHaveMoneyInAnyAccount(Customer customer) {
+		Set<PrimaryAccount> primaryAccounts = customer.getPrimaryAccounts();	
+		Set<SavingsAccount> savingsAccounts = customer.getSavingsAccounts();
+
+		if (primaryAccounts.isEmpty() && savingsAccounts.isEmpty()) {
+			return false;
+		}
+
 		for (PrimaryAccount primaryAccount : customer.getPrimaryAccounts()) {
 			if (primaryAccount.getAccountBalance().compareTo(BigDecimal.valueOf(0)) > 0) {
 				return true;
 			}
 		}
-		for(SavingsAccount savingsAccount : customer.getSavingsAccounts()) {
-			if(savingsAccount.getAccountBalance().compareTo(BigDecimal.valueOf(0)) > 0) {
+		for (SavingsAccount savingsAccount : customer.getSavingsAccounts()) {
+			if (savingsAccount.getAccountBalance().compareTo(BigDecimal.valueOf(0)) > 0) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -99,29 +120,26 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<CustomerResponseDto> getAll() {
 		return toCustomerResponseDtoList(customerRepository.findAll());
-	
+
 	}
-	
+
 	@Override
-	public CustomerResponseDto findByEmail(String email) throws BaseException{
-		Customer customer = customerRepository
-				.findByEmail(email)
+	public CustomerResponseDto findByEmail(String email) throws BaseException {
+		Customer customer = customerRepository.findByEmail(email)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
 		return customerConverter.toCustomerResponseDto(customer);
 	}
 
 	@Override
-	public CustomerResponseDto findByIdentityNumber(String identityNumber) throws BaseException{
-		Customer customer = customerRepository
-				.findByIdentityNumber(identityNumber)
+	public CustomerResponseDto findByIdentityNumber(String identityNumber) throws BaseException {
+		Customer customer = customerRepository.findByIdentityNumber(identityNumber)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("customer not found"));
 		return customerConverter.toCustomerResponseDto(customer);
 	}
 
 	@Override
-	public CustomerResponseDto findByPhoneNumber(String phoneNumber) throws BaseException{
-		Customer customer = customerRepository
-				.findByIdentityNumber(phoneNumber)
+	public CustomerResponseDto findByPhoneNumber(String phoneNumber) throws BaseException {
+		Customer customer = customerRepository.findByIdentityNumber(phoneNumber)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("customer not found"));
 		return customerConverter.toCustomerResponseDto(customer);
 	}
@@ -150,7 +168,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<CustomerResponseDto> findByIsConfirmedByAdminFalse() {
 		return toCustomerResponseDtoList(customerRepository.findByIsConfirmedByAdminFalse());
 	}
-	
+
 	private List<CustomerResponseDto> toCustomerResponseDtoList(List<Customer> customers) {
 		List<CustomerResponseDto> customerResponseDtoList = new ArrayList<CustomerResponseDto>();
 		customers.forEach(customer -> {
@@ -161,10 +179,10 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void activateCustomer(Long id) throws BaseException{
+	public void activateCustomer(Long id) throws BaseException {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
-		if(customer.isActive()) {
+		if (customer.isActive()) {
 			throw new CustomerServiceOperationException.CustomerAlreadyActive("this customer already active");
 		}
 		log.info("customer will be active, isActive: {}", customer.isActive());
@@ -174,10 +192,10 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void disableCustomer(Long id) throws BaseException{
+	public void disableCustomer(Long id) throws BaseException {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
-		if(!customer.isActive()) {
+		if (!customer.isActive()) {
 			throw new CustomerServiceOperationException.CustomerAlreadyPassive("the client is already disabled");
 		}
 		log.info("customer will be disable, isActive: {}", customer.isActive());
@@ -187,11 +205,12 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void confirmCustomer(Long id) throws BaseException{
+	public void confirmCustomer(Long id) throws BaseException {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
-		if(customer.isConfirmedByAdmin()) {
-			throw new CustomerServiceOperationException.CustomerAlreadyConfirmedByAdmin("customer is already confirmed by admin");
+		if (customer.isConfirmedByAdmin()) {
+			throw new CustomerServiceOperationException.CustomerAlreadyConfirmedByAdmin(
+					"customer is already confirmed by admin");
 		}
 		log.info("customer will confirm by admin, isConfirmedByAdmin: {}", customer.isConfirmedByAdmin());
 		customer.setConfirmedByAdmin(true);
