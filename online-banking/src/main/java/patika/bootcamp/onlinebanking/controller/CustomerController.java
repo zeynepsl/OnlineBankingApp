@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,7 +28,7 @@ public class CustomerController {
 	private final CustomerService customerService;
 	
 	@PostMapping("/")
-	public ResponseEntity<CustomerResponseDto> create(@RequestBody CreateCustomerRequestDto createCustomerRequestDto) {
+	public ResponseEntity<CustomerResponseDto> create(@RequestBody @Validated CreateCustomerRequestDto createCustomerRequestDto) {
 		return new ResponseEntity<>(customerService.create(createCustomerRequestDto), HttpStatus.CREATED);
 	}
 	
