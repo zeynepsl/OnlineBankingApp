@@ -15,6 +15,7 @@ import patika.bootcamp.onlinebanking.model.customer.Gender;
 @Getter
 @Setter
 public class CustomerResponseDto {
+	private Long id;
 	private String email;
 	private String identityNumber;
 	private String phoneNumber;

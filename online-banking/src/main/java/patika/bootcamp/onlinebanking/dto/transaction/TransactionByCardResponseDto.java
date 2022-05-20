@@ -11,6 +11,7 @@ import patika.bootcamp.onlinebanking.model.transaction.ModeOfPayment;
 @Getter
 @Setter
 public class TransactionByCardResponseDto {
+	private Long id;
 	private String senderAccountNumber;
 	private CurrencyUnit senderCurrencyUnit;
 	

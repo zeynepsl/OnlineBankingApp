@@ -30,6 +30,7 @@ public class CustomerConverter {
 
 	public CustomerResponseDto toCustomerResponseDto(Customer customer) {
 		CustomerResponseDto customerResponseDto = new CustomerResponseDto();
+		customerResponseDto.setId(customer.getId());
 		customerResponseDto.setActive(customer.isActive());
 		customerResponseDto.setAge(customer.getAge());
 		customerResponseDto.setConfirmedByAdmin(customer.isConfirmedByAdmin());

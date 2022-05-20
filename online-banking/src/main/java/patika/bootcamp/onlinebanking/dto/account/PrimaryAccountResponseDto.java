@@ -13,7 +13,7 @@ import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
 @Getter
 @Setter
 public class PrimaryAccountResponseDto {
-	
+	private Long id;
 	private String accountNumber;
 	private BigDecimal accountBalance;
 	private CurrencyUnit currencyUnit;

@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PrepaidCardResponseDto {
+	private Long id;
 	private String cardNo;
 	private BigDecimal accountBalance;
 	private Long customerId;

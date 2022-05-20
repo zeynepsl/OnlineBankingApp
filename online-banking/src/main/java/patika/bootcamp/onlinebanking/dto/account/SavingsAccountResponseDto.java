@@ -10,6 +10,7 @@ import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
 @Getter
 @Setter
 public class SavingsAccountResponseDto {
+	private Long id;
 	private String accountNumber;
 	private BigDecimal accountBalance = BigDecimal.ZERO;
 	private CurrencyUnit currencyUnit;

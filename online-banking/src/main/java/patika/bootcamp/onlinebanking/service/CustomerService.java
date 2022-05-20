@@ -9,9 +9,9 @@ import patika.bootcamp.onlinebanking.exception.BaseException;
 
 public interface CustomerService {
 	
-	void create(CreateCustomerRequestDto createCustomerRequestDto);
+	CustomerResponseDto create(CreateCustomerRequestDto createCustomerRequestDto);
 	CustomerResponseDto get(Long id) throws BaseException;
-	void delete(Long id, Boolean deleteIsHard) throws BaseException;
+	void delete(Long id, Boolean hardDelete) throws BaseException;
 	void update(CreateCustomerRequestDto createCustomerRequestDto);
 	
 	List<CustomerResponseDto> getAll();

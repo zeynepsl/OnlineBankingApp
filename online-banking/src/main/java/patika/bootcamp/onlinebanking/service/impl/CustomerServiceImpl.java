@@ -30,9 +30,10 @@ public class CustomerServiceImpl implements CustomerService {
 	private final CustomerConverter customerConverter;
 
 	@Override
-	public void create(CreateCustomerRequestDto createCustomerRequestDto) {
+	public CustomerResponseDto create(CreateCustomerRequestDto createCustomerRequestDto) {
 		Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
 		customerRepository.save(customer);
+		return customerConverter.toCustomerResponseDto(customer);
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void delete(Long id, Boolean deleteIsHard) throws BaseException {
+	public void delete(Long id, Boolean hardDelete) throws BaseException {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
 		if (doHaveMoneyInAnyAccount(customer)) {
@@ -55,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if(!customer.isActive()) {
 			throw new CustomerServiceOperationException.CustomerAlreadyDeleted("this customer already deleted");
 		}
-		if(deleteIsHard) {
+		if(hardDelete) {
 			customerRepository.delete(customer);
 			log.info("customer deleted from db");
 			return;

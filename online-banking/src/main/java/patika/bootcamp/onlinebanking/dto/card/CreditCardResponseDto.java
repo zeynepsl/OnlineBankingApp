@@ -10,7 +10,7 @@ import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 @Getter
 @Setter
 public class CreditCardResponseDto {
-	
+	private Long id;
 	private String cardNo;
 	private BigDecimal accountBalance;
 	private CustomerResponseDto customerResponseDto;
