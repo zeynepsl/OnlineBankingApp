@@ -2,6 +2,8 @@ package patika.bootcamp.onlinebanking.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.service.CustomerService;
 
 @RestController

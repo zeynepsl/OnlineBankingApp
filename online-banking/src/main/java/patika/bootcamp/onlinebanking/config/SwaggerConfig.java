@@ -1,12 +1,19 @@
 package patika.bootcamp.onlinebanking.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableSwagger2
+@Configuration
 public class SwaggerConfig {
 	@Bean
     public Docket api() { 
@@ -14,6 +21,16 @@ public class SwaggerConfig {
           .select()                                  
           .apis(RequestHandlerSelectors.any())              
           .paths(PathSelectors.any())                          
-          .build();                                           
+          .build().apiInfo(apiEndPointsInfo());                                        
+    }
+	
+	private ApiInfo apiEndPointsInfo() {
+        return new ApiInfoBuilder().title("Norma Java Spring Bootcamp")
+                .description("Norma Bootcamp Final Project Api Documentation")
+                .contact(new Contact("Zeynep Salman", "https://github.com/zeynepsl", "zeyneprsalman@gmail.com"))
+                .license("Apache 2.0")
+                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+                .version("1.0.0")
+                .build();
     }
 }

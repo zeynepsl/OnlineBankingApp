@@ -11,8 +11,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 
+import org.springframework.validation.annotation.Validated;
+
 import lombok.Getter;
 import lombok.Setter;
+import patika.bootcamp.onlinebanking.customvalidation.PhoneNumber;
 import patika.bootcamp.onlinebanking.model.BaseExtendedModel;
 import patika.bootcamp.onlinebanking.model.account.GoldPointAccount;
 import patika.bootcamp.onlinebanking.model.account.PrimaryAccount;
@@ -23,13 +26,14 @@ import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 @Entity
 @Getter
 @Setter
+@Validated
 public class Customer extends BaseExtendedModel{
 	private String email;
 	private String identityNumber;
+	
 	private String phoneNumber;
 	private String password;
 	
-	@Min(18)
 	private Integer age;
 	
 	@Enumerated(EnumType.STRING)
