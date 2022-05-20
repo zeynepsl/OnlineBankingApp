@@ -19,5 +19,5 @@ public abstract class Account extends BaseExtendedModel{
 	
 	@Enumerated(EnumType.STRING)
 	private CurrencyUnit currencyUnit;
-	
+	private boolean isActive = true;
 }

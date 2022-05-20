@@ -9,7 +9,7 @@ import patika.bootcamp.onlinebanking.model.transaction.ModeOfPayment;
 import patika.bootcamp.onlinebanking.model.transaction.TransactionByIban;
 
 public interface TransactionByIbanRepository extends JpaRepository<TransactionByIban, Long> {
-	List<TransactionByIban> findByTransacionDate(Date transacionDate);
+	List<TransactionByIban> findByTransactionDate(Date transacionDate);
 
 	List<TransactionByIban> findByModeOfPayment(ModeOfPayment modeOfPayment);
 

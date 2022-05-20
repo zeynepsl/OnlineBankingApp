@@ -14,4 +14,5 @@ public class SavingsAccountResponseDto {
 	private BigDecimal accountBalance = BigDecimal.ZERO;
 	private CurrencyUnit currencyUnit;
 	private CustomerResponseDto customerResponseDto;
+	private boolean isActive;
 }

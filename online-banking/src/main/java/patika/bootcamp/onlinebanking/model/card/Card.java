@@ -13,4 +13,5 @@ import patika.bootcamp.onlinebanking.model.BaseExtendedModel;
 public abstract class Card extends BaseExtendedModel{
 	private String cardNo;
 	private BigDecimal accountBalance;
+	private boolean isActive = true;
 }

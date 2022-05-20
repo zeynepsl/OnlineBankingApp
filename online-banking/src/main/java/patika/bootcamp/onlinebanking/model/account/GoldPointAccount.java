@@ -5,7 +5,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.card.Card;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import lombok.Getter;
 
@@ -15,7 +14,7 @@ import lombok.Getter;
 @Entity
 @Getter
 @Setter
-public class GoldPointAccount extends Card{
+public class GoldPointAccount extends Account{
 	
 	@OneToOne
 	@JoinColumn(name = "customer_id")

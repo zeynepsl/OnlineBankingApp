@@ -4,25 +4,33 @@ import java.util.List;
 import java.util.Optional;
 
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
-import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.exception.BaseException;
 
 public interface CustomerService {
 	
 	void create(CreateCustomerRequestDto createCustomerRequestDto);
-	Customer get(Long id);
-	void delete(Long id);
-	void update(Customer customer);
-	List<Customer> getAll();
+	CustomerResponseDto get(Long id) throws BaseException;
+	void delete(Long id, Boolean deleteIsHard) throws BaseException;
+	void update(CreateCustomerRequestDto createCustomerRequestDto);
 	
-	Optional<Customer> findByEmail(String email);
-	Optional<Customer> findByIdentityNumber(String identityNumber);
-	Optional<Customer> findByPhoneNumber(String phoneNumber);
+	List<CustomerResponseDto> getAll();
 	
-	List<Customer> findByAgeBetween(Integer startAge, Integer endAge);
+	CustomerResponseDto findByEmail(String email) throws BaseException;
+	CustomerResponseDto findByIdentityNumber(String identityNumber) throws BaseException;
+	CustomerResponseDto findByPhoneNumber(String phoneNumber) throws BaseException;
 	
-	List<Customer> findByIsActiveTrue();
-	List<Customer> findByIsActiveFalse();
+	List<CustomerResponseDto> findByAgeBetween(Integer startAge, Integer endAge);
 	
-	List<Customer> findByIsConfirmedByAdminTrue();
-	List<Customer> findByIsConfirmedByAdminFalse();
+	List<CustomerResponseDto> finAllActiveCustomers();
+	List<CustomerResponseDto> finAllNotActiveCustomers();
+	
+	List<CustomerResponseDto> findByIsConfirmedByAdminTrue();
+	List<CustomerResponseDto> findByIsConfirmedByAdminFalse();
+
+	void activateCustomer(Long id) throws BaseException;
+	void disableCustomer(Long id) throws BaseException;
+	
+	void confirmCustomer(Long id) throws BaseException;
+
 }

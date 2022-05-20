@@ -15,10 +15,8 @@ import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
 public class PrimaryAccountResponseDto {
 	
 	private String accountNumber;
-	private BigDecimal accountBalance = BigDecimal.ZERO;
-	
-	@Enumerated(EnumType.STRING)
+	private BigDecimal accountBalance;
 	private CurrencyUnit currencyUnit;
-	
 	private CustomerResponseDto customerResponseDto;
+	private boolean isActive;
 }

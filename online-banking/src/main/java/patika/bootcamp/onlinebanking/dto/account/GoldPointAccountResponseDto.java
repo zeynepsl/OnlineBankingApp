@@ -16,4 +16,5 @@ public class GoldPointAccountResponseDto {
 	
 	private CustomerResponseDto customerResponseDto;
 	private Double percentage = 0.1;
+	private boolean isActive;
 }
