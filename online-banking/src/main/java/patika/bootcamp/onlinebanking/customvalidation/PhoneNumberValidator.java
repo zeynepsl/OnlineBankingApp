@@ -12,7 +12,7 @@ public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, St
 	}
 
 	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context) {
+	public boolean isValid(String value, ConstraintValidatorContext context)  {
 		if (value.startsWith("+90") && value.length() == 13 && (value.substring(1)).chars().allMatch(Character::isDigit)) {
 			return true;
 		}

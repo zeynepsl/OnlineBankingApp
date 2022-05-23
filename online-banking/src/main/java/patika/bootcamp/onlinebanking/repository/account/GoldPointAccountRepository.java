@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
+import patika.bootcamp.onlinebanking.model.account.Currency;
 import patika.bootcamp.onlinebanking.model.account.GoldPointAccount;
 
 public interface GoldPointAccountRepository extends JpaRepository<GoldPointAccount, Long>{
@@ -13,5 +13,5 @@ public interface GoldPointAccountRepository extends JpaRepository<GoldPointAccou
 	
 	Optional<GoldPointAccount> findByAccountNumber(String accountNumber);
 	
-	List<GoldPointAccount> findByCurrencyUnit(CurrencyUnit currencyUnit);
+	List<GoldPointAccount> findByCurrency_id(Long currencyId);
 }

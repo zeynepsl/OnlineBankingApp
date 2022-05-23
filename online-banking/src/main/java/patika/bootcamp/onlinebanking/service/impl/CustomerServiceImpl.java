@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.converter.customer.CustomerConverter;
-import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CustomerServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.PrimaryAccount;
@@ -120,7 +120,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<CustomerResponseDto> getAll() {
 		return toCustomerResponseDtoList(customerRepository.findAll());
-
 	}
 
 	@Override

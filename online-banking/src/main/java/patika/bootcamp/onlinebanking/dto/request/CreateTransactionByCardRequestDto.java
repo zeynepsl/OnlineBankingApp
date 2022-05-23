@@ -1,30 +1,29 @@
-package patika.bootcamp.onlinebanking.dto.transaction;
+package patika.bootcamp.onlinebanking.dto.request;
 
 import java.math.BigDecimal;
-
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
-import patika.bootcamp.onlinebanking.model.transaction.ModeOfPayment;
+import patika.bootcamp.onlinebanking.model.account.Currency;
+import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
 @Getter
 @Setter
-public class CreateTransactionByIbanRequestDto {
+public class CreateTransactionByCardRequestDto {
 	private String senderAccountNumber;
 	
-	@Enumerated(EnumType.STRING)
-	private CurrencyUnit senderCurrencyUnit;
+	private Long currencyId;
 	
 	private String recipientFirstName;
 	private String recipientLastName;
-	private String recipientIbanNo;
+	private String recipientCardNo;
 	
 	private Boolean useAllBalance = false;
 	private BigDecimal amount;
 	
 	@Enumerated(EnumType.STRING)
 	private ModeOfPayment modeOfPayment;
+
 }

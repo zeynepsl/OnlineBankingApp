@@ -15,4 +15,8 @@ public class SavingsAccount extends Account{
 	@ManyToOne
 	@JoinColumn(name =  "customer_id")
 	private Customer customer;
+	
+	@ManyToOne
+	@JoinColumn(name = "currency_id")
+	private Currency currency;
 }

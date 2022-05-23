@@ -3,25 +3,23 @@ package patika.bootcamp.onlinebanking.model.transaction;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.BaseModel;
-import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
+import patika.bootcamp.onlinebanking.model.account.Currency;
+import patika.bootcamp.onlinebanking.model.base.BaseModel;
+import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
 @Getter
 @Setter
 @MappedSuperclass
 public abstract class Transaction extends BaseModel{
-	private String senderAccountNumber;
 	
-	@Enumerated(EnumType.STRING)
-	private CurrencyUnit senderCurrencyUnit;
+	@ManyToOne
+	@JoinColumn(name = "sender_currency_id")
+	private Currency senderCurrency;
+	private String senderAccountNumber;
 	//private BigDecimal senderAccountBalance;//bunu accountNUmber dan da alabiliriz
 	
 	private String recipientFirstName;

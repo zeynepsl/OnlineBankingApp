@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
 import patika.bootcamp.onlinebanking.model.account.SavingsAccount;
 
 public interface SavingsAccountRepository extends JpaRepository<SavingsAccount, Long>{
@@ -14,5 +13,5 @@ public interface SavingsAccountRepository extends JpaRepository<SavingsAccount, 
 	
 	Optional<SavingsAccount> findByAccountNumber(String accountNumber);
 	
-	List<SavingsAccount> findByCurrencyUnit(CurrencyUnit currencyUnit);
+	List<SavingsAccount> findByCurrency_Id(Long currencyId);
 }

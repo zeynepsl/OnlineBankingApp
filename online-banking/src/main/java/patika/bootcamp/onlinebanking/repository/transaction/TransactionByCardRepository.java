@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import patika.bootcamp.onlinebanking.model.transaction.ModeOfPayment;
+import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 import patika.bootcamp.onlinebanking.model.transaction.TransactionByCard;
 
 public interface TransactionByCardRepository extends JpaRepository<TransactionByCard, Long>{

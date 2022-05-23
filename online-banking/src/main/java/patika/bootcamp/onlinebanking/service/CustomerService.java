@@ -3,8 +3,8 @@ package patika.bootcamp.onlinebanking.service;
 import java.util.List;
 import java.util.Optional;
 
-import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 
 public interface CustomerService {

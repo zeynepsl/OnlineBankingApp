@@ -20,6 +20,10 @@ public class PrimaryAccount extends Account{
 	@JoinColumn(name =  "customer_id")
 	private Customer customer;
 	
+	@ManyToOne
+	@JoinColumn(name = "currency_id")
+	private Currency currency;
+	
 	@OneToOne(mappedBy = "primaryAccount", cascade = CascadeType.ALL, orphanRemoval = true)
 	private CreditCard creditCard;
 }

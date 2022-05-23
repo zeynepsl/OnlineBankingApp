@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.model;
+package patika.bootcamp.onlinebanking.model.base;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

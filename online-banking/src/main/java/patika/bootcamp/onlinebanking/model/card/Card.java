@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import javax.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.BaseExtendedModel;
+import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
 
 @Getter
 @Setter
@@ -13,5 +13,6 @@ import patika.bootcamp.onlinebanking.model.BaseExtendedModel;
 public abstract class Card extends BaseExtendedModel{
 	private String cardNo;
 	private BigDecimal accountBalance;
+	private String password;
 	private boolean isActive = true;
 }

@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.model.transaction;
+package patika.bootcamp.onlinebanking.model.enums;
 
 public enum ModeOfPayment {
 	IsyeriKirasi,

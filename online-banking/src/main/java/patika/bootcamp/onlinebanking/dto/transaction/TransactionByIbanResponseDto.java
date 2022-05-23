@@ -5,15 +5,15 @@ import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.account.CurrencyUnit;
-import patika.bootcamp.onlinebanking.model.transaction.ModeOfPayment;
+import patika.bootcamp.onlinebanking.dto.response.CurrencyResponseDto;
+import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
 @Getter
 @Setter
 public class TransactionByIbanResponseDto {
 	private Long id;
 	private String senderAccountNumber;
-	private CurrencyUnit senderCurrencyUnit;
+	private CurrencyResponseDto senderCurrencyResponseDto;
 	
 	private String recipientFirstName;
 	private String recipientLastName;

@@ -10,16 +10,16 @@ import patika.bootcamp.onlinebanking.dto.account.PrimaryAccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.SavingsAccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
 import patika.bootcamp.onlinebanking.dto.card.PrepaidCardResponseDto;
-import patika.bootcamp.onlinebanking.model.customer.Gender;
+import patika.bootcamp.onlinebanking.model.enums.Gender;
 
 @Getter
 @Setter
 public class CustomerResponseDto {
 	private Long id;
 	private String email;
-	private String identityNumber;
 	private String phoneNumber;
-	private String password;
+	private String secondaryEmail;
+	private String secondaryPhoneNumber;
 	private Integer age;
 	private Gender gender;
 	private boolean isActive;

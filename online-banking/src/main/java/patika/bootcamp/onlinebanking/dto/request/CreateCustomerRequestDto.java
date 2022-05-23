@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.dto.customer;
+package patika.bootcamp.onlinebanking.dto.request;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.customvalidation.PhoneNumber;
-import patika.bootcamp.onlinebanking.model.customer.Gender;
+import patika.bootcamp.onlinebanking.model.enums.Gender;
 
 @Getter
 @Setter
@@ -17,11 +17,17 @@ public class CreateCustomerRequestDto {
 	@NotBlank(message = "email cannot be null and empty")
 	private String email;
 	
-	@NotBlank(message = "identityNumber cannot be null and empty")
-	private String identityNumber;
-	
 	@PhoneNumber(message = "Enter the complete phone number with +90 at the beginning.")
 	private String phoneNumber;
+	
+	@NotBlank(message = "email cannot be null and empty")
+	private String secondaryEmail;
+	
+	@PhoneNumber(message = "Enter the complete secondary phone number with +90 at the beginning.")
+	private String secondaryPhoneNumber;
+	
+	@NotNull(message = "identityNumber cannot be null")
+	private Long identityNumber;
 	
 	@NotBlank(message = "password cannot be null and empty")
 	private String password;

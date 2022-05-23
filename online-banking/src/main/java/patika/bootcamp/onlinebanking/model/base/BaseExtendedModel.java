@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.model;
+package patika.bootcamp.onlinebanking.model.base;
 
 import java.util.Date;
 
