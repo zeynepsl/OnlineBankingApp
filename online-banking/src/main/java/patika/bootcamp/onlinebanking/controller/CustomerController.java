@@ -2,7 +2,6 @@ package patika.bootcamp.onlinebanking.controller;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,78 +10,79 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.service.CustomerService;
+import patika.bootcamp.onlinebanking.service.facade.CustomerFacade;
 
 @RestController
 @RequestMapping("api/customers")
 @RequiredArgsConstructor
 public class CustomerController {
 	private final CustomerService customerService;
+	private final CustomerFacade customerFacade;
 	
 	@PostMapping("/")
 	public ResponseEntity<CustomerResponseDto> create(@RequestBody @Validated CreateCustomerRequestDto createCustomerRequestDto) {
-		return new ResponseEntity<>(customerService.create(createCustomerRequestDto), HttpStatus.CREATED);
+		return customerFacade.create(createCustomerRequestDto);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<CustomerResponseDto> get(@PathVariable Long id) {
-		return ResponseEntity.ok(customerService.get(id));
+		return customerFacade.get(id);
 	}
 	
-	@DeleteMapping("/{id}/{hardDelete}")
-	public ResponseEntity<?> delete(@PathVariable Long id, @PathVariable Boolean hardDelete){
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam Boolean hardDelete){
 		customerService.delete(id, hardDelete);
 		return ResponseEntity.ok().build();
 	}
 	
 	@PutMapping("/")
 	public ResponseEntity<?> update(@RequestBody CreateCustomerRequestDto createCustomerRequestDto){
-		customerService.update(createCustomerRequestDto);
-		return ResponseEntity.ok().build();
+		return customerFacade.update(createCustomerRequestDto);
 	}
 	
 	@GetMapping("/")
 	public ResponseEntity<List<CustomerResponseDto>> getAll(){
-		return ResponseEntity.ok(customerService.getAll());
+		return customerFacade.getAll();
 	}
 	
 	@GetMapping("/email")
 	public ResponseEntity<CustomerResponseDto> findByEmail(@RequestParam String email){
-		return ResponseEntity.ok(customerService.findByEmail(email));
+		return customerFacade.findByEmail(email);
 	}
 	
 	@GetMapping("/identity")
 	public ResponseEntity<CustomerResponseDto> findByIdentityNumber(@RequestParam String identityNumber){
-		return ResponseEntity.ok(customerService.findByIdentityNumber(identityNumber));
+		return customerFacade.findByIdentityNumber(identityNumber);
 	}
 	
 	@GetMapping("/phone")
 	public ResponseEntity<CustomerResponseDto> findByPhoneNumber(@RequestParam String phoneNumber){
-		return ResponseEntity.ok(customerService.findByPhoneNumber(phoneNumber));
+		return customerFacade.findByPhoneNumber(phoneNumber);
 	}
 	
 	@GetMapping("/{startAge}/{endAge}")
 	public ResponseEntity<List<CustomerResponseDto>> findByAgeBetween(@PathVariable Integer startAge, @PathVariable Integer endAge){
-		return ResponseEntity.ok(customerService.findByAgeBetween(startAge, endAge));
+		return customerFacade.findByAgeBetween(startAge, endAge);
 	}
 	
 	@GetMapping("/active")
 	public ResponseEntity<List<CustomerResponseDto>> finAllActiveCustomers(){
-		return ResponseEntity.ok(customerService.finAllActiveCustomers());
+		return customerFacade.finAllActiveCustomers();
 	}
 	
 	@GetMapping("/notactive")
 	public ResponseEntity<List<CustomerResponseDto>> finAllNotActiveCustomers(){
-		return ResponseEntity.ok(customerService.finAllNotActiveCustomers());
+		return customerFacade.finAllNotActiveCustomers();
 	}
 	
 	@GetMapping("/confirmed")
 	public ResponseEntity<List<CustomerResponseDto>> findByIsConfirmedByAdminTrue(){
-		return ResponseEntity.ok(customerService.findByIsConfirmedByAdminTrue());
+		return customerFacade.findByIsConfirmedByAdminTrue();
 	}
 	
 	@GetMapping("/unconfirmed")
 	public ResponseEntity<List<CustomerResponseDto>> findByIsConfirmedByAdminFalse(){
-		return ResponseEntity.ok(customerService.findByIsConfirmedByAdminFalse());
+		return customerFacade.findByIsConfirmedByAdminFalse();
 	}
 
 	@PatchMapping("/activate/{id}")

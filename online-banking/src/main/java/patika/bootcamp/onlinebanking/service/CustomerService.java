@@ -1,32 +1,32 @@
 package patika.bootcamp.onlinebanking.service;
 
 import java.util.List;
-import java.util.Optional;
-
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
-import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
 
 public interface CustomerService {
 	
-	CustomerResponseDto create(CreateCustomerRequestDto createCustomerRequestDto);
-	CustomerResponseDto get(Long id) throws BaseException;
+	Customer create(Customer customer);
+	Customer get(Long id) throws BaseException;
 	void delete(Long id, Boolean hardDelete) throws BaseException;
-	void update(CreateCustomerRequestDto createCustomerRequestDto);
+	Customer update(Customer customer);
 	
-	List<CustomerResponseDto> getAll();
+	List<Customer> getAll();
 	
-	CustomerResponseDto findByEmail(String email) throws BaseException;
-	CustomerResponseDto findByIdentityNumber(String identityNumber) throws BaseException;
-	CustomerResponseDto findByPhoneNumber(String phoneNumber) throws BaseException;
+	Customer findByEmail(String email) throws BaseException;
+	Customer findByIdentityNumber(String identityNumber) throws BaseException;
+	Customer findByPhoneNumber(String phoneNumber) throws BaseException;
 	
-	List<CustomerResponseDto> findByAgeBetween(Integer startAge, Integer endAge);
+	//getBalance();
+	//getBalanceByAccountType(AccountType type);
 	
-	List<CustomerResponseDto> finAllActiveCustomers();
-	List<CustomerResponseDto> finAllNotActiveCustomers();
+	List<Customer> findByAgeBetween(Integer startAge, Integer endAge);
 	
-	List<CustomerResponseDto> findByIsConfirmedByAdminTrue();
-	List<CustomerResponseDto> findByIsConfirmedByAdminFalse();
+	List<Customer> finAllActiveCustomers();
+	List<Customer> finAllNotActiveCustomers();
+	
+	List<Customer> findByIsConfirmedByAdminTrue();
+	List<Customer> findByIsConfirmedByAdminFalse();
 
 	void activateCustomer(Long id) throws BaseException;
 	void disableCustomer(Long id) throws BaseException;

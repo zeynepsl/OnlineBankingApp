@@ -1,5 +1,6 @@
 package patika.bootcamp.onlinebanking.repository.customer;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,9 +10,13 @@ import patika.bootcamp.onlinebanking.model.customer.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
 	
-	Optional<Customer> findByEmail(String email);
+	Optional<Customer> findByContactInformation_PrimaryEmail(String email);
 	Optional<Customer> findByIdentityNumber(String identityNumber);
-	Optional<Customer> findByPhoneNumber(String phoneNumber);
+	Optional<Customer> findByContactInformation_PrimaryPhoneNumber(String phoneNumber);
+	
+	List<Customer> findByBirthDate(Date birthDate);
+	List<Customer> findByBirthDateAfter(Date birthDate);
+	List<Customer> findByBirthDateBefore(Date birthDate);
 	
 	List<Customer> findByAgeBetween(Integer startAge, Integer endAge);
 	

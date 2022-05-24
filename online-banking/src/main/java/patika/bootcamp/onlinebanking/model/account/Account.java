@@ -3,29 +3,27 @@ package patika.bootcamp.onlinebanking.model.account;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.PositiveOrZero;
 
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
+import patika.bootcamp.onlinebanking.model.enums.AccountType;
 
+@Entity
 @Getter
 @Setter
-@MappedSuperclass
-public abstract class Account extends BaseExtendedModel{
+public class Account extends BaseExtendedModel{
 	
 	private Long accountNumber;
-	private BigDecimal accountBalance = BigDecimal.ZERO;
 	
 	@PositiveOrZero
 	private BigDecimal lockedBalance = BigDecimal.ZERO;
+	private BigDecimal accountBalance = BigDecimal.ZERO;
 	private String bankCode;
 	private String branchCode;
 	
@@ -41,6 +39,17 @@ public abstract class Account extends BaseExtendedModel{
 	
 	@Enumerated(EnumType.STRING)
 	private AccountStatus accountStatus = AccountStatus.PASSIVE;
+	
+	@Enumerated(EnumType.STRING)
+	private AccountType accountType = AccountType.CHECKING_ACCOUNT;
+	
+	@ManyToOne
+	@JoinColumn(name =  "customer_id")
+	private Customer customer;
+	
+	@ManyToOne
+	@JoinColumn(name = "currency_id")
+	private Currency currency;
 	
 	//@Enumerated(EnumType.STRING)
 	//private CurrencyUnit currencyUnit;

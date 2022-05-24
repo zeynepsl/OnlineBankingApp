@@ -1,24 +1,17 @@
 package patika.bootcamp.onlinebanking.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import patika.bootcamp.onlinebanking.converter.customer.CustomerConverter;
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
-import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CustomerServiceOperationException;
-import patika.bootcamp.onlinebanking.model.account.PrimaryAccount;
-import patika.bootcamp.onlinebanking.model.account.SavingsAccount;
+import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.repository.customer.CustomerRepository;
@@ -30,20 +23,19 @@ import patika.bootcamp.onlinebanking.service.CustomerService;
 public class CustomerServiceImpl implements CustomerService {
 
 	private final CustomerRepository customerRepository;
-	private final CustomerConverter customerConverter;
 
 	@Override
-	public CustomerResponseDto create(CreateCustomerRequestDto createCustomerRequestDto) {
-		Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
+	public Customer create(Customer customer) {
+		//Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
 		customerRepository.save(customer);
-		return customerConverter.toCustomerResponseDto(customer);
+		return customer;//bu static oldu artık direk Class dan ulaşanbilirsin
 	}
 
 	@Override
-	public CustomerResponseDto get(Long id) throws BaseException {
+	public Customer get(Long id) throws BaseException {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
-		return customerConverter.toCustomerResponseDto(customer);
+		return customer;
 	}
 
 	@Override
@@ -71,6 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setDeletedAt(new Date());
 		customer.setDeletedBy("Zeynep Salman");
 		log.info("id: {}, customer deleted", customer.getId());
+		//vadesiz mevduat hesabı oluştru 
 		customerRepository.save(customer);
 	}
 
@@ -90,20 +83,14 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	public boolean doHaveMoneyInAnyAccount(Customer customer) {
-		Set<PrimaryAccount> primaryAccounts = customer.getPrimaryAccounts();	
-		Set<SavingsAccount> savingsAccounts = customer.getSavingsAccounts();
-
-		if (primaryAccounts.isEmpty() && savingsAccounts.isEmpty()) {
+		Set<Account> accounts = customer.getAccounts();
+		
+		if (accounts.isEmpty()) {
 			return false;
 		}
-
-		for (PrimaryAccount primaryAccount : customer.getPrimaryAccounts()) {
-			if (primaryAccount.getAccountBalance().compareTo(BigDecimal.valueOf(0)) > 0) {
-				return true;
-			}
-		}
-		for (SavingsAccount savingsAccount : customer.getSavingsAccounts()) {
-			if (savingsAccount.getAccountBalance().compareTo(BigDecimal.valueOf(0)) > 0) {
+		
+		for (Account account : customer.getAccounts()) {
+			if (account.getAccountBalance().compareTo(BigDecimal.valueOf(0)) > 0) {
 				return true;
 			}
 		}
@@ -112,69 +99,60 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void update(CreateCustomerRequestDto createCustomerRequestDto) {
-		Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
+	public Customer update(Customer customer) {
 		customerRepository.save(customer);
+		return customer;
 	}
 
 	@Override
-	public List<CustomerResponseDto> getAll() {
-		return toCustomerResponseDtoList(customerRepository.findAll());
+	public List<Customer> getAll() {
+		return customerRepository.findAll();
 	}
 
 	@Override
-	public CustomerResponseDto findByEmail(String email) throws BaseException {
-		Customer customer = customerRepository.findByEmail(email)
+	public Customer findByEmail(String email) throws BaseException {
+		Customer customer = customerRepository.findByContactInformation_PrimaryEmail(email)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
-		return customerConverter.toCustomerResponseDto(customer);
+		return customer;
 	}
 
 	@Override
-	public CustomerResponseDto findByIdentityNumber(String identityNumber) throws BaseException {
+	public Customer findByIdentityNumber(String identityNumber) throws BaseException {
 		Customer customer = customerRepository.findByIdentityNumber(identityNumber)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("customer not found"));
-		return customerConverter.toCustomerResponseDto(customer);
+		return customer;
 	}
 
 	@Override
-	public CustomerResponseDto findByPhoneNumber(String phoneNumber) throws BaseException {
-		Customer customer = customerRepository.findByIdentityNumber(phoneNumber)
+	public Customer findByPhoneNumber(String phoneNumber) throws BaseException {
+		Customer customer = customerRepository.findByContactInformation_PrimaryPhoneNumber(phoneNumber)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("customer not found"));
-		return customerConverter.toCustomerResponseDto(customer);
+		return customer;
 	}
 
 	@Override
-	public List<CustomerResponseDto> findByAgeBetween(Integer startAge, Integer endAge) {
-		return toCustomerResponseDtoList(customerRepository.findByAgeBetween(startAge, endAge));
+	public List<Customer> findByAgeBetween(Integer startAge, Integer endAge) {
+		return customerRepository.findByAgeBetween(startAge, endAge);
 	}
 
 	@Override
-	public List<CustomerResponseDto> finAllActiveCustomers() {
-		return toCustomerResponseDtoList(customerRepository.findByIsActiveTrue());
+	public List<Customer> finAllActiveCustomers() {
+		return customerRepository.findByIsActiveTrue();
 	}
 
 	@Override
-	public List<CustomerResponseDto> finAllNotActiveCustomers() {
-		return toCustomerResponseDtoList(customerRepository.findByIsActiveFalse());
+	public List<Customer> finAllNotActiveCustomers() {
+		return customerRepository.findByIsActiveFalse();
 	}
 
 	@Override
-	public List<CustomerResponseDto> findByIsConfirmedByAdminTrue() {
-		return toCustomerResponseDtoList(customerRepository.findByIsConfirmedByAdminTrue());
+	public List<Customer> findByIsConfirmedByAdminTrue() {
+		return customerRepository.findByIsConfirmedByAdminTrue();
 	}
 
 	@Override
-	public List<CustomerResponseDto> findByIsConfirmedByAdminFalse() {
-		return toCustomerResponseDtoList(customerRepository.findByIsConfirmedByAdminFalse());
-	}
-
-	private List<CustomerResponseDto> toCustomerResponseDtoList(List<Customer> customers) {
-		List<CustomerResponseDto> customerResponseDtoList = new ArrayList<CustomerResponseDto>();
-		customers.forEach(customer -> {
-			CustomerResponseDto customerResponseDto = customerConverter.toCustomerResponseDto(customer);
-			customerResponseDtoList.add(customerResponseDto);
-		});
-		return customerResponseDtoList;
+	public List<Customer> findByIsConfirmedByAdminFalse() {
+		return customerRepository.findByIsConfirmedByAdminFalse();
 	}
 
 	@Override

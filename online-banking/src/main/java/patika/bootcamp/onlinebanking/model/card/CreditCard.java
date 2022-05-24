@@ -3,15 +3,10 @@ package patika.bootcamp.onlinebanking.model.card;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.account.PrimaryAccount;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 
 @Entity
@@ -23,11 +18,12 @@ public class CreditCard extends Card{
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-	@OneToOne
+	//kredi kartı artık bir hesaba bağlı değil:
+	/*@OneToOne
 	@JoinColumn(name = "primary_account_id")
-	private PrimaryAccount primaryAccount;
+	private PrimaryAccount primaryAccount;*/
 	
-	private BigDecimal limit;
+	private BigDecimal cardLimit;
 	private BigDecimal availableLimit;// availableLimit = limit - periodExpenditures
 	private BigDecimal periodExpenditures;
 	

@@ -12,7 +12,7 @@ import patika.bootcamp.onlinebanking.model.customer.Customer;
 @Component
 public class CustomerConverter {
 
-	public Customer toCustomer(CreateCustomerRequestDto createCustomerRequestDto) {
+	public static Customer toCustomer(CreateCustomerRequestDto createCustomerRequestDto) {
 		Customer customer = new Customer();
 		customer.setAge(createCustomerRequestDto.getAge());
 		
@@ -35,7 +35,7 @@ public class CustomerConverter {
 		return customer;
 	}
 
-	public CustomerResponseDto toCustomerResponseDto(Customer customer) {
+	public static CustomerResponseDto toCustomerResponseDto(Customer customer) {
 		CustomerResponseDto customerResponseDto = new CustomerResponseDto();
 		customerResponseDto.setId(customer.getId());
 		customerResponseDto.setActive(customer.isActive());

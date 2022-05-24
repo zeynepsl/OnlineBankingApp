@@ -11,9 +11,7 @@ import org.springframework.validation.annotation.Validated;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.account.GoldPointAccount;
-import patika.bootcamp.onlinebanking.model.account.PrimaryAccount;
-import patika.bootcamp.onlinebanking.model.account.SavingsAccount;
+import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
@@ -21,7 +19,7 @@ import patika.bootcamp.onlinebanking.model.enums.Gender;
 
 @Entity
 @Getter
-@Setter
+@Setter  
 @Validated
 public class Customer extends BaseExtendedModel{
 	
@@ -48,19 +46,13 @@ public class Customer extends BaseExtendedModel{
 	private Set<Address> customerAddresses = new HashSet<>();
 	
 	@OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<PrimaryAccount> primaryAccounts = new HashSet<>();
-	
-	@OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<SavingsAccount> savingsAccounts = new HashSet<>();
+	private Set<Account> accounts = new HashSet<>();
 	
 	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private CreditCard creditCard;
 	
 	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private PrepaidCard prepaidCard;
-	
-	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-	private GoldPointAccount goldPointAccount;
 	
 	@Transient
 	private String getFullName() {

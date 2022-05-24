@@ -20,6 +20,6 @@ public class Currency extends BaseModel{
 	private String symbol;
 	
 	@OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<PrimaryAccount> primaryAccounts = new HashSet<>();
+	private Set<Account> accounts = new HashSet<>();
 	
 }
