@@ -15,9 +15,11 @@ import patika.bootcamp.onlinebanking.model.base.BaseModel;
 @Getter
 @Setter
 public class Currency extends BaseModel{
-	private String name;
-	private String code;
-	private String symbol;
+	private String name;//Turkish lira
+	private String code;//TRY 
+	private String symbol;//₺
+	
+	//Turkish lira	₺	TRY
 	
 	@OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();

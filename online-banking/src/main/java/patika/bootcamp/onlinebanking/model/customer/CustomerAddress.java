@@ -8,19 +8,16 @@ import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.base.BaseModel;
+import patika.bootcamp.onlinebanking.model.base.Address;
 import patika.bootcamp.onlinebanking.model.enums.AdressType;
 
 @Entity
 @Getter
 @Setter
-public class Address extends BaseModel{
+public class CustomerAddress extends Address{
 	
 	private String name;
-	private String country;
-	private String city;
-	private String district;
-	
+
 	@Enumerated(EnumType.STRING)
 	private AdressType addressType;
 	

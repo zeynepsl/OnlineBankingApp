@@ -31,6 +31,7 @@ public class Customer extends BaseExtendedModel{
 	private Long identityNumber;
 	private String password;
 	private Integer age;
+	private String customerNumber;// genellikle 8 hane
 	
 	@Past
 	@Temporal(TemporalType.DATE)
@@ -43,7 +44,7 @@ public class Customer extends BaseExtendedModel{
 	private boolean isConfirmedByAdmin = false;
 	
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<Address> customerAddresses = new HashSet<>();
+	private Set<CustomerAddress> customerAddresses = new HashSet<>();
 	
 	@OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();

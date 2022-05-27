@@ -6,9 +6,11 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
+import patika.bootcamp.onlinebanking.model.bank.BankBranch;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
@@ -19,13 +21,22 @@ import patika.bootcamp.onlinebanking.model.enums.AccountType;
 @Setter
 public class Account extends BaseExtendedModel{
 	
-	private Long accountNumber;
+	//private Long accountNumber;//branchCode + customerNumber + additional_account_number
+	private String accountNumber;
+	private String additionalAccountNumber;
 	
 	@PositiveOrZero
 	private BigDecimal lockedBalance = BigDecimal.ZERO;
 	private BigDecimal accountBalance = BigDecimal.ZERO;
+	
+	@Column(length = 5)
+	@Size(min = 5, max = 5)
 	private String bankCode;
-	private String branchCode;
+	
+	//private String branchCode;
+	@ManyToOne
+	@JoinColumn(name = "bank_branch_id")
+	private BankBranch bankBranch;
 	
 	//@Pattern(regexp = "")
 	private String iban;
@@ -50,6 +61,11 @@ public class Account extends BaseExtendedModel{
 	@ManyToOne
 	@JoinColumn(name = "currency_id")
 	private Currency currency;
+	
+	/*@Transient
+	private String getAccountNumber() {
+		return branchCode + customer.getCustomerNumber() + additionalAccountNumber;
+	}*/
 	
 	//@Enumerated(EnumType.STRING)
 	//private CurrencyUnit currencyUnit;

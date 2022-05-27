@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
+import patika.bootcamp.onlinebanking.dto.response.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 
 public interface CustomerFacade {

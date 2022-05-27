@@ -1,11 +1,10 @@
-package patika.bootcamp.onlinebanking.dto.transaction;
+package patika.bootcamp.onlinebanking.dto.response;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.dto.response.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
 @Getter

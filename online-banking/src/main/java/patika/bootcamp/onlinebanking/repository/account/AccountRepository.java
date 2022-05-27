@@ -16,6 +16,6 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 	List<Account> findByCurrency_Id(Long currencyId);
 	List<Account> findByAccountType(AccountType accountType);
 	List<Account> findByBankCode(String bankCode);
-	List<Account> findByBranchCode(String branchCode);
+	List<Account> findByBankBranch_BranchCode(String branchCode);
 	
 }

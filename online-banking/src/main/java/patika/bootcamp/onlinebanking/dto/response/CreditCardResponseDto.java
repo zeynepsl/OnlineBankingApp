@@ -1,11 +1,9 @@
-package patika.bootcamp.onlinebanking.dto.card;
+package patika.bootcamp.onlinebanking.dto.response;
 
 import java.math.BigDecimal;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.dto.account.PrimaryAccountResponseDto;
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 
 @Getter
 @Setter
@@ -14,7 +12,7 @@ public class CreditCardResponseDto {
 	private String cardNo;
 	private BigDecimal accountBalance;
 	private CustomerResponseDto customerResponseDto;
-	private PrimaryAccountResponseDto primaryAccounResponseDto;
+	private AccountResponseDto accounResponseDto;
 	private BigDecimal additionalLimit;
 	private BigDecimal amountOfDebt;
 }

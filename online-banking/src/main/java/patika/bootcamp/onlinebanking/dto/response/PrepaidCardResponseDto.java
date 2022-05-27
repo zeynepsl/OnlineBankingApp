@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.dto.card;
+package patika.bootcamp.onlinebanking.dto.response;
 
 import java.math.BigDecimal;
 

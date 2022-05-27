@@ -1,11 +1,11 @@
-package patika.bootcamp.onlinebanking.converter.customer;
+package patika.bootcamp.onlinebanking.converter;
 
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
+import patika.bootcamp.onlinebanking.dto.response.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.customer.ContactInformation;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 
@@ -50,10 +50,7 @@ public class CustomerConverter {
 		customerResponseDto.setSecondaryPhoneNumber(contactInformation.getSecondaryPhoneNumber());
 		
 		customerResponseDto.setCreditCardResponseDto(null);
-		customerResponseDto.setGoldPointAccountResponseDto(null);
 		customerResponseDto.setPrepaidCardResponseDto(null);
-		customerResponseDto.setPrimaryAccountResponseDtos(null);
-		customerResponseDto.setSavingsAccountResponseDtos(null);
 		return customerResponseDto;
 	}
 	

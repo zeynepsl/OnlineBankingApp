@@ -12,10 +12,19 @@ import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CustomerServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.Account;
+import patika.bootcamp.onlinebanking.model.bank.BankBranch;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.model.customer.CustomerAddress;
+import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.customer.CustomerRepository;
+import patika.bootcamp.onlinebanking.service.BankBranchService;
+import patika.bootcamp.onlinebanking.service.CurrencyService;
 import patika.bootcamp.onlinebanking.service.CustomerService;
+import patika.bootcamp.onlinebanking.util.AccountNumberGenerator;
+import patika.bootcamp.onlinebanking.util.AdditionalAccountNumberGenerator;
+import patika.bootcamp.onlinebanking.util.CustomerNumberGenerator;
+import patika.bootcamp.onlinebanking.util.IbanGenerator;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +32,68 @@ import patika.bootcamp.onlinebanking.service.CustomerService;
 public class CustomerServiceImpl implements CustomerService {
 
 	private final CustomerRepository customerRepository;
+	private final BankBranchService bankBranchService;
+	private final CurrencyService currencyService;
 
 	@Override
 	public Customer create(Customer customer) {
 		//Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
 		customerRepository.save(customer);
-		return customer;//bu static oldu artık direk Class dan ulaşanbilirsin
+		
+		Account account = createCheckingAccountWhileCustomerIsCreated(customer);
+		customer.setAccounts(Set.of(account));
+		customerRepository.save(customer);
+		return customer;
+	}
+
+	public Account createCheckingAccountWhileCustomerIsCreated(Customer customer) {
+		Account account = new Account();
+		account.setAccountType(AccountType.CHECKING_ACCOUNT);
+		account.setBankCode("207");
+		
+		Set<CustomerAddress> customerAddresses = customer.getCustomerAddresses();
+		if(!customerAddresses.isEmpty()) {
+			customerAddresses.forEach(customerAddres -> {
+				String country = customerAddres.getCountry();
+				String city = customerAddres.getCity();
+				String district = customerAddres.getDistrict();
+				String neighborhood = customerAddres.getNeighborhood();
+				
+				List<BankBranch> bankBranchsByDistrict = bankBranchService.findByDistrict(district);
+				List<BankBranch> bankBranchsByCity = bankBranchService.findByCity(city);
+				List<BankBranch> bankBranchByCountry = bankBranchService.findByCountry(country);
+				BankBranch bankBranchFromNeighborhood = bankBranchService.findByNeighborhood(neighborhood);
+				
+				if(bankBranchByCountry != null && bankBranchsByCity != null 
+						&&  bankBranchsByDistrict != null && bankBranchFromNeighborhood != null) {
+					account.setBankBranch(bankBranchFromNeighborhood);
+				}
+				else if(bankBranchByCountry != null && bankBranchsByCity != null && bankBranchsByDistrict != null) {
+					account.setBankBranch(bankBranchsByDistrict.get(0));
+				}
+				else if(bankBranchByCountry != null && bankBranchsByCity != null) {
+					account.setBankBranch(bankBranchsByCity.get(0));
+				}
+				else {
+					account.setBankBranch(bankBranchByCountry.get(0));
+				}
+			});
+		}
+		String branchCode = account.getBankBranch().getBranchCode();
+		String customerNumber = CustomerNumberGenerator.generate();
+		String additionalAccountNumber = AdditionalAccountNumberGenerator.generate();
+		
+		String accountNumber = AccountNumberGenerator.generate(branchCode, customerNumber, additionalAccountNumber);
+		account.setAccountNumber(accountNumber);
+		
+		account.setAdditionalAccountNumber(additionalAccountNumber);
+		account.setCreatedAt(new Date());
+		account.setCreatedBy("Zeynep Salman");
+		
+		
+		account.setCurrency(currencyService.findByCode("TRY"));
+		account.setIban(IbanGenerator.generate("207", account.getAccountNumber()));
+		return account;
 	}
 
 	@Override
@@ -54,7 +119,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new CustomerServiceOperationException.CustomerAlreadyDeleted("this customer already deleted");
 		}
 		if (hardDelete) {
-			customerRepository.delete(customer);
+			delete(id);
 			log.info("customer deleted from db");
 			return;
 		}
@@ -65,6 +130,11 @@ public class CustomerServiceImpl implements CustomerService {
 		log.info("id: {}, customer deleted", customer.getId());
 		//vadesiz mevduat hesabı oluştru 
 		customerRepository.save(customer);
+	}
+	
+	@Override
+	public void delete(Long id) throws BaseException {
+		customerRepository.deleteById(id);
 	}
 
 	public boolean isThereDebtAmountOnCreditCard(Customer customer) {

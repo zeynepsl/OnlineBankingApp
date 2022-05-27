@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.service.facade;
+package patika.bootcamp.onlinebanking.service.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.customer.CustomerConverter;
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.converter.CustomerConverter;
 import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
+import patika.bootcamp.onlinebanking.dto.response.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.service.CustomerService;
+import patika.bootcamp.onlinebanking.service.facade.CustomerFacade;
 
 @Service
 @RequiredArgsConstructor
