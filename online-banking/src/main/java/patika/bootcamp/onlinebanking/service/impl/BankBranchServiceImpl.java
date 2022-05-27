@@ -68,4 +68,10 @@ public class BankBranchServiceImpl implements BankBranchService{
 		return bankBranch;
 	}
 	
+	@Override
+	public boolean existsByNeighborhood(String neighborhood) {
+		boolean result = bankBranchRepository.existsByBankBranchAddress_Neighborhood(neighborhood);
+		return result;
+	}
+	
 }

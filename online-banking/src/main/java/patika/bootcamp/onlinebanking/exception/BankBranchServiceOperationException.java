@@ -11,5 +11,10 @@ public final class BankBranchServiceOperationException {
 		}
 	}
 	
+	public static class BankBranchAlreadyExists extends BaseException {
+		public BankBranchAlreadyExists(String message) {
+			super(message);
+		}
+	}
 	
 }

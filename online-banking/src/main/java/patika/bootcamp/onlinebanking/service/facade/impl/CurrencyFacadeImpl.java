@@ -1,5 +1,8 @@
 package patika.bootcamp.onlinebanking.service.facade.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,6 +53,21 @@ public class CurrencyFacadeImpl implements CurrencyFacade{
 	public ResponseEntity<CurrencyResponseDto> get(Long id) {
 		Currency currency = currencyService.get(id);
 		return ResponseEntity.ok(currencyConverter.toCurrencyResponseDto(currency));
+	}
+	
+	@Override
+	public ResponseEntity<List<CurrencyResponseDto>> getAll() {
+		List<CurrencyResponseDto> currencyResponseDtos = toCurrencyResponseDtoList(currencyService.getAll());
+		return ResponseEntity.ok(currencyResponseDtos);
+	}
+
+	private List<CurrencyResponseDto> toCurrencyResponseDtoList(List<Currency> currencies) {
+		List<CurrencyResponseDto> currencyResponseDtos = new ArrayList<CurrencyResponseDto>();
+		currencies.forEach(currency -> {
+			CurrencyResponseDto currencyResponseDto = currencyConverter.toCurrencyResponseDto(currency);
+			currencyResponseDtos.add(currencyResponseDto);
+		});
+		return currencyResponseDtos;
 	}
 
 	@Override

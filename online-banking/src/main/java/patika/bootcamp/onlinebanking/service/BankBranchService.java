@@ -11,4 +11,5 @@ public interface BankBranchService extends BaseService<BankBranch>{
 	List<BankBranch> findByCity(String city);
 	List<BankBranch> findByDistrict(String district);
 	BankBranch findByNeighborhood(String neighborhood);
+	boolean existsByNeighborhood(String neighborhood);
 }

@@ -13,5 +13,5 @@ public interface BankBranchRepository extends JpaRepository<BankBranch, Long>{
 	List<BankBranch> findByBankBranchAddress_City(String city);
 	List<BankBranch> findByBankBranchAddress_District(String district);
 	Optional<BankBranch> findByBankBranchAddress_Neighborhood(String neighborhood);//bir mahallede bir şube olur
-	
+	boolean existsByBankBranchAddress_Neighborhood(String neighborhood);
 }
