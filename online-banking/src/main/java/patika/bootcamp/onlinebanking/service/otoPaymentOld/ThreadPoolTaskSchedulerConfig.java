@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.service.otoPayment;
+package patika.bootcamp.onlinebanking.service.otoPaymentOld;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

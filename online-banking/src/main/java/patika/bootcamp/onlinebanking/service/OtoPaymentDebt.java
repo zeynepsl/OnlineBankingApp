@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.service.otoPayment;
+package patika.bootcamp.onlinebanking.service;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
