@@ -11,26 +11,24 @@ import patika.bootcamp.onlinebanking.model.account.Currency;
 import patika.bootcamp.onlinebanking.model.base.BaseModel;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
+@Entity
 @Getter
 @Setter
-@MappedSuperclass
-public abstract class Transaction extends BaseModel{
+public class Transaction extends BaseModel{
 	
 	@ManyToOne
 	@JoinColumn(name = "sender_currency_id")
 	private Currency senderCurrency;
-	private String senderAccountNumber;
-	//private BigDecimal senderAccountBalance;//bunu accountNUmber dan da alabiliriz
 	
-	private String recipientFirstName;
-	private String recipientLastName;
+	private String senderIbanNo;
+	private String recipientIbanNo;
+	private Boolean useAllBalance = false;
+	private BigDecimal amount;
 	
 	@Temporal(TemporalType.DATE)
 	private Date transactionDate = new Date();
 	
-	private Boolean useAllBalance = false;
-	private BigDecimal amount;
-	
 	@Enumerated(EnumType.STRING)
 	private ModeOfPayment modeOfPayment;
+ 	
 }

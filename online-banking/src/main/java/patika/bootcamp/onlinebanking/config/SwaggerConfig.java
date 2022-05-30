@@ -2,6 +2,7 @@ package patika.bootcamp.onlinebanking.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -14,23 +15,25 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
 @Configuration
-public class SwaggerConfig {
+public class SwaggerConfig implements WebMvcConfigurer {
 	@Bean
-    public Docket api() { 
-        return new Docket(DocumentationType.SWAGGER_2)  
-          .select()                                  
-          .apis(RequestHandlerSelectors.any())              
-          .paths(PathSelectors.any())                          
-          .build().apiInfo(apiEndPointsInfo());                                        
-    }
-	
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2)
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("patika.bootcamp.onlinebanking"))
+				.paths(PathSelectors.any())
+				.build()
+				.apiInfo(apiEndPointsInfo());
+	}
+
 	private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Norma Java Spring Bootcamp")
-                .description("Norma Bootcamp Final Project Api Documentation")
-                .contact(new Contact("Zeynep Salman", "https://github.com/zeynepsl", "zeyneprsalman@gmail.com"))
-                .license("Apache 2.0")
-                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-                .version("1.0.0")
-                .build();
-    }
+		return new ApiInfoBuilder().title("Norma Java Spring Bootcamp")
+				.description("Norma Bootcamp Final Project Api Documentation")
+				.contact(new Contact("Zeynep Salman", "https://github.com/zeynepsl", "zeyneprsalman@gmail.com"))
+				.license("Apache 2.0")
+				.licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+				.version("1.0.0")
+				.build();
+	}
+
 }

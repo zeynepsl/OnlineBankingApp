@@ -22,4 +22,6 @@ public class BaseControllerAdvice {
 	public ResponseEntity<?> onMethodArgumentNotValidException(MethodArgumentNotValidException ex){
 		return ResponseEntity.badRequest().body(ex.getLocalizedMessage());
 	}
+	
+	//java.lang.IllegalStateException
 }

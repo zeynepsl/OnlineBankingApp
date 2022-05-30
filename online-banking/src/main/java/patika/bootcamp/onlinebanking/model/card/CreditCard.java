@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
+import patika.bootcamp.onlinebanking.model.bank.BankBranch;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 
 @Entity
@@ -18,14 +20,18 @@ public class CreditCard extends Card{
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
+	@ManyToOne
+	@JoinColumn(name = "bank_branch_id")
+	private BankBranch bankBranch;
+	
 	//kredi kartı artık bir hesaba bağlı değil:
 	/*@OneToOne
 	@JoinColumn(name = "primary_account_id")
 	private PrimaryAccount primaryAccount;*/
 	
-	private BigDecimal cardLimit;
-	private BigDecimal availableLimit;// availableLimit = limit - periodExpenditures
-	private BigDecimal periodExpenditures;
+	private BigDecimal cardLimit;//7_000
+	private BigDecimal availableLimit;// availableLimit = limit - periodExpenditures  2500
+	private BigDecimal periodExpenditures;// 4500 tl harcamisim
 	
 	@Temporal(TemporalType.DATE)
 	private Date accountCutOffDate;//hesap kesim tarihi
@@ -34,4 +40,10 @@ public class CreditCard extends Card{
 	private Date paymentDueDate;//son odeme tarihi
 	//private BigDecimal additionalLimit = BigDecimal.valueOf(250);//It can be 250, 500, 1.000, 1.500 or 2.000.
 	private BigDecimal amountOfDebt;
+	
+	@Size(min = 3, max = 3)
+	private String cvv;
+	
+	@Temporal(TemporalType.DATE)
+	private Date dueDate;
 }

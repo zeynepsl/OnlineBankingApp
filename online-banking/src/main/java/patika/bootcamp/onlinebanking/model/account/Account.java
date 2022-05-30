@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.bank.BankBranch;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
+import patika.bootcamp.onlinebanking.model.card.BankCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
@@ -61,6 +62,9 @@ public class Account extends BaseExtendedModel{
 	@ManyToOne
 	@JoinColumn(name = "currency_id")
 	private Currency currency;
+	
+	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+	private BankCard bankCard;
 	
 	/*@Transient
 	private String getAccountNumber() {

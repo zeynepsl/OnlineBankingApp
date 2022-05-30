@@ -12,5 +12,6 @@ public interface CreditCardRepository extends JpaRepository<CreditCard, Long>{
 	
 	Optional<CreditCard> findByCustomer_Id(Long customerId);
 	List<CreditCard> findByAccountCutOffDate(Date accountCutOffDate);
+	Optional<CreditCard> findByCardNumber(String cardNumber);
 
 }

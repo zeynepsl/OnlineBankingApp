@@ -23,6 +23,7 @@ public class AccountServiceImpl implements AccountService{
 	//to do: throws BaseException
 	@Override
 	public Account create(Account account) throws BaseException{
+		//eger olusturulan hesap vadesiz ise ve kullanıcı ilk defa vadesiz hesap oluşturuyorsa bir banka kartı oluştur
 		account = accountRepository.save(account);
 		return account;
 	}
@@ -51,7 +52,7 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
-	public Account findByAccountNumber(Long accountNumber) throws BaseException{
+	public Account findByAccountNumber(String accountNumber) throws BaseException{
 		Account account = accountRepository.findByAccountNumber(accountNumber)
 				.orElseThrow(() -> new AccountServiceOperationException.AccountNotFound("Account not found"));
 		return account;
@@ -97,5 +98,14 @@ public class AccountServiceImpl implements AccountService{
 		return accountRepository.findByBankBranch_BranchCode(branchCode);
 	}
 	
+	@Override
+	public List<Account> findByBranchName(String branchName) {
+		return accountRepository.findByBankBranch_BranchName(branchName);
+	}
+	
+	@Override
+	public List<Account> findByBranchNameAndCustomerId(String branchName, Long customerId) {
+		return accountRepository.findByBankBranch_BranchNameAndCustomer_Id(branchName, customerId);
+	}
 	
 }
