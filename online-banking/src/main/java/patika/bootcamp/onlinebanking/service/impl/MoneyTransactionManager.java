@@ -33,7 +33,7 @@ public class MoneyTransactionManager implements TransactionService {
 
 		BigDecimal fromBalance = from.getAccountBalance();
 		BigDecimal toBalance = to.getAccountBalance();
-
+		
 		boolean useAllBalance = transaction.getUseAllBalance();
 		if (useAllBalance) {
 			deductFromAccount(from, fromBalance);
@@ -42,6 +42,8 @@ public class MoneyTransactionManager implements TransactionService {
 		}
 
 		BigDecimal lockedBalance = from.getLockedBalance();
+		
+		
 
 		validateBalance(fromBalance, lockedBalance);
 
@@ -51,7 +53,6 @@ public class MoneyTransactionManager implements TransactionService {
 
 		accountService.update(to);
 		accountService.update(from);
-
 	}
 
 	@Override

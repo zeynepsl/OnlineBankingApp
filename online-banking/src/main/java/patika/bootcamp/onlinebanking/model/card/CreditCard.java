@@ -24,11 +24,6 @@ public class CreditCard extends Card{
 	@JoinColumn(name = "bank_branch_id")
 	private BankBranch bankBranch;
 	
-	//kredi kartı artık bir hesaba bağlı değil:
-	/*@OneToOne
-	@JoinColumn(name = "primary_account_id")
-	private PrimaryAccount primaryAccount;*/
-	
 	private BigDecimal cardLimit;//7_000
 	private BigDecimal availableLimit;// availableLimit = limit - periodExpenditures  2500
 	private BigDecimal periodExpenditures;// 4500 tl harcamisim
@@ -47,3 +42,9 @@ public class CreditCard extends Card{
 	@Temporal(TemporalType.DATE)
 	private Date dueDate;
 }
+
+
+//kredi kartı artık bir hesaba bağlı değil:
+/*@OneToOne
+@JoinColumn(name = "primary_account_id")
+private PrimaryAccount primaryAccount;*/

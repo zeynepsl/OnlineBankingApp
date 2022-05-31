@@ -1,8 +1,10 @@
 package patika.bootcamp.onlinebanking.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -250,6 +252,19 @@ public class CreditCardServiceImpl implements CreditCardService{
 		CreditCard creditCard = creditCardRepository.findByCardNumber(cardNumber)
 				.orElseThrow(() -> new CreditCardServiceOperationException.CreditCardNotFound("credit card not found"));
 		return creditCard;
+	}
+	
+	@Override
+	public List<CreditCard> findCardsThatHaveDebt() {
+		List<CreditCard> allCreditCards = new ArrayList<CreditCard>();
+		allCreditCards.addAll(getAll());
+		
+		List<CreditCard> cardsThatHaveDebt = allCreditCards
+				.stream()
+				.filter(c -> c.getAmountOfDebt().compareTo(BigDecimal.ZERO) > 0)
+				.collect(Collectors.toList());
+		
+		return cardsThatHaveDebt;
 	}
 	
 	

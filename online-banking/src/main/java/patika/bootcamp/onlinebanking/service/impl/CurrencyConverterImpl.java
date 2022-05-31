@@ -40,7 +40,7 @@ public class CurrencyConverterImpl implements CurrencyConverter {
 				.url(ur)
 				.addHeader("apikey", "pUw0APFAvkALYUYjIhLkjLgLYLqmUKyx")
 				.method("GET", null)
-				.build();
+				 .build();
 		Response response = client.newCall(request).execute();
 		String result = response.body().string();
 

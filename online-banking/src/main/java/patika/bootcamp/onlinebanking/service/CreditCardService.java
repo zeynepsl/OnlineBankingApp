@@ -13,6 +13,8 @@ public interface CreditCardService extends BaseService<CreditCard>{
 	CreditCard findByCardNumber(String cardNumber);
 	List<CreditCard> findByAccountCutOffDate(Date accountCutOffDate);
 	
+	List<CreditCard> findCardsThatHaveDebt();
+	
 	
 	BigDecimal getCardLimit(Long creditCardId);
 	BigDecimal getAvailableLimit(Long creditCardId);
