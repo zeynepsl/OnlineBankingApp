@@ -1,16 +1,17 @@
 package patika.bootcamp.onlinebanking.service.impl;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CreditCardServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.Account;
@@ -20,7 +21,7 @@ import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.card.CreditCardRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.CreditCardService;
-import patika.bootcamp.onlinebanking.service.CurrencyService;
+import patika.bootcamp.onlinebanking.util.converter.CurrencyConverter;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ import patika.bootcamp.onlinebanking.service.CurrencyService;
 public class CreditCardServiceImpl implements CreditCardService{
 	private final CreditCardRepository creditCardRepository;
 	private final AccountService accountService;
-	private final CurrencyService currencyService;
+	private final CurrencyConverter currencyConverter;
 
 	@Override
 	public CreditCard create(CreditCard creditCard) throws BaseException {
@@ -51,8 +52,6 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 	@Override
 	public void delete(Long id) throws BaseException {
-		//kredi karı borcu olan silinemez
-		
 		CreditCard creditCard = get(id);
 		if(creditCard.getAmountOfDebt().compareTo(BigDecimal.ZERO) > 0) {
 			throw new CreditCardServiceOperationException.CreditCardCannotDeleted("a card with debt cannot be deleted");
@@ -101,15 +100,6 @@ public class CreditCardServiceImpl implements CreditCardService{
 		return creditCard.getAmountOfDebt();
 	}
 
-	//her ayın 10 unda saat 10 15 te borç öde
-	@Override
-	//@Scheduled(cron = "0 10 10 15 * ?")
-	public void otoPaymentDebt() throws BaseException{
-		//bu metot bir parametre alamaz
-		//tüm kayıtlı kullanıcıların kartını öde
-		//basePaymentDebt(creditCard);
-	}
-
 	public void paymentDebtFromAccount(CreditCard creditCard, BigDecimal amountOfDebt, Account account) {
 		account.setAccountBalance(account.getAccountBalance().subtract(amountOfDebt));
 		accountService.update(account);
@@ -132,9 +122,7 @@ public class CreditCardServiceImpl implements CreditCardService{
 		 * */
 		
 		creditCardPasswordValidate(creditCard, password);
-		
-		updateLimitAndDebtInCreditCard(creditCard, amount);
-		
+		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);
 		updateToAccount(to, amount);		
 	}
 
@@ -157,22 +145,36 @@ public class CreditCardServiceImpl implements CreditCardService{
 	}
 
 	@Override
-	public void onlineMoneyTransfer(String cardNo, String firstName, String lastName, String cvv, Date dueDate, String to, BigDecimal amount) {
+	public void onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto){
 		/*o card numarasına ait kartı getir
 		 * o kartın firstname i, cvv si vs.. hepsi girilenlerle aynı değilse hata ver
 		 * 
 		 * aynıysa devam et
 		 * */
+		String cardNo = onlineTransferByCardRequestDto.getCardNo();
+		String firstName = onlineTransferByCardRequestDto.getFirstName();
+		String lastName = onlineTransferByCardRequestDto.getLastName();
+		BigDecimal amount = onlineTransferByCardRequestDto.getAmount();
+		String cvv = onlineTransferByCardRequestDto.getCvv();
+		Date dueDate = onlineTransferByCardRequestDto.getDueDate();
+		String to = onlineTransferByCardRequestDto.getTo();
+		
 		CreditCard creditCard = findByCardNumber(cardNo);
+		
+		validateOnlineTransferInfo(firstName, lastName, cvv, dueDate, creditCard);
+		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);
+		updateToAccount(to, amount);
+	}
+
+	public void validateOnlineTransferInfo(String firstName, String lastName, String cvv, Date dueDate,
+			CreditCard creditCard) {
 		if( !(creditCard.getCustomer().getFirstName().equals(firstName) || !(creditCard.getCustomer().getLastName().equals(lastName)) 
 				|| !(creditCard.getCvv().equals(cvv)) || (creditCard.getDueDate().compareTo(dueDate) != 0)) ) {
 			throw new CreditCardServiceOperationException.WrongCardInformation("wrong card information");
 		}
-		updateLimitAndDebtInCreditCard(creditCard, amount);
-		updateToAccount(to, amount);
 	}
 
-	public void updateLimitAndDebtInCreditCard(CreditCard creditCard, BigDecimal amount) {
+	public void updateAvailableLimitAndDebtInCreditCard(CreditCard creditCard, BigDecimal amount) {
 		
 		BigDecimal limit = creditCard.getCardLimit();
 		BigDecimal newPeriodExpenditures = creditCard.getPeriodExpenditures().add(amount);
@@ -185,17 +187,16 @@ public class CreditCardServiceImpl implements CreditCardService{
 	}
 
 	@Override
-	public void paymentDebtFromCashMachine(CreditCard creditCard, String password) {
+	public void paymentDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException {
 		creditCardPasswordValidate(creditCard, password);
-		
 		basePaymentDebt(creditCard);
 	}
 
-	public void basePaymentDebt(CreditCard creditCard) {
+	public void basePaymentDebt(CreditCard creditCard) throws BaseException, IOException{
 		Branch creditCardBankBranch = creditCard.getBankBranch();
 		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
 		//kredi kartı sahibinin kredi kart aldığı şubedeki hesaplari:
-		List<Account> accounts = accountService.findByBranchNameAndCustomerId(creditCardBankBranch.getBranchName(), creditCard.getCustomer().getId());
+		List<Account> accounts = accountService.findByBranchCodeAndCustomerId(creditCardBankBranch.getBranchCode(), creditCard.getCustomer().getId());
 		
 		//o şubedeki hesapların arasından ilk once; vadesiz tl hesabına bakılır: vadesiz tl hesabı bakiyesi yeterliyse borç bu hesaptan ödenir: 
 		accounts.forEach(account -> {
@@ -212,7 +213,15 @@ public class CreditCardServiceImpl implements CreditCardService{
 			if((account.getAccountType() == AccountType.CHECKING_ACCOUNT) && (account.getCurrency().getName() == "TRY")) {
 				continue;
 			}
-			paymentDebtFromAccount(creditCard, amountOfDebt, account);
+			/*kredi kartı borcum tl cinsinden
+			 *  o account un currencyTipini al
+			 *     currencyconverter a gonder( accountCurrencyType dan --> TRY tipine
+			 * */
+			String fromCurrency = account.getCurrency().getCode();
+			String toCurrency = "TRY";
+			Double rate = currencyConverter.converter(toCurrency, fromCurrency);
+			BigDecimal newAmountOfDebt = amountOfDebt.subtract(BigDecimal.valueOf(rate));
+			paymentDebtFromAccount(creditCard, newAmountOfDebt, account);
 			return;
 		}
 		throw new CreditCardServiceOperationException.InsufficientBalance("Your credit card debt is not paid. you have insufficient balance");
@@ -236,15 +245,19 @@ public class CreditCardServiceImpl implements CreditCardService{
 		CreditCard creditCard = account.getCustomer().getCreditCard();
 		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
 		
-		if(accountBalance.compareTo(amountOfDebt) > 0) {
-			throw new CreditCardServiceOperationException.InsufficientBalance("Your credit card debt is not paid. you have insufficient balance");
-		}
+		validateBalance(accountBalance, amountOfDebt);
 		
 		account.setAccountBalance(accountBalance.subtract(amountOfDebt));
 		accountService.update(account);
 		
 		creditCard.setAmountOfDebt(BigDecimal.ZERO);
 		update(creditCard);
+	}
+
+	public void validateBalance(BigDecimal accountBalance, BigDecimal amountOfDebt) {
+		if(accountBalance.compareTo(amountOfDebt) > 0) {
+			throw new CreditCardServiceOperationException.InsufficientBalance("Your credit card debt is not paid. you have insufficient balance");
+		}
 	}
 	
 	@Override

@@ -119,8 +119,8 @@ public class AccountFacadeImpl implements AccountFacade{
 	}
 
 	@Override
-	public ResponseEntity<List<AccountResponseDto>> findByBranchNameAndCustomerId(String branchName, Long customerId) {
-		return ResponseEntity.ok(toAccountResponseDtoList(accountService.findByBranchNameAndCustomerId(branchName, customerId)));
+	public ResponseEntity<List<AccountResponseDto>> findByBranchCodeAndCustomerId(String branchCode, Long customerId) {
+		return ResponseEntity.ok(toAccountResponseDtoList(accountService.findByBranchCodeAndCustomerId(branchCode, customerId)));
 	}
 
 	@Override

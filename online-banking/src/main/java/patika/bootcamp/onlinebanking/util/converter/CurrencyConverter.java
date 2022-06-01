@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.service;
+package patika.bootcamp.onlinebanking.util.converter;
 
 import java.io.IOException;
 

@@ -52,18 +52,18 @@ public class TransactionController {
 		return transactionFacade.findByModeOfPayment(modeOfPayment);
 	}
 	
-	@GetMapping("/senderIban/{iban}")
+	@GetMapping("/sender/{iban}")
 	ResponseEntity<List<TransactionResponseDto>> findBySenderIbanNo(@PathVariable String iban){
 		return transactionFacade.findBySenderIbanNo(iban);
 	}
 	
-	@GetMapping("/recipientIban/{iban}")
+	@GetMapping("/recipient/{iban}")
 	ResponseEntity<List<TransactionResponseDto>> findByRecipientIbanNo(@PathVariable String iban){
 		return transactionFacade.findByRecipientIbanNo(iban);
 	}
 	
-	@GetMapping("/senderAccount/{id}")
-	ResponseEntity<List<TransactionResponseDto>> findBySenderAccountId(@PathVariable Long id){
-		return transactionFacade.findBySenderAccountId(id);
+	@GetMapping("/sender/{accountId}")
+	ResponseEntity<List<TransactionResponseDto>> findBySenderAccountId(@PathVariable Long accountId){
+		return transactionFacade.findBySenderAccountId(accountId);
 	}
 }

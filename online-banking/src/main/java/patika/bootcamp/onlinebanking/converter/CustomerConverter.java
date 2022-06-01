@@ -49,8 +49,6 @@ public class CustomerConverter {
 		customerResponseDto.setSecondaryEmail(contactInformation.getSecondaryEmail());
 		customerResponseDto.setSecondaryPhoneNumber(contactInformation.getSecondaryPhoneNumber());
 		
-		customerResponseDto.setCreditCardResponseDto(null);
-		customerResponseDto.setPrepaidCardResponseDto(null);
 		return customerResponseDto;
 	}
 	

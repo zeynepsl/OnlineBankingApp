@@ -23,7 +23,7 @@ public interface AccountService extends BaseService<Account>{
 	List<Account> findByBankCode(String bankCode);
 	List<Account> findByBranchCode(String branchCode);
 	List<Account> findByBranchName(String branchName);
-	List<Account> findByBranchNameAndCustomerId(String branchName, Long customerId);
+	List<Account> findByBranchCodeAndCustomerId(String branchCode, Long customerId);
 	List<Account> findByAccountTypeAndCustomerId(AccountType accountType, Long customerId);
 	BankCard createBankCardWhileCreatingFirstCheckingAccount(Account account);
 }

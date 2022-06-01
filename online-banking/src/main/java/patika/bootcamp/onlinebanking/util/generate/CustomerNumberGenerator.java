@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.util;
+package patika.bootcamp.onlinebanking.util.generate;
 
 import java.util.Random;
 

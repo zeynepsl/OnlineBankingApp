@@ -22,10 +22,10 @@ import patika.bootcamp.onlinebanking.repository.customer.CustomerRepository;
 import patika.bootcamp.onlinebanking.service.BranchService;
 import patika.bootcamp.onlinebanking.service.CurrencyService;
 import patika.bootcamp.onlinebanking.service.CustomerService;
-import patika.bootcamp.onlinebanking.util.AccountNumberGenerator;
-import patika.bootcamp.onlinebanking.util.AdditionalAccountNumberGenerator;
-import patika.bootcamp.onlinebanking.util.CustomerNumberGenerator;
-import patika.bootcamp.onlinebanking.util.IbanGenerator;
+import patika.bootcamp.onlinebanking.util.generate.AccountNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.AdditionalAccountNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.CustomerNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 
 @Service
 @RequiredArgsConstructor

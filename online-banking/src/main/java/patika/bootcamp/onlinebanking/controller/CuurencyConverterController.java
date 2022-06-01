@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.service.CurrencyConverter;
+import patika.bootcamp.onlinebanking.util.converter.CurrencyConverter;
 
 @RestController
 @RequestMapping("api/currencyconverters")

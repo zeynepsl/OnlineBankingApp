@@ -19,7 +19,7 @@ import patika.bootcamp.onlinebanking.service.facade.BranchFacade;
 
 @Service
 @RequiredArgsConstructor
-public class BankBranchFacadeImpl implements BranchFacade{
+public class BranchFacadeImpl implements BranchFacade{
 	private final BranchService bankBranchService;
 	private final BranchConverter bankBranchConverter;
 

@@ -19,7 +19,7 @@ import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.account.AccountRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.CustomerService;
-import patika.bootcamp.onlinebanking.util.CardNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 
 @Service
 @RequiredArgsConstructor
@@ -147,8 +147,8 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public List<Account> findByBranchNameAndCustomerId(String branchName, Long customerId) {
-		return accountRepository.findByBankBranch_BranchNameAndCustomer_Id(branchName, customerId);
+	public List<Account> findByBranchCodeAndCustomerId(String branchCode, Long customerId) {
+		return accountRepository.findByBankBranch_BranchCodeAndCustomer_Id(branchCode, customerId);
 	}
 
 	@Override

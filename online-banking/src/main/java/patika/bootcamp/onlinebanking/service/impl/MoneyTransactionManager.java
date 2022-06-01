@@ -17,8 +17,8 @@ import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 import patika.bootcamp.onlinebanking.repository.transaction.TransactionRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
-import patika.bootcamp.onlinebanking.service.CurrencyConverter;
 import patika.bootcamp.onlinebanking.service.TransactionService;
+import patika.bootcamp.onlinebanking.util.converter.CurrencyConverter;
 
 @Service
 @RequiredArgsConstructor

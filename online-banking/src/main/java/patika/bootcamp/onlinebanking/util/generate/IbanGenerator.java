@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.util;
+package patika.bootcamp.onlinebanking.util.generate;
 
 public final class IbanGenerator {
 	

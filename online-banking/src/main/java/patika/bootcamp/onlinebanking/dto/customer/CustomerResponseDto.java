@@ -28,11 +28,11 @@ public class CustomerResponseDto {
 	private boolean isActive;
 	private boolean isConfirmedByAdmin;
 	
-	private Set<AccountResponseDto> accountResponseDtos = new HashSet<>();
+	//private Set<AccountResponseDto> accountResponseDtos = new HashSet<>();
 	
-	private Set<CustomerAddressResponseDto> customerAddressResponseDtos = new HashSet<>();
+	//private Set<CustomerAddressResponseDto> customerAddressResponseDtos = new HashSet<>();
 	
-	private CreditCardResponseDto creditCardResponseDto;
+	//private CreditCardResponseDto creditCardResponseDto;
 	
-	private PrepaidCardResponseDto prepaidCardResponseDto;
+	//private PrepaidCardResponseDto prepaidCardResponseDto;
 }

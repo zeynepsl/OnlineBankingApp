@@ -30,7 +30,7 @@ public interface AccountFacade {
 	ResponseEntity<List<AccountResponseDto>> findByBankCode(String bankCode);
 	ResponseEntity<List<AccountResponseDto>> findByBranchCode(String branchCode);
 	ResponseEntity<List<AccountResponseDto>> findByBranchName(String branchName);
-	ResponseEntity<List<AccountResponseDto>> findByBranchNameAndCustomerId(String branchName, Long customerId);
+	ResponseEntity<List<AccountResponseDto>> findByBranchCodeAndCustomerId(String branchCode, Long customerId);
 	ResponseEntity<List<AccountResponseDto>> findByAccountTypeAndCustomerId(AccountType accountType, Long customerId);
 	ResponseEntity<List<AccountResponseDto>> findByAccountStatus(AccountStatus accountStatus);
 }

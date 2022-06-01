@@ -15,6 +15,7 @@ import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
+import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
@@ -26,6 +27,7 @@ import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 public class Account extends BaseExtendedModel{
 	
 	//private Long accountNumber;//branchCode + customerNumber + additional_account_number
+	private String accountName;
 	private String accountNumber;
 	private String additionalAccountNumber;
 	

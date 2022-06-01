@@ -95,8 +95,8 @@ public class AccountController {
 	}
 	
 	@GetMapping("/branchName/{branchName}/customer/{customerId}")
-	public ResponseEntity<List<AccountResponseDto>> findByBranchNameAndCustomerId(String branchName, Long customerId){
-		return accountFacade.findByBranchNameAndCustomerId(branchName, customerId);
+	public ResponseEntity<List<AccountResponseDto>> findByBranchCodeAndCustomerId(String branchCode, Long customerId){
+		return accountFacade.findByBranchCodeAndCustomerId(branchCode, customerId);
 	}
 	
 	@GetMapping("/accountType/{accountType}/customer/{customerId}")

@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.service.impl;
+package patika.bootcamp.onlinebanking.util.converter;
 
 import java.io.IOException;
 import java.net.URI;
@@ -10,7 +10,6 @@ import org.springframework.web.util.UriTemplate;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import patika.bootcamp.onlinebanking.service.CurrencyConverter;
 
 @Service
 public class CurrencyConverterImpl implements CurrencyConverter {
