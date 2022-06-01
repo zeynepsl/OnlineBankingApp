@@ -7,8 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
-import patika.bootcamp.onlinebanking.dto.response.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
+import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.facade.CustomerFacade;
 

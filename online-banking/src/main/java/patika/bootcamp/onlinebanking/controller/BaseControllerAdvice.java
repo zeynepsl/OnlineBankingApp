@@ -24,4 +24,6 @@ public class BaseControllerAdvice {
 	}
 	
 	//java.lang.IllegalStateException
+	
+	//IOException
 }

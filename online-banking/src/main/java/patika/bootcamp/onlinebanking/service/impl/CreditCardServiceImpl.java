@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CreditCardServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.Account;
-import patika.bootcamp.onlinebanking.model.bank.BankBranch;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.card.CreditCardRepository;
@@ -192,7 +192,7 @@ public class CreditCardServiceImpl implements CreditCardService{
 	}
 
 	public void basePaymentDebt(CreditCard creditCard) {
-		BankBranch creditCardBankBranch = creditCard.getBankBranch();
+		Branch creditCardBankBranch = creditCard.getBankBranch();
 		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
 		//kredi kartı sahibinin kredi kart aldığı şubedeki hesaplari:
 		List<Account> accounts = accountService.findByBranchNameAndCustomerId(creditCardBankBranch.getBranchName(), creditCard.getCustomer().getId());

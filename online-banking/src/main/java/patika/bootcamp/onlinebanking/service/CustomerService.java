@@ -10,13 +10,9 @@ public interface CustomerService extends BaseService<Customer>{
 
 	void delete(Long id, Boolean hardDelete) throws BaseException;
 
-	
 	Customer findByEmail(String email) throws BaseException;
 	Customer findByIdentityNumber(String identityNumber) throws BaseException;
-	Customer findByPhoneNumber(String phoneNumber) throws BaseException;
-	
-	//getBalance();
-	//getBalanceByAccountType(AccountType type);
+	Customer findByPhoneNumber(String phoneNumber) throws BaseException;	
 	
 	List<Customer> findByAgeBetween(Integer startAge, Integer endAge);
 	
@@ -28,7 +24,6 @@ public interface CustomerService extends BaseService<Customer>{
 
 	void activateCustomer(Long id) throws BaseException;
 	void disableCustomer(Long id) throws BaseException;
-	
 	void confirmCustomer(Long id) throws BaseException;
 
 }

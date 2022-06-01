@@ -16,4 +16,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>{
 	List<Transaction> findBySenderIbanNo(String ibanNo);
 	
 	List<Transaction> findByRecipientIbanNo(String ibanNo);
+	
+	List<Transaction> findBySenderAccount_Id(Long id);
 }

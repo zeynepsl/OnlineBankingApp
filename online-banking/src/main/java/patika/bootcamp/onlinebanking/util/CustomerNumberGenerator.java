@@ -12,4 +12,5 @@ public final class CustomerNumberGenerator {
 	    String customerNumber = String.format("%06d", number);
 	    return customerNumber;
 	}
+	
 }

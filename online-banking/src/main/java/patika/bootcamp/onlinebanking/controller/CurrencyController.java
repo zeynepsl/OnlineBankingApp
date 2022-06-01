@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.dto.request.CreateCurrencyRequestDto;
-import patika.bootcamp.onlinebanking.dto.response.CurrencyResponseDto;
+import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
+import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.service.facade.CurrencyFacade;
 
 @RestController

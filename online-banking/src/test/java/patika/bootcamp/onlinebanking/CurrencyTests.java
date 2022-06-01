@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import patika.bootcamp.onlinebanking.controller.CurrencyController;
 import patika.bootcamp.onlinebanking.converter.CurrencyConverter;
-import patika.bootcamp.onlinebanking.dto.request.CreateCurrencyRequestDto;
+import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
 import patika.bootcamp.onlinebanking.model.account.Currency;
 import patika.bootcamp.onlinebanking.service.CurrencyService;
 

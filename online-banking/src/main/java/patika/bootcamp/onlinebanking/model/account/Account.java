@@ -2,6 +2,8 @@ package patika.bootcamp.onlinebanking.model.account;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.FutureOrPresent;
@@ -10,12 +12,13 @@ import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.bank.BankBranch;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
+import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 
 @Entity
 @Getter
@@ -37,7 +40,7 @@ public class Account extends BaseExtendedModel{
 	//private String branchCode;
 	@ManyToOne
 	@JoinColumn(name = "bank_branch_id")
-	private BankBranch bankBranch;
+	private Branch bankBranch;
 	
 	//@Pattern(regexp = "")
 	private String iban;
@@ -65,6 +68,9 @@ public class Account extends BaseExtendedModel{
 	
 	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
 	private BankCard bankCard;
+	
+	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL)
+	private Set<Transaction> transactions = new HashSet<>();
 	
 	/*@Transient
 	private String getAccountNumber() {

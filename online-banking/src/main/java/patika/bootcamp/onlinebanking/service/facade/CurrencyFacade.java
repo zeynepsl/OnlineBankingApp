@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
-import patika.bootcamp.onlinebanking.dto.request.CreateCurrencyRequestDto;
-import patika.bootcamp.onlinebanking.dto.response.CurrencyResponseDto;
+import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
+import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 
 public interface CurrencyFacade {

@@ -3,16 +3,18 @@ package patika.bootcamp.onlinebanking.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CurrencyServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.Currency;
-import patika.bootcamp.onlinebanking.repository.CurrencyRepository;
+import patika.bootcamp.onlinebanking.repository.account.CurrencyRepository;
 import patika.bootcamp.onlinebanking.service.CurrencyService;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CurrencyServiceImpl implements CurrencyService{
 
 	private final CurrencyRepository currencyRepository;

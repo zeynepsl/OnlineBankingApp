@@ -2,8 +2,8 @@ package patika.bootcamp.onlinebanking.converter;
 
 import org.springframework.stereotype.Component;
 
-import patika.bootcamp.onlinebanking.dto.request.CreateCurrencyRequestDto;
-import patika.bootcamp.onlinebanking.dto.response.CurrencyResponseDto;
+import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
+import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Currency;
 
 @Component

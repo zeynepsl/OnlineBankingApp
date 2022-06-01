@@ -111,4 +111,11 @@ public class BankCardServiceImpl implements BankCardService{
 			throw new BankCardServiceOperationException.InsufficientBalance("InsufficientBalance");
 		}
 	}
+	
+	@Override
+	public BankCard findByCardNumber(String cardNumber) {
+		BankCard bankCard = bankCardRepository.findByCardNumber(cardNumber)
+				.orElseThrow(() -> new BankCardServiceOperationException.BankCardNotFound("not found"));
+		return bankCard;
+	}
 }

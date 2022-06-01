@@ -4,17 +4,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import patika.bootcamp.onlinebanking.controller.BankBranchController;
-import patika.bootcamp.onlinebanking.model.bank.BankBranch;
+import patika.bootcamp.onlinebanking.controller.BranchController;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
 
 @SpringBootTest
 public class BankBranchTests {
 	
 	@Autowired
-	BankBranchController bankBranchController;
+	BranchController bankBranchController;
 	
 	@Test
 	void should_create_success_bankbranch() {
-		BankBranch bankBranch = new BankBranch();
+		Branch bankBranch = new Branch();
 	}
 }

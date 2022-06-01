@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import patika.bootcamp.onlinebanking.core.service.BaseService;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
 
 public interface BankCardService extends BaseService<BankCard>{
@@ -16,4 +17,5 @@ public interface BankCardService extends BaseService<BankCard>{
 	
 	void deposit(BankCard bankCard, String password, BigDecimal amount);//para yatır
 	String getIban(BankCard bankCard, String password) throws BaseException ;
+	BankCard findByCardNumber(String cardNumber);
 }

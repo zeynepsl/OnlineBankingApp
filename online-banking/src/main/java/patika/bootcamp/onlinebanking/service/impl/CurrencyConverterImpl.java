@@ -2,21 +2,10 @@ package patika.bootcamp.onlinebanking.service.impl;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,14 +14,19 @@ import patika.bootcamp.onlinebanking.service.CurrencyConverter;
 
 @Service
 public class CurrencyConverterImpl implements CurrencyConverter {
-	private static final String URL = "https://api.apilayer.com/exchangerates_data/latest?symbols={symbols}&base={base}";
+	//private static final String URL = "https://api.apilayer.com/exchangerates_data/latest?symbols={symbols}&base={base}";
 	private final String API_KEY = "pUw0APFAvkALYUYjIhLkjLgLYLqmUKyx";
+	
+	/*private final String apiKey = "32b956a6ca1086c0de29d387f53565cd";
+	private final RestTemplate restTemplate;
+	private final ObjectMapper objectMapper;*/
 
 	@Override
-	public Double converter(String ratee, String basee) throws IOException {
+	public Double converter(String to, String from) throws IOException {
 
-		String ur = "https://api.apilayer.com/exchangerates_data/latest?symbols=" + ratee + "," + "USD" + "&base="
-				+ basee + "&access_key=" + API_KEY;
+		//apinin endpointi symbol leri liste olarak kabul ediyordu, mecburen liste olması için USD ekledim:
+		String ur = "https://api.apilayer.com/exchangerates_data/latest?symbols=" + to + "," + "USD" + "&base="
+				+ from + "&access_key=" + API_KEY;
 		OkHttpClient client = new OkHttpClient()
 				.newBuilder()
 				.build();
@@ -46,8 +40,14 @@ public class CurrencyConverterImpl implements CurrencyConverter {
 
 		return parseCurrencyFromString(result);
 	}
+	
+	/*public void deneme() {
+		URI url = new UriTemplate(FORECAST_URL).expand(city, country, apiKey);
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        //return convertToWeatherForecast(response);
+	}*/
 
-	// bu metot anlasilmasi biraz zor olabilir ama calima mantigi basittir
+	// bu metot anlasilmasi biraz zor olabilir ama calisma mantigi basittir :)
 	public Double parseCurrencyFromString(String result) {
 		String[] sp = result.split(":");
 		for (int i = 0; i < sp.length; i++) {
@@ -63,11 +63,9 @@ public class CurrencyConverterImpl implements CurrencyConverter {
 				endIndex = i;
 			}
 		}
-		pureBase = (base.substring(1, endIndex + 1)).replaceAll("\\s", "");// double sayiyi alma ve bosluklardan
-																			// arindirma
+		pureBase = (base.substring(1, endIndex + 1)).replaceAll("\\s", "");// double sayiyi alma ve bosluklardan arindirma
 
 		Double currency = Double.valueOf(pureBase);
-
 		return currency;
 	}
 

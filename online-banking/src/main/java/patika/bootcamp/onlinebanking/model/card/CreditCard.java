@@ -8,7 +8,8 @@ import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.bank.BankBranch;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
+import patika.bootcamp.onlinebanking.model.base.Card;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 
 @Entity
@@ -22,7 +23,7 @@ public class CreditCard extends Card{
 	
 	@ManyToOne
 	@JoinColumn(name = "bank_branch_id")
-	private BankBranch bankBranch;
+	private Branch bankBranch;
 	
 	private BigDecimal cardLimit;//7_000
 	private BigDecimal availableLimit;// availableLimit = limit - periodExpenditures  2500

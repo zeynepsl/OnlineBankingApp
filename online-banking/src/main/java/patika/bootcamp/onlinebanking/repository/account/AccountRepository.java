@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import patika.bootcamp.onlinebanking.model.account.Account;
+import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 
 public interface AccountRepository extends JpaRepository<Account, Long>{
@@ -19,5 +20,6 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 	List<Account> findByBankBranch_BranchCode(String branchCode);
 	List<Account> findByBankBranch_BranchName(String branchName);
 	List<Account> findByBankBranch_BranchNameAndCustomer_Id(String branchName, Long customerId);
-	
+	List<Account> findByAccountTypeAndCustomer_Id(AccountType accountType, Long customerId);
+	List<Account> findByAccountStatus(AccountStatus accountStatus);
 }

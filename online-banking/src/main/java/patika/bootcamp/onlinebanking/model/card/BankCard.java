@@ -7,6 +7,7 @@ import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.account.Account;
+import patika.bootcamp.onlinebanking.model.base.Card;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 
 @Entity

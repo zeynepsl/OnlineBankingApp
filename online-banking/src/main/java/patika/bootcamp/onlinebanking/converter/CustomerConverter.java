@@ -4,8 +4,8 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
-import patika.bootcamp.onlinebanking.dto.request.CreateCustomerRequestDto;
-import patika.bootcamp.onlinebanking.dto.response.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
+import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.customer.ContactInformation;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 
