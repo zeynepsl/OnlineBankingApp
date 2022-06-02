@@ -23,10 +23,13 @@ public interface CreditCardService extends BaseService<CreditCard>{
 	BigDecimal getPeriodExpenditures(Long creditCardId);
 	BigDecimal getAmountOfDebt(Long creditCardId);//borc sorgulama
 	
-	void moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException;//alışveriş - market
-	void onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto);//online alışveriş
+	void moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException;//alışveriş - market
+	void onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException;//online alışveriş
 	
-	void paymentDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException;//bankamatik - , BigDecimal amount
+	void payDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException;//bankamatik - , BigDecimal amount
+	void payDebtFromAccount(Long accountId);//hesaptan borç öde
 	
-	void paymentDebtFromAccount(Long accountId);//hesaptan borç öde
+	void payDebtGivenFromAccount(CreditCard creditCard, BigDecimal amountOfDebt) throws BaseException, IOException;
+
+	
 }

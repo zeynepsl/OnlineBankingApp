@@ -15,7 +15,6 @@ import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionToAccountR
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionToCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Account;
-import patika.bootcamp.onlinebanking.model.card.BankCard;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 import patika.bootcamp.onlinebanking.service.AccountService;

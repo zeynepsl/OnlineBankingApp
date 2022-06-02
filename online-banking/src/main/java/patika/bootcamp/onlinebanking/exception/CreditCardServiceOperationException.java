@@ -2,6 +2,14 @@ package patika.bootcamp.onlinebanking.exception;
 
 public final class CreditCardServiceOperationException {
 
+	public static class AmountMoreThanDebt extends BaseException {
+
+		public AmountMoreThanDebt(String message) {
+			super(message);
+		}
+
+	}
+
 	public static class CreditCardCannotDeleted extends BaseException {
 
 		public CreditCardCannotDeleted(String message) {

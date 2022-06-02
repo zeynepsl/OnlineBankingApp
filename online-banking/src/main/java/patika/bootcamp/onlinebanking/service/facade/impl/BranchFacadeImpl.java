@@ -13,7 +13,6 @@ import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchRequestDto;
 import patika.bootcamp.onlinebanking.exception.BranchServiceOperationException;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
-import patika.bootcamp.onlinebanking.model.bank.BranchAddress;
 import patika.bootcamp.onlinebanking.service.BranchService;
 import patika.bootcamp.onlinebanking.service.facade.BranchFacade;
 

@@ -26,17 +26,18 @@ import patika.bootcamp.onlinebanking.util.converter.CurrencyConverter;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CreditCardServiceImpl implements CreditCardService{
+public class CreditCardServiceImpl implements CreditCardService {
 	private final CreditCardRepository creditCardRepository;
 	private final AccountService accountService;
 	private final CurrencyConverter currencyConverter;
+	//private final String fromCurrency = "TRY";
 
 	@Override
 	public CreditCard create(CreditCard creditCard) throws BaseException {
 		creditCard = creditCardRepository.save(creditCard);
 		return creditCard;
 	}
-
+	
 	@Override
 	public CreditCard get(Long id) throws BaseException {
 		CreditCard creditCard = creditCardRepository.findById(id)
@@ -53,7 +54,7 @@ public class CreditCardServiceImpl implements CreditCardService{
 	@Override
 	public void delete(Long id) throws BaseException {
 		CreditCard creditCard = get(id);
-		if(creditCard.getAmountOfDebt().compareTo(BigDecimal.ZERO) > 0) {
+		if (creditCard.getAmountOfDebt().compareTo(BigDecimal.ZERO) > 0) {
 			throw new CreditCardServiceOperationException.CreditCardCannotDeleted("a card with debt cannot be deleted");
 		}
 		creditCardRepository.delete(creditCard);
@@ -100,57 +101,64 @@ public class CreditCardServiceImpl implements CreditCardService{
 		return creditCard.getAmountOfDebt();
 	}
 
-	public void paymentDebtFromAccount(CreditCard creditCard, BigDecimal amountOfDebt, Account account) {
-		account.setAccountBalance(account.getAccountBalance().subtract(amountOfDebt));
-		accountService.update(account);
-		creditCard.setAmountOfDebt(BigDecimal.ZERO);
-		update(creditCard);
-	}
-
 	@Override
-	public void moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException{
-		/*password ler uyuşmalı
-		 * uyuşmuyorsa hata ver --> burada ileride bcryptEncoder devreye girecek
-		 * 
-		 * amount u periyodikHarcamalar ile topla, çıkan sonuç limiti aşıyorsa hata ver
-		 * 
-		 * aşmıyorsa devam et:
-		 * creditCardı borç miktari ile amount u topla
-		 * to nun hesabına amount u aktar
-		 * 
-		 * bitir
-		 * */
-		
-		creditCardPasswordValidate(creditCard, password);
-		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);
-		updateToAccount(to, amount);		
+	public void moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException {
+		creditCardPasswordValidate(creditCard, password);//password ler uyuşmalı uyuşmuyorsa hata ver --> burada ileride bcryptEncoder devreye girecek
+		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);//amount u periyodikHarcamalar ile topla, çıkan sonuç limiti aşıyorsa hata ver
+		updateToAccount(to, amount);//miktari alici hesabina aktar
 	}
 
-	public void creditCardPasswordValidate(CreditCard creditCard, String password) throws BaseException{
-		if( !(creditCard.getPassword()).equals(password) ) {
+	public void creditCardPasswordValidate(CreditCard creditCard, String password) throws BaseException {
+		if (!(creditCard.getPassword()).equals(password)) {
 			throw new CreditCardServiceOperationException.PasswordWrong("The password you entered is incorrect");
 		}
 	}
+	
+	public void updateAvailableLimitAndDebtInCreditCard(CreditCard creditCard, BigDecimal amount) {
+		
+		BigDecimal limit = creditCard.getCardLimit();
+		BigDecimal newPeriodExpenditures = creditCard.getPeriodExpenditures().add(amount);
 
-	public void updateToAccount(String to, BigDecimal amount) {
-		Account toAccount = accountService.findByAccountNumber(to);
-		toAccount.setAccountBalance(toAccount.getAccountBalance().add(amount));
-		accountService.update(toAccount);
+		validateCreditCardLimit(limit, newPeriodExpenditures);
+
+		creditCard.setAvailableLimit(limit.subtract(newPeriodExpenditures));
+		creditCard.setAmountOfDebt(creditCard.getAmountOfDebt().add(amount));
+		update(creditCard);
 	}
-
-	public void validateCreditCardLimit(BigDecimal limit, BigDecimal newPeriodExpenditures) throws BaseException{
-		if(newPeriodExpenditures.compareTo(limit) > 0) {
+	
+	public void validateCreditCardLimit(BigDecimal limit, BigDecimal newPeriodExpenditures) throws BaseException {
+		if (newPeriodExpenditures.compareTo(limit) > 0) {
 			throw new CreditCardServiceOperationException.InsufficientCreditCardLimit("you are exceeding the credit card limit");
 		}
 	}
 
+	public void updateToAccount(String to, BigDecimal amount) throws IOException {
+		Account toAccount = accountService.findByAccountNumber(to);
+		
+		String toCurrency = toAccount.getCurrency().getCode();
+		
+		amount = validateCurrencyTypeAndCalculateAmountWithNewCurrency(amount, toCurrency, "TRY");
+		toAccount.setAccountBalance(toAccount.getAccountBalance().add(amount));
+		
+		accountService.update(toAccount);
+	}
+
+	public BigDecimal validateCurrencyTypeAndCalculateAmountWithNewCurrency(BigDecimal amount, String toCurrencyUnit, String fromCurrencyUnit) throws IOException {
+		if( !toCurrencyUnit.equals(fromCurrencyUnit) ) {
+			amount = calculateAmountWithNewCurrency(amount, toCurrencyUnit, fromCurrencyUnit);
+		}
+		return amount;
+	}
+
+	public BigDecimal calculateAmountWithNewCurrency(BigDecimal amount, String toCurrencyUnit, String fromCurrencyUnit) throws IOException {
+		Double rate = currencyConverter.converter(toCurrencyUnit, fromCurrencyUnit);
+		amount = amount.subtract(BigDecimal.valueOf(rate));
+		return amount;
+	}
+
 	@Override
-	public void onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto){
-		/*o card numarasına ait kartı getir
-		 * o kartın firstname i, cvv si vs.. hepsi girilenlerle aynı değilse hata ver
-		 * 
-		 * aynıysa devam et
-		 * */
+	public void onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException {
+
 		String cardNo = onlineTransferByCardRequestDto.getCardNo();
 		String firstName = onlineTransferByCardRequestDto.getFirstName();
 		String lastName = onlineTransferByCardRequestDto.getLastName();
@@ -158,9 +166,9 @@ public class CreditCardServiceImpl implements CreditCardService{
 		String cvv = onlineTransferByCardRequestDto.getCvv();
 		Date dueDate = onlineTransferByCardRequestDto.getDueDate();
 		String to = onlineTransferByCardRequestDto.getTo();
-		
+
 		CreditCard creditCard = findByCardNumber(cardNo);
-		
+
 		validateOnlineTransferInfo(firstName, lastName, cvv, dueDate, creditCard);
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);
 		updateToAccount(to, amount);
@@ -168,117 +176,109 @@ public class CreditCardServiceImpl implements CreditCardService{
 
 	public void validateOnlineTransferInfo(String firstName, String lastName, String cvv, Date dueDate,
 			CreditCard creditCard) {
-		if( !(creditCard.getCustomer().getFirstName().equals(firstName) || !(creditCard.getCustomer().getLastName().equals(lastName)) 
-				|| !(creditCard.getCvv().equals(cvv)) || (creditCard.getDueDate().compareTo(dueDate) != 0)) ) {
+		if (!(creditCard.getCustomer().getFirstName().equals(firstName)
+				|| !(creditCard.getCustomer().getLastName().equals(lastName)) || !(creditCard.getCvv().equals(cvv))
+				|| (creditCard.getDueDate().compareTo(dueDate) != 0))) {
 			throw new CreditCardServiceOperationException.WrongCardInformation("wrong card information");
 		}
 	}
+	
+	@Override
+	public void payDebtGivenFromAccount(CreditCard creditCard, BigDecimal amountOfPayment) throws BaseException, IOException {
+		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
 
-	public void updateAvailableLimitAndDebtInCreditCard(CreditCard creditCard, BigDecimal amount) {
+		if (amountOfDebt.compareTo(amountOfPayment) < 0) {
+			throw new CreditCardServiceOperationException.AmountMoreThanDebt("The amount you will pay is more than the credit card debt");
+		}
 		
-		BigDecimal limit = creditCard.getCardLimit();
-		BigDecimal newPeriodExpenditures = creditCard.getPeriodExpenditures().add(amount);
-		
-		validateCreditCardLimit(limit, newPeriodExpenditures);
-		
-		creditCard.setAvailableLimit(limit.subtract(newPeriodExpenditures));
-		creditCard.setAmountOfDebt(creditCard.getAmountOfDebt().add(amount));
+		basePaymentDebt(creditCard, amountOfDebt);
 		update(creditCard);
 	}
 
 	@Override
-	public void paymentDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException {
+	public void payDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException {
 		creditCardPasswordValidate(creditCard, password);
-		basePaymentDebt(creditCard);
+		basePaymentDebt(creditCard, creditCard.getAmountOfDebt());
 	}
 
-	public void basePaymentDebt(CreditCard creditCard) throws BaseException, IOException{
+	public void basePaymentDebt(CreditCard creditCard, BigDecimal amountOfDebt) throws BaseException, IOException {
 		Branch creditCardBankBranch = creditCard.getBankBranch();
-		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
-		//kredi kartı sahibinin kredi kart aldığı şubedeki hesaplari:
+		// kredi kartı sahibinin kredi kart aldığı şubedeki hesaplari:
 		List<Account> accounts = accountService.findByBranchCodeAndCustomerId(creditCardBankBranch.getBranchCode(), creditCard.getCustomer().getId());
-		
-		//o şubedeki hesapların arasından ilk once; vadesiz tl hesabına bakılır: vadesiz tl hesabı bakiyesi yeterliyse borç bu hesaptan ödenir: 
+
+		// o şubedeki hesapların arasından ilk once; vadesiz tl hesabına bakılır: vadesiz tl hesabı bakiyesi yeterliyse borç bu hesaptan ödenir:
 		accounts.forEach(account -> {
-			if((account.getAccountType() == AccountType.CHECKING_ACCOUNT) && (account.getCurrency().getName() == "TRY")) {
-				if(account.getAccountBalance().compareTo(amountOfDebt) > 0) {
-					paymentDebtFromAccount(creditCard, amountOfDebt, account);
+			if ((account.getAccountType() == AccountType.CHECKING_ACCOUNT) && (account.getCurrency().getName() == "TRY")) {
+				if (account.getAccountBalance().compareTo(amountOfDebt) > 0) {
+					discountMoneyFromAccountAndUpdateDebt(creditCard, amountOfDebt, account);
 					return;
 				}
 			}
 		});
-		
-		//vadesiz tl hesabında yeterli bakiye kalmamış, o zaman diğer para birimlerindeki hesaplara bak (forEach continue kabul etmedi :) )
+
+		// vadesiz tl hesabında yeterli bakiye kalmamış, o zaman diğer para birimlerindeki hesaplara bak (forEach continue kabul etmedi :) )
 		for (Account account : accounts) {
-			if((account.getAccountType() == AccountType.CHECKING_ACCOUNT) && (account.getCurrency().getName() == "TRY")) {
+			if ((account.getAccountType() == AccountType.CHECKING_ACCOUNT) && (account.getCurrency().getName() == "TRY")) {
 				continue;
 			}
-			/*kredi kartı borcum tl cinsinden
-			 *  o account un currencyTipini al
-			 *     currencyconverter a gonder( accountCurrencyType dan --> TRY tipine
-			 * */
+			/*
+			 * kredi kartı borcum tl cinsinden o account un currencyTipini al
+			 * currencyconverter a gonder( accountCurrencyType dan --> TRY tipine
+			 */
 			String fromCurrency = account.getCurrency().getCode();
 			String toCurrency = "TRY";
-			Double rate = currencyConverter.converter(toCurrency, fromCurrency);
-			BigDecimal newAmountOfDebt = amountOfDebt.subtract(BigDecimal.valueOf(rate));
-			paymentDebtFromAccount(creditCard, newAmountOfDebt, account);
+			BigDecimal newAmountOfDebt = calculateAmountWithNewCurrency(amountOfDebt, toCurrency, fromCurrency);
+			discountMoneyFromAccountAndUpdateDebt(creditCard, newAmountOfDebt, account);
 			return;
 		}
-		throw new CreditCardServiceOperationException.InsufficientBalance("Your credit card debt is not paid. you have insufficient balance");
+		throw new CreditCardServiceOperationException.InsufficientBalance(
+				"Your credit card debt is not paid. you have insufficient balance");
 	}
-
-	@Override
-	public void paymentDebtFromAccount(Long accountId) {
-		/*hesabı getir
-		 * o hesabın customerının kredi kartını getir
-		 * 
-		 * o hesabın bakiyesi yeterliyse
-		 *  hesabın bakiyesinden kredi karı borcunu öde
-		 *  hesap bakiyesini güncelle
-		 *  
-		 * yeterli değilse hata ver
-		 *  */
-		
-		Account account = accountService.get(accountId);
-		BigDecimal accountBalance = account.getAccountBalance();
-		
-		CreditCard creditCard = account.getCustomer().getCreditCard();
-		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
-		
-		validateBalance(accountBalance, amountOfDebt);
-		
-		account.setAccountBalance(accountBalance.subtract(amountOfDebt));
+	
+	public void discountMoneyFromAccountAndUpdateDebt(CreditCard creditCard, BigDecimal amountOfDebt, Account account) {
+		account.setAccountBalance(account.getAccountBalance().subtract(amountOfDebt));
 		accountService.update(account);
-		
 		creditCard.setAmountOfDebt(BigDecimal.ZERO);
 		update(creditCard);
 	}
 
-	public void validateBalance(BigDecimal accountBalance, BigDecimal amountOfDebt) {
-		if(accountBalance.compareTo(amountOfDebt) > 0) {
-			throw new CreditCardServiceOperationException.InsufficientBalance("Your credit card debt is not paid. you have insufficient balance");
+	@Override
+	public void payDebtFromAccount(Long accountId) {
+		Account account = accountService.get(accountId);//hesabı getir
+		BigDecimal accountBalance = account.getAccountBalance();
+
+		CreditCard creditCard = account.getCustomer().getCreditCard();
+		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
+
+		if ( validateBalance(accountBalance, amountOfDebt) ) {
+			discountMoneyFromAccountAndUpdateDebt(creditCard, amountOfDebt, account);
 		}
+		
 	}
-	
+
+	public boolean validateBalance(BigDecimal accountBalance, BigDecimal amountOfDebt) {
+		if (accountBalance.compareTo(amountOfDebt) > 0) {
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public CreditCard findByCardNumber(String cardNumber) {
 		CreditCard creditCard = creditCardRepository.findByCardNumber(cardNumber)
 				.orElseThrow(() -> new CreditCardServiceOperationException.CreditCardNotFound("credit card not found"));
 		return creditCard;
 	}
-	
+
 	@Override
 	public List<CreditCard> findCardsThatHaveDebt() {
 		List<CreditCard> allCreditCards = new ArrayList<CreditCard>();
 		allCreditCards.addAll(getAll());
-		
-		List<CreditCard> cardsThatHaveDebt = allCreditCards
-				.stream()
-				.filter(c -> c.getAmountOfDebt().compareTo(BigDecimal.ZERO) > 0)
-				.collect(Collectors.toList());
-		
+
+		List<CreditCard> cardsThatHaveDebt = allCreditCards.stream()
+				.filter(c -> c.getAmountOfDebt().compareTo(BigDecimal.ZERO) > 0).collect(Collectors.toList());
+
 		return cardsThatHaveDebt;
 	}
-	
-	
+
 }

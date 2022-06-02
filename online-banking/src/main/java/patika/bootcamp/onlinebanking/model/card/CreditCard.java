@@ -8,7 +8,6 @@ import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.base.Card;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
@@ -44,9 +43,3 @@ public class CreditCard extends Card{
 	@Temporal(TemporalType.DATE)
 	private Date dueDate;
 }
-
-
-//kredi kartı artık bir hesaba bağlı değil:
-/*@OneToOne
-@JoinColumn(name = "primary_account_id")
-private PrimaryAccount primaryAccount;*/

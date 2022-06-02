@@ -25,7 +25,7 @@ public class OtoPaymentDebt {
 	public void paymentDebt(CreditCard card) {
         System.out.println("A - " + Thread.currentThread().getName());
         //processingWorkers();
-		//oto kredi borcu ödeme
+		creditCardService.pa
 	}
 
 	@Scheduled(cron = "0 10 10 15 * ?")

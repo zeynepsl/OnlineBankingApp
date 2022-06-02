@@ -1,11 +1,8 @@
 package patika.bootcamp.onlinebanking.service;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-
 import patika.bootcamp.onlinebanking.core.service.BaseService;
 import patika.bootcamp.onlinebanking.exception.BaseException;
-import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
 
 public interface BankCardService extends BaseService<BankCard>{

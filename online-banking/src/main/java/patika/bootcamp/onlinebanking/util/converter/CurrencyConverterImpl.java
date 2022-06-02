@@ -1,12 +1,7 @@
 package patika.bootcamp.onlinebanking.util.converter;
 
 import java.io.IOException;
-import java.net.URI;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriTemplate;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
