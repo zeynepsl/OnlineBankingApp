@@ -9,26 +9,77 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.converter.AccountConverter;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CreateAccountRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
+import patika.bootcamp.onlinebanking.model.account.Currency;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
+import patika.bootcamp.onlinebanking.model.card.BankCard;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.service.AccountService;
+import patika.bootcamp.onlinebanking.service.BranchService;
+import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.facade.AccountFacade;
+import patika.bootcamp.onlinebanking.util.generate.AccountNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.AdditionalAccountNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountFacadeImpl implements AccountFacade{
 	private final AccountService accountService;
 	private final AccountConverter accountConverter;
+	private final BranchService branchService;
+	private final CustomerService customerService;
 
 	@Override
-	public ResponseEntity<AccountResponseDto> create(CreateAccountRequestDto createAccountRequestDto) throws BaseException {
+	public ResponseEntity<?> create(CreateAccountRequestDto createAccountRequestDto) throws BaseException {
 		Account account = accountConverter.toAccount(createAccountRequestDto);
-		accountService.create(account);
+		
+		String additionalAccountNumber = AdditionalAccountNumberGenerator.generate();
+		account.setAdditionalAccountNumber(additionalAccountNumber);
+		
+		Customer customer = customerService.get(createAccountRequestDto.getCustomerId());
+		account.setCustomer(customer);
+		
+		/*Branch bankBranch = new Branch();
+		bankBranch.setId(createAccountRequestDto.getBranchId());
+		account.setBranch(bankBranch); bu kullanim mantikli fakat ise yaramiyor sanirim fetchType=LAZY den kaynakli bir durum*/
+		
+		Branch branch = branchService.get(createAccountRequestDto.getBranchId());
+		account.setBranch(branch);
+		
+		String accountNumber = AccountNumberGenerator.generate(branch.getBranchCode(), customer.getCustomerNumber(), additionalAccountNumber);
+		account.setAccountNumber(accountNumber);
+		
+		account.setIban(IbanGenerator.generate(createAccountRequestDto.getBankCode(), accountNumber));
+		
+		Currency currency = new Currency();
+		currency.setId(createAccountRequestDto.getCurrencyId());
+		log.info("currency kodu: {}", currency.getCode());//mesela burasi null veriyor, yularidaki gibi currency nin bir fieldına ihityacım olsaydi service den tüm nesneyi getirmem gerekecekti
+		account.setCurrency(currency);
+		
+		AccountType accountType = createAccountRequestDto.getAccountType();
+		if (accountType == AccountType.CHECKING_ACCOUNT) {
+			List<Account> accounts = null;
+			log.info("customer {}",createAccountRequestDto.getCustomerId());
+			accounts = accountService.findByAccountTypeAndCustomerId(accountType, createAccountRequestDto.getCustomerId());
+			if (accounts.isEmpty()) {
+				log.info("iverideyic :)");
+				BankCard bankCard = accountService.createBankCardWhileCreatingFirstCheckingAccount(account);
+				account.setBankCard(bankCard);
+				//accountRepository.save(account);
+				//update(account);
+			}
+		}
+		
+		account = accountService.create(account);
 		return new ResponseEntity<>(accountConverter.toAccountResponseDto(account), HttpStatus.CREATED);
 	}
 

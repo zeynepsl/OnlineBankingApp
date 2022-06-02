@@ -201,6 +201,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 		basePaymentDebt(creditCard, creditCard.getAmountOfDebt());
 	}
 
+	@Override
 	public void basePaymentDebt(CreditCard creditCard, BigDecimal amountOfDebt) throws BaseException, IOException {
 		Branch creditCardBankBranch = creditCard.getBankBranch();
 		// kredi kartı sahibinin kredi kart aldığı şubedeki hesaplari:

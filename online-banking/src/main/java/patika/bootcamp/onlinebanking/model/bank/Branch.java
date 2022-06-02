@@ -26,7 +26,7 @@ public class Branch extends BaseModel{
 	@JoinColumn(name = "bank_branch_address_id")
 	private BranchAddress bankBranchAddress;
 	
-	@OneToMany(mappedBy = "bankBranch", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
 	
 	@OneToMany(mappedBy = "bankBranch", cascade = CascadeType.ALL, orphanRemoval = true)

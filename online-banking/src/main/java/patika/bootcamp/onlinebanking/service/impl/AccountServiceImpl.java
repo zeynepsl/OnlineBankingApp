@@ -1,6 +1,7 @@
 package patika.bootcamp.onlinebanking.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -10,38 +11,39 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.exception.AccountServiceOperationException;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
+import patika.bootcamp.onlinebanking.model.account.Currency;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.account.AccountRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
+import patika.bootcamp.onlinebanking.service.BankCardService;
 import patika.bootcamp.onlinebanking.service.CustomerService;
+import patika.bootcamp.onlinebanking.util.generate.AccountNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.AdditionalAccountNumberGenerator;
 import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
+import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class AccountServiceImpl implements AccountService {
 	private final AccountRepository accountRepository;
-	private final CustomerService customerService;
+	//private final BankCardService bankCardService;
 
 	@Override
 	public Account create(Account account) throws BaseException {
-		account = accountRepository.save(account);
 		
 		// eger olusturulan hesap vadesiz ise ve kullanıcı ilk defa vadesiz hesap oluşturuyorsa bir banka kartı oluştur:
-		AccountType accountType = account.getAccountType();
-		if (accountType == AccountType.CHECKING_ACCOUNT) {
-			List<Account> accounts = findByAccountTypeAndCustomerId(accountType, account.getCustomer().getId());
-			if (accounts.size() == 1) {
-				BankCard bankCard = createBankCardWhileCreatingFirstCheckingAccount(account);
-				account.setBankCard(bankCard);
-				update(account);
-			}
-		}
+		
+		account = accountRepository.save(account);
 		return account;
 	}
 
@@ -51,13 +53,14 @@ public class AccountServiceImpl implements AccountService {
 		bankCard.setAccount(account);
 		bankCard.setIsActive(true);
 		bankCard.setCardNumber(
-				CardNumberGenerator.generate(account.getBankBranch().getBranchCode(), account.getAccountNumber()));
+				CardNumberGenerator.generate(account.getBranch().getBranchCode(), account.getAccountNumber()));
 		bankCard.setCreatedAt(new Date());
 		bankCard.setCreatedBy("Zeynep Salman");
 		bankCard.setCustomer(account.getCustomer());
 		bankCard.setPassword(UUID.randomUUID().toString());
 		bankCard.setUpdatedAt(new Date());
 		bankCard.setUpdatedBy("Zeynep Salman");
+		//bankCard = bankCardService.create(bankCard);
 		return bankCard;
 	}
 
@@ -111,7 +114,6 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public List<Account> findByCustomer_Id(Long customerId) throws BaseException {
-		customerService.get(customerId);
 		return accountRepository.findByCustomer_Id(customerId);
 
 	}
@@ -138,17 +140,17 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public List<Account> findByBranchCode(String branchCode) {
-		return accountRepository.findByBankBranch_BranchCode(branchCode);
+		return accountRepository.findByBranch_BranchCode(branchCode);
 	}
 
 	@Override
 	public List<Account> findByBranchName(String branchName) {
-		return accountRepository.findByBankBranch_BranchName(branchName);
+		return accountRepository.findByBranch_BranchName(branchName);
 	}
 
 	@Override
 	public List<Account> findByBranchCodeAndCustomerId(String branchCode, Long customerId) {
-		return accountRepository.findByBankBranch_BranchCodeAndCustomer_Id(branchCode, customerId);
+		return accountRepository.findByBranch_BranchCodeAndCustomer_Id(branchCode, customerId);
 	}
 
 	@Override

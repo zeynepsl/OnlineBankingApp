@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CreateAccountRequestDto;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
@@ -16,11 +17,13 @@ import patika.bootcamp.onlinebanking.service.facade.AccountFacade;
 @RestController
 @RequestMapping("api/accounts")
 @RequiredArgsConstructor
+@Slf4j
 public class AccountController {
 	private final AccountFacade accountFacade;
 	
 	@PostMapping("/")
-	public ResponseEntity<AccountResponseDto> create(@RequestBody CreateAccountRequestDto accountRequestDto){
+	public ResponseEntity<?> create(@RequestBody CreateAccountRequestDto accountRequestDto){
+		log.info("id {}", accountRequestDto.getBranchId());
 		return accountFacade.create(accountRequestDto);
 	}
 	
@@ -34,7 +37,7 @@ public class AccountController {
 		return accountFacade.update(createAccountRequestDto);
 	}
 	
-	@DeleteMapping("/")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id){
 		return accountFacade.delete(id);
 	}

@@ -27,7 +27,7 @@ public class BankCardConverter {
 		account.setId(createBankCardRequestDto.getAccountId());
 		bankCard.setAccount(account);
 		
-		bankCard.setCardNumber(CardNumberGenerator.generate(account.getBankBranch().getBranchCode(), account.getAccountNumber()));
+		bankCard.setCardNumber(CardNumberGenerator.generate(account.getBranch().getBranchCode(), account.getAccountNumber()));
 		
 		Customer customer = new Customer();
 		customer.setId(createBankCardRequestDto.getCustomerId());
@@ -48,7 +48,7 @@ public class BankCardConverter {
 		bankCardResponseDto.setId(bankCard.getId());
 		bankCardResponseDto.setAccountResponseDto(accountConverter.toAccountResponseDto(bankCard.getAccount()));
 		bankCardResponseDto.setCardNumber(bankCard.getCardNumber());
-		bankCardResponseDto.setCustomerResponseDto(CustomerConverter.toCustomerResponseDto(bankCard.getCustomer()));
+		bankCardResponseDto.setCustomerResponseDto(customerConverter.toCustomerResponseDto(bankCard.getCustomer()));
 		bankCardResponseDto.setIsActive(bankCard.getIsActive());
 		return bankCardResponseDto;
 	}

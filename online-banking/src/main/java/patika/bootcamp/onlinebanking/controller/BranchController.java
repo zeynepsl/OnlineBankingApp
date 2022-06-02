@@ -17,47 +17,47 @@ public class BranchController {
 	private final BranchFacade bankBranchFacade;
 	
 	@PostMapping("/")
-	ResponseEntity<BranchResponseDto> create(@RequestBody CreateBranchRequestDto createBankBranchRequestDto){
+	public ResponseEntity<BranchResponseDto> create(@RequestBody CreateBranchRequestDto createBankBranchRequestDto){
 		return bankBranchFacade.create(createBankBranchRequestDto);
 	}
 	
 	@PutMapping("/")
-	ResponseEntity<BranchResponseDto> update(@RequestBody CreateBranchRequestDto createBankBranchRequestDto){
+	public ResponseEntity<BranchResponseDto> update(@RequestBody CreateBranchRequestDto createBankBranchRequestDto){
 		return bankBranchFacade.update(createBankBranchRequestDto);
 	}
 	
 	@DeleteMapping("/{id}")
-	ResponseEntity<?> delete(@PathVariable Long id){
+	public ResponseEntity<?> delete(@PathVariable Long id){
 		return bankBranchFacade.delete(id);
 	}
 	
 	@GetMapping("/{id}")
-	ResponseEntity<BranchResponseDto> get(@PathVariable Long id){
+	public ResponseEntity<BranchResponseDto> get(@PathVariable Long id){
 		return bankBranchFacade.get(id);
 	}
 	
 	@GetMapping("/")
-	ResponseEntity<List<BranchResponseDto>> getAll(){
+	public ResponseEntity<List<BranchResponseDto>> getAll(){
 		return bankBranchFacade.getAll();
 	}
 	
 	@GetMapping("/country/{country}")
-	ResponseEntity<List<BranchResponseDto>> findByCountry(@PathVariable String country){
+	public ResponseEntity<List<BranchResponseDto>> findByCountry(@PathVariable String country){
 		return bankBranchFacade.findByCountry(country);
 	}
 
 	@GetMapping("/city/{city}")
-	ResponseEntity<List<BranchResponseDto>> findByCity(@PathVariable String city){
+	public ResponseEntity<List<BranchResponseDto>> findByCity(@PathVariable String city){
 		return bankBranchFacade.findByCity(city);
 	}
 	
 	@GetMapping("/district/{district}")
-	ResponseEntity<List<BranchResponseDto>> findByDistrict(@PathVariable  String district){
+	public ResponseEntity<List<BranchResponseDto>> findByDistrict(@PathVariable  String district){
 		return bankBranchFacade.findByDistrict(district);
 	}
 	
 	@GetMapping("/neighborhood/{neighborhood}")
-	ResponseEntity<BranchResponseDto> findByNeighborhood(@PathVariable String neighborhood){
+	public ResponseEntity<BranchResponseDto> findByNeighborhood(@PathVariable String neighborhood){
 		return bankBranchFacade.findByNeighborhood(neighborhood);
 	}
 }

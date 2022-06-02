@@ -13,7 +13,7 @@ import patika.bootcamp.onlinebanking.model.enums.AccountType;
 
 public interface AccountFacade {
 	
-	ResponseEntity<AccountResponseDto> create(CreateAccountRequestDto accountRequestDto) throws BaseException;
+	ResponseEntity<?> create(CreateAccountRequestDto accountRequestDto) throws BaseException;
 	ResponseEntity<AccountResponseDto> get(Long id) throws BaseException;
 	ResponseEntity<AccountResponseDto> update(CreateAccountRequestDto createAccountRequestDto);
 	ResponseEntity<?> delete(Long id) throws BaseException;

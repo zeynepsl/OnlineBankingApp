@@ -1,6 +1,8 @@
 package patika.bootcamp.onlinebanking;
 
+import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,8 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import patika.bootcamp.onlinebanking.model.customer.ContactInformation;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.model.customer.CustomerAddress;
 import patika.bootcamp.onlinebanking.repository.customer.CustomerRepository;
 import patika.bootcamp.onlinebanking.service.CustomerService;
+import patika.bootcamp.onlinebanking.util.generate.CustomerNumberGenerator;
 
 @SpringBootTest
 public class CustomerTests {
@@ -25,6 +29,18 @@ public class CustomerTests {
 	void should_create_success_customer() {
 		Customer customer = new Customer();
 		customer.setAge(21);
+		customer.setCustomerNumber(CustomerNumberGenerator.generate());
+		
+		CustomerAddress customerAddress = new CustomerAddress();
+		customerAddress.setAdressDescription("ev");
+		customerAddress.setCity("samsun");
+		customerAddress.setCountry("turkiye");
+		customerAddress.setDistrict("binevler");
+		customerAddress.setNeighborhood("mimar sinan");
+		customerAddress.setCustomer(customer);//**********
+		customer.setCustomerAddresses(Set.of(customerAddress));
+		customer.setFirstName("zeynep");
+		customer.setLastName("salman");
 		
 		ContactInformation contactInformation = new ContactInformation();
 		contactInformation.setPrimaryEmail("zeynep@salman.com");

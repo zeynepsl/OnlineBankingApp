@@ -44,4 +44,5 @@ public class CreateCustomerRequestDto {
 	
 	@NotNull
 	private Gender gender;
+	
 }

@@ -19,6 +19,7 @@ public class Currency extends BaseModel{
 	private String code;//TRY 
 	private String symbol;//₺
 	
+	//, cascade = CascadeType.ALL, orphanRemoval = true
 	@OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
 	

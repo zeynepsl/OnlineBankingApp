@@ -8,13 +8,19 @@ import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.customer.ContactInformation;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.util.generate.CustomerNumberGenerator;
 
 @Component
 public class CustomerConverter {
 
-	public static Customer toCustomer(CreateCustomerRequestDto createCustomerRequestDto) {
+	public Customer toCustomer(CreateCustomerRequestDto createCustomerRequestDto) {
 		Customer customer = new Customer();
 		customer.setAge(createCustomerRequestDto.getAge());
+		customer.setFirstName(createCustomerRequestDto.getFirstName());
+		customer.setLastName(createCustomerRequestDto.getLastName());
+		customer.setBirthDate(createCustomerRequestDto.getBirthDate());
+		customer.setCustomerNumber(CustomerNumberGenerator.generate());
+		
 		
 		ContactInformation contactInformation = new ContactInformation();
 		contactInformation.setPrimaryEmail(createCustomerRequestDto.getEmail());
@@ -35,19 +41,24 @@ public class CustomerConverter {
 		return customer;
 	}
 
-	public static CustomerResponseDto toCustomerResponseDto(Customer customer) {
+	public CustomerResponseDto toCustomerResponseDto(Customer customer) {
 		CustomerResponseDto customerResponseDto = new CustomerResponseDto();
 		customerResponseDto.setId(customer.getId());
 		customerResponseDto.setActive(customer.isActive());
+		customerResponseDto.setFirstName(customer.getFirstName());
+		customerResponseDto.setLastName(customer.getLastName());
+		customerResponseDto.setBirthDate(customer.getBirthDate());
 		customerResponseDto.setAge(customer.getAge());
 		customerResponseDto.setConfirmedByAdmin(customer.isConfirmedByAdmin());
 		customerResponseDto.setGender(customer.getGender());
 		
-		ContactInformation contactInformation = customer.getContactInformation();
-		customerResponseDto.setEmail(contactInformation.getPrimaryEmail());
+		/*ContactInformation contactInformation = customer.getContactInformation();
+		customerResponseDto.setEmail(customer.getContactInformation().getPrimaryEmail());
 		customerResponseDto.setPhoneNumber(contactInformation.getPrimaryPhoneNumber());
 		customerResponseDto.setSecondaryEmail(contactInformation.getSecondaryEmail());
-		customerResponseDto.setSecondaryPhoneNumber(contactInformation.getSecondaryPhoneNumber());
+		customerResponseDto.setSecondaryPhoneNumber(contactInformation.getSecondaryPhoneNumber());*/
+		
+		customerResponseDto.setCustomerNumber(customer.getCustomerNumber());
 		
 		return customerResponseDto;
 	}

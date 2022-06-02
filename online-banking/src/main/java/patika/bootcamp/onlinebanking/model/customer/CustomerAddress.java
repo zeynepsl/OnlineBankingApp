@@ -16,8 +16,6 @@ import patika.bootcamp.onlinebanking.model.enums.AdressType;
 @Setter
 public class CustomerAddress extends Address{
 	
-	private String name;
-
 	@Enumerated(EnumType.STRING)
 	private AdressType addressType;
 	

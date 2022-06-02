@@ -34,7 +34,7 @@ public class BranchConverter {
 
 	public BranchResponseDto toBankBranchResponseDto(Branch bankBranch) {
 		BranchResponseDto bankBranchResponseDto = new BranchResponseDto();
-		
+		bankBranchResponseDto.setId(bankBranch.getId());
 		BranchAddressResponseDto addressResponseDto = branchAddressConverter
 				.toBankBranchAddressResponseDto(bankBranch.getBankBranchAddress());
 		bankBranchResponseDto.setBankBranchAddressResponseDto(addressResponseDto);

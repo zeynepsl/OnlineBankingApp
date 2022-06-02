@@ -21,56 +21,46 @@ import patika.bootcamp.onlinebanking.service.facade.CustomerFacade;
 @RequiredArgsConstructor
 public class CustomerFacadeImpl implements CustomerFacade{
 	private final CustomerService customerService;
+	private final CustomerConverter customerConverter;
 	
 	@Override
 	public ResponseEntity<List<CustomerResponseDto>> getAll() {
-		/*
-		 * fetch customers from service
-		 * convert customers
-		 * masking
-		 * */
 		List<Customer> customers = customerService.getAll();
-		if(customers.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		List<CustomerResponseDto> customerResponseDtos = customers
-				.stream().
-				map(CustomerConverter::toCustomerResponseDto).collect(Collectors.toList());
-		return ResponseEntity.ok(customerResponseDtos);
+		return ResponseEntity.ok(toCustomerResponseDtoList(customers));
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponseDto> create(CreateCustomerRequestDto createCustomerRequestDto) {
-		Customer customer = CustomerConverter.toCustomer(createCustomerRequestDto);
+		Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
 		customer = customerService.create(customer);
-		return new ResponseEntity<>(CustomerConverter.toCustomerResponseDto(customer), HttpStatus.CREATED);
+		return new ResponseEntity<>(customerConverter.toCustomerResponseDto(customer), HttpStatus.CREATED);
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponseDto> get(Long id) throws BaseException {
-		return ResponseEntity.ok(CustomerConverter.toCustomerResponseDto(customerService.get(id)));
+		return ResponseEntity.ok(customerConverter.toCustomerResponseDto(customerService.get(id)));
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponseDto> update(CreateCustomerRequestDto createCustomerRequestDto) {
-		Customer customer = CustomerConverter.toCustomer(createCustomerRequestDto);
+		Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
 		customer = customerService.update(customer);
-		return ResponseEntity.ok(CustomerConverter.toCustomerResponseDto(customer));
+		return ResponseEntity.ok(customerConverter.toCustomerResponseDto(customer));
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponseDto> findByEmail(String email) throws BaseException {
-		return ResponseEntity.ok(CustomerConverter.toCustomerResponseDto(customerService.findByEmail(email)));
+		return ResponseEntity.ok(customerConverter.toCustomerResponseDto(customerService.findByEmail(email)));
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponseDto> findByIdentityNumber(String identityNumber) throws BaseException {
-		return ResponseEntity.ok(CustomerConverter.toCustomerResponseDto(customerService.findByIdentityNumber(identityNumber)));
+		return ResponseEntity.ok(customerConverter.toCustomerResponseDto(customerService.findByIdentityNumber(identityNumber)));
 	}
 
 	@Override
 	public ResponseEntity<CustomerResponseDto> findByPhoneNumber(String phoneNumber) throws BaseException {
-		return ResponseEntity.ok(CustomerConverter.toCustomerResponseDto(customerService.findByPhoneNumber(phoneNumber)));
+		return ResponseEntity.ok(customerConverter.toCustomerResponseDto(customerService.findByPhoneNumber(phoneNumber)));
 	}
 
 	@Override
@@ -102,7 +92,7 @@ public class CustomerFacadeImpl implements CustomerFacade{
 	public List<CustomerResponseDto> toCustomerResponseDtoList(List<Customer> customers) {
 		List<CustomerResponseDto> customerResponseDtoList = new ArrayList<CustomerResponseDto>();
 		customers.forEach(customer -> {
-			CustomerResponseDto customerResponseDto = CustomerConverter.toCustomerResponseDto(customer);
+			CustomerResponseDto customerResponseDto = customerConverter.toCustomerResponseDto(customer);
 			customerResponseDtoList.add(customerResponseDto);
 		});
 		return customerResponseDtoList;

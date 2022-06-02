@@ -13,19 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CustomerServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.Account;
-import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
-import patika.bootcamp.onlinebanking.model.customer.CustomerAddress;
-import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.customer.CustomerRepository;
-import patika.bootcamp.onlinebanking.service.BranchService;
-import patika.bootcamp.onlinebanking.service.CurrencyService;
 import patika.bootcamp.onlinebanking.service.CustomerService;
-import patika.bootcamp.onlinebanking.util.generate.AccountNumberGenerator;
-import patika.bootcamp.onlinebanking.util.generate.AdditionalAccountNumberGenerator;
-import patika.bootcamp.onlinebanking.util.generate.CustomerNumberGenerator;
-import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 
 @Service
 @RequiredArgsConstructor
@@ -34,67 +25,10 @@ import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 public class CustomerServiceImpl implements CustomerService {
 
 	private final CustomerRepository customerRepository;
-	private final BranchService bankBranchService;
-	private final CurrencyService currencyService;
-
 	@Override
 	public Customer create(Customer customer) {
-		customerRepository.save(customer);
-		
-		Account account = createCheckingAccountWhileCustomerIsCreated(customer);
-		customer.setAccounts(Set.of(account));
-		customerRepository.save(customer);
+		customer = customerRepository.save(customer);
 		return customer;
-	}
-
-	public Account createCheckingAccountWhileCustomerIsCreated(Customer customer) {
-		Account account = new Account();
-		account.setAccountType(AccountType.CHECKING_ACCOUNT);
-		account.setBankCode("207");
-		String customerNumber = CustomerNumberGenerator.generate();
-		String additionalAccountNumber = AdditionalAccountNumberGenerator.generate();
-
-		account.setAdditionalAccountNumber(additionalAccountNumber);
-		account.setCreatedAt(new Date());
-		account.setCreatedBy("Zeynep Salman");
-
-		account.setCurrency(currencyService.findByCode("TRY"));
-		account.setIban(IbanGenerator.generate("207", account.getAccountNumber()));
-
-		Set<CustomerAddress> customerAddresses = customer.getCustomerAddresses();
-		if (customerAddresses.isEmpty()) {
-			return account;
-		}
-
-		customerAddresses.forEach(customerAddres -> {
-			String country = customerAddres.getCountry();
-			String city = customerAddres.getCity();
-			String district = customerAddres.getDistrict();
-			String neighborhood = customerAddres.getNeighborhood();
-
-			List<Branch> bankBranchsByDistrict = bankBranchService.findByDistrict(district);
-			List<Branch> bankBranchsByCity = bankBranchService.findByCity(city);
-			List<Branch> bankBranchByCountry = bankBranchService.findByCountry(country);
-			Branch bankBranchFromNeighborhood = bankBranchService.findByNeighborhood(neighborhood);
-
-			if (bankBranchByCountry != null && bankBranchsByCity != null && bankBranchsByDistrict != null
-					&& bankBranchFromNeighborhood != null) {
-				account.setBankBranch(bankBranchFromNeighborhood);
-			} 
-			else if (bankBranchByCountry != null && bankBranchsByCity != null && bankBranchsByDistrict != null) {
-				account.setBankBranch(bankBranchsByDistrict.get(0));
-			} 
-			else if (bankBranchByCountry != null && bankBranchsByCity != null) {
-				account.setBankBranch(bankBranchsByCity.get(0));
-			} 
-			else {
-				account.setBankBranch(bankBranchByCountry.get(0));
-			}
-		});
-		String branchCode = account.getBankBranch().getBranchCode();
-		String accountNumber = AccountNumberGenerator.generate(branchCode, customerNumber, additionalAccountNumber);
-		account.setAccountNumber(accountNumber);
-		return account;
 	}
 
 	@Override

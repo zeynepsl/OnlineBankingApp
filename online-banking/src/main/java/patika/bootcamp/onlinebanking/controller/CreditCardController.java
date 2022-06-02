@@ -77,23 +77,23 @@ public class CreditCardController {
 		return creditCardFacade.getAvailableLimit(creditCardId);
 	}
 	
-	@GetMapping("/customer/{customerId}")
+	@GetMapping("/periodExpenditures/{creditCardId}")
 	ResponseEntity<BigDecimal> getPeriodExpenditures(@PathVariable Long creditCardId){
 		return creditCardFacade.getPeriodExpenditures(creditCardId);
 	}
 	
-	@GetMapping("/customer/{customerId}")
+	@GetMapping("/amountOfDebt/{creditCardId}")
 	ResponseEntity<BigDecimal> getAmountOfDebt(@PathVariable Long creditCardId){
 		return creditCardFacade.getAmountOfDebt(creditCardId);
 	}
 	
 	@PatchMapping("/transfer")
-	ResponseEntity<?> moneyTransfer(@RequestBody CreditCard creditCard, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount){
+	ResponseEntity<?> moneyTransfer(@RequestBody CreditCard creditCard, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount) throws BaseException, IOException{
 		return creditCardFacade.moneyTransfer(creditCard, password, to, amount);
 	}
 	
 	@PatchMapping("/onlineTransfer")
-	ResponseEntity<?> onlineMoneyTransfer(@RequestBody CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto){
+	ResponseEntity<?> onlineMoneyTransfer(@RequestBody CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException{
 		return creditCardFacade.onlineMoneyTransfer(onlineTransferByCardRequestDto);
 	}
 	

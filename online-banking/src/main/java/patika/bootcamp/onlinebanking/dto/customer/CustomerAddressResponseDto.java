@@ -7,10 +7,9 @@ import patika.bootcamp.onlinebanking.model.enums.AdressType;
 @Getter
 @Setter
 public class CustomerAddressResponseDto {
-
+	private Long id;
 	private CustomerResponseDto customerResponseDto;
 	private AdressType addressType;
-	private String name;
 	private String country;
 	private String city;
 	private String district;

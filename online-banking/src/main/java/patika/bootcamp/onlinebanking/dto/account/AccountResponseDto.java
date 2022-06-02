@@ -23,7 +23,7 @@ public class AccountResponseDto {
 	private Date canBeActiveAt;
 	private AccountStatus accountStatus;
 	private AccountType accountType;
-	private CurrencyResponseDto currencyResponseDto;
-	private CustomerResponseDto customerResponseDto;
-	private BranchResponseDto bankBranchResponseDto;
+	private Long currencyId;
+	private Long customerId;
+	private Long branchId;
 }

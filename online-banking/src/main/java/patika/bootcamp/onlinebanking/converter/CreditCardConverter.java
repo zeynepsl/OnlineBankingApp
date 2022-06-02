@@ -22,7 +22,8 @@ import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 @RequiredArgsConstructor
 public class CreditCardConverter {
 	
-	private BranchConverter branchConverter;
+	private final BranchConverter branchConverter;
+	private final CustomerConverter customerConverter;
 
 	public CreditCard toCreditCard(CreateCreditCardRequestDto createCreditCardRequestDto) {
 		CreditCard creditCard = new CreditCard();
@@ -60,7 +61,7 @@ public class CreditCardConverter {
 		creditCardResponseDto.setCardLimit(creditCard.getCardLimit());
 		creditCardResponseDto.setCardNumber(creditCard.getCardNumber());
 		
-		CustomerResponseDto customerResponseDto = CustomerConverter.toCustomerResponseDto(creditCard.getCustomer());
+		CustomerResponseDto customerResponseDto = customerConverter.toCustomerResponseDto(creditCard.getCustomer());
 		creditCardResponseDto.setCustomerResponseDto(customerResponseDto);
 		
 		creditCardResponseDto.setCvv(creditCard.getCvv());

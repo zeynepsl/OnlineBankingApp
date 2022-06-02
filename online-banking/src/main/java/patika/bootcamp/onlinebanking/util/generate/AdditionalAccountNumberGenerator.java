@@ -8,7 +8,7 @@ public final class AdditionalAccountNumberGenerator {
 	
 	public static String generate() {
 		Random random = new Random();
-		String additionalAccountNumber = String.format("%04d%n", random.nextInt(10000));
+		String additionalAccountNumber = String.format("%04d", random.nextInt(9999));
 		return additionalAccountNumber;
 	}
 }

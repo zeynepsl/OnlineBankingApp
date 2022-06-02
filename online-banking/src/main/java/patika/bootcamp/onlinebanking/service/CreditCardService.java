@@ -30,6 +30,6 @@ public interface CreditCardService extends BaseService<CreditCard>{
 	void payDebtFromAccount(Long accountId);//hesaptan borç öde
 	
 	void payDebtGivenFromAccount(CreditCard creditCard, BigDecimal amountOfDebt) throws BaseException, IOException;
-
 	
+	void basePaymentDebt(CreditCard creditCard, BigDecimal amountOfDebt) throws BaseException, IOException;
 }

@@ -25,6 +25,8 @@ public class BaseControllerAdvice {
 		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 	
+	//javax.validation.ConstraintViolationException: 
+	
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> onMethodArgumentNotValidException(MethodArgumentNotValidException ex){
@@ -43,11 +45,11 @@ public class BaseControllerAdvice {
 		return ResponseEntity.badRequest().body(ex.getLocalizedMessage());
 	}
 	
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	/*@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(NullPointerException.class)
 	public ResponseEntity<Object> onNullPointerExceptionHandled(NullPointerException e) {
 		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, "NullPointerException"));
-	}
+	}*/
 
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(InternalServerError.class)
@@ -74,11 +76,11 @@ public class BaseControllerAdvice {
 		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, "ConstraintViolationException"));
 	}
 	
-	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	/*@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> onIllegalArgumentException(IllegalArgumentException e){
 		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, "IllegalArgumentException"));
-	}
+	}*/
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(RestClientException.class)

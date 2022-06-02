@@ -43,10 +43,11 @@ public class Customer extends BaseExtendedModel{
 	private boolean isActive = true;
 	private boolean isConfirmedByAdmin = false;
 	
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "customer")
 	private Set<CustomerAddress> customerAddresses = new HashSet<>();
 	
-	@OneToMany(mappedBy = "customer", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	//, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
 	
 	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)

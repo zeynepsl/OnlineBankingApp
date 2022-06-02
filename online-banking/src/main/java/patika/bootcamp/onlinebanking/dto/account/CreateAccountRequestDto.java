@@ -12,5 +12,5 @@ public class CreateAccountRequestDto {
 	private AccountType accountType;
 	private Long customerId;
 	private Long currencyId;
-	private Long bankBranchId;
+	private Long branchId;
 }

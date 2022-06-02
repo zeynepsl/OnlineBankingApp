@@ -10,6 +10,8 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Cascade;
+
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
@@ -39,9 +41,9 @@ public class Account extends BaseExtendedModel{
 	private String bankCode;
 	
 	//private String branchCode;
-	@ManyToOne
-	@JoinColumn(name = "bank_branch_id")
-	private Branch bankBranch;
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "branch_id")
+	private Branch branch;
 	
 	//@Pattern(regexp = "")
 	private String iban;
@@ -70,7 +72,7 @@ public class Account extends BaseExtendedModel{
 	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
 	private BankCard bankCard;
 	
-	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Transaction> transactions = new HashSet<>();
 	
 	/*@Transient
