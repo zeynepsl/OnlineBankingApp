@@ -2,8 +2,6 @@ package patika.bootcamp.onlinebanking.service.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,8 +40,7 @@ public class CustomerFacadeImpl implements CustomerFacade{
 	}
 
 	@Override
-	public ResponseEntity<CustomerResponseDto> update(CreateCustomerRequestDto createCustomerRequestDto) {
-		Customer customer = customerConverter.toCustomer(createCustomerRequestDto);
+	public ResponseEntity<CustomerResponseDto> update(Customer customer) {
 		customer = customerService.update(customer);
 		return ResponseEntity.ok(customerConverter.toCustomerResponseDto(customer));
 	}

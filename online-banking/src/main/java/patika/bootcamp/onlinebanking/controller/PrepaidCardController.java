@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.card.CreatePrepaidCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.PrepaidCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 import patika.bootcamp.onlinebanking.service.facade.CreditCardFacade;
 import patika.bootcamp.onlinebanking.service.facade.PrepaidCardFacade;
 
@@ -37,8 +38,8 @@ public class PrepaidCardController {
 	}
 	
 	@PutMapping("/")
-	ResponseEntity<PrepaidCardResponseDto> update(@RequestBody CreatePrepaidCardRequestDto createPrepaidCardRequestDto){
-		return prepaidCardFacade.update(createPrepaidCardRequestDto);
+	ResponseEntity<PrepaidCardResponseDto> update(@RequestBody PrepaidCard prepaidCard){
+		return prepaidCardFacade.update(prepaidCard);
 	}
 	
 	@DeleteMapping("/{id}")

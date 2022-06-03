@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CreateAccountRequestDto;
+import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.service.facade.AccountFacade;
@@ -33,8 +34,8 @@ public class AccountController {
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<AccountResponseDto> update(@RequestBody CreateAccountRequestDto createAccountRequestDto){
-		return accountFacade.update(createAccountRequestDto);
+	public ResponseEntity<AccountResponseDto> update(@RequestBody Account account){
+		return accountFacade.update(account);
 	}
 	
 	@DeleteMapping("/{id}")

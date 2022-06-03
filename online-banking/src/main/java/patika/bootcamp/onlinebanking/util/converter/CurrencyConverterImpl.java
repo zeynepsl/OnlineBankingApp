@@ -1,19 +1,43 @@
 package patika.bootcamp.onlinebanking.util.converter;
 
 import java.io.IOException;
+import java.net.URI;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 @Service
+@RequiredArgsConstructor
 public class CurrencyConverterImpl implements CurrencyConverter {
 	//private static final String URL = "https://api.apilayer.com/exchangerates_data/latest?symbols={symbols}&base={base}";
+	
+	private static final String URL = "https://api.exchangeratesapi.io/v1/latest?access_key={API_KEY}&base ={base}&symbols={symbol1},{sysmbol2}";
+		//GBP,JPY,EUR
 	private final String API_KEY = "pUw0APFAvkALYUYjIhLkjLgLYLqmUKyx";
+	
 	
 	/*private final String apiKey = "32b956a6ca1086c0de29d387f53565cd";
 	private final RestTemplate restTemplate;
 	private final ObjectMapper objectMapper;*/
+	
+	private final RestTemplate restTemplate;
+	private final ObjectMapper objectMapper;
+	
+	@Override
+	public String deneme(String from, String to) {
+		URI url = new UriTemplate(URL).expand(API_KEY, from, to, "GBP");
+		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        return response.getBody();
+	}
 
 	@Override
 	public Double converter(String to, String from) throws IOException {
@@ -31,9 +55,26 @@ public class CurrencyConverterImpl implements CurrencyConverter {
 				 .build();
 		Response response = client.newCall(request).execute();
 		String result = response.body().string();
+		
+		System.out.println(result);
 
 		return parseCurrencyFromString(result);
 	}
+	
+	/*
+	 gelen yanit:
+	 
+	 {
+    "success": true,
+    "timestamp": 1654255204,
+    "base": "USD",
+    "date": "2022-06-03",
+    "rates": {
+        "TRY": 16.511475,
+        "USD": 1
+         }
+    }
+	 */
 	
 	/*public void deneme() {
 		URI url = new UriTemplate(FORECAST_URL).expand(city, country, apiKey);
@@ -62,5 +103,27 @@ public class CurrencyConverterImpl implements CurrencyConverter {
 		Double currency = Double.valueOf(pureBase);
 		return currency;
 	}
+	
+	/*
+
+0.  deger:{
+    "success"
+1.  deger: true,
+    "timestamp"
+2.  deger: 1654255204,
+    "base"
+3.  deger: "USD",
+    "date"
+4.  deger: "2022-06-03",
+    "rates"
+5.  deger: {
+        "TRY"
+6.  deger: 16.511475,
+        "USD"
+7.  deger: 1
+    }
+}
+
+*/
 
 }

@@ -29,8 +29,8 @@ public class BankCardController {
 	}
 	
 	@PutMapping("/")
-	ResponseEntity<BankCardResponseDto> update(@RequestBody CreateBankCardRequestDto createBankCardRequestDto){
-		return bankCardFacade.update(createBankCardRequestDto);
+	ResponseEntity<BankCardResponseDto> update(@RequestBody BankCard bankCard){
+		return bankCardFacade.update(bankCard);
 	}
 	
 	@DeleteMapping("/{id}")

@@ -28,17 +28,8 @@ public class CreditCardConverter {
 	public CreditCard toCreditCard(CreateCreditCardRequestDto createCreditCardRequestDto) {
 		CreditCard creditCard = new CreditCard();
 		
-		Branch branch = new Branch();
-		branch.setId(createCreditCardRequestDto.getBankBranchId());
-		creditCard.setBankBranch(branch);
-		
-		Customer customer = new Customer();
-		customer.setId(createCreditCardRequestDto.getCustomerId());
-		creditCard.setCustomer(customer);
-		
-		//o subedeki tl hesabi
+		creditCard.setCardLimit(createCreditCardRequestDto.getCardLimit());
 		creditCard.setPassword(createCreditCardRequestDto.getPassword());
-		
 		creditCard.setCreatedAt(new Date());
 		creditCard.setCreatedBy("Zeynep Salman");
 		creditCard.setUpdatedAt(new Date());

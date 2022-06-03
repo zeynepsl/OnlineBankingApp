@@ -37,8 +37,7 @@ public class CurrencyFacadeImpl implements CurrencyFacade{
 	}
 
 	@Override
-	public ResponseEntity<CurrencyResponseDto> update(CreateCurrencyRequestDto createCurrencyRequestDto) {
-		Currency currency = currencyConverter.toCurrency(createCurrencyRequestDto);
+	public ResponseEntity<CurrencyResponseDto> update(Currency currency) {
 		currency = currencyService.update(currency);
 		return ResponseEntity.ok(currencyConverter.toCurrencyResponseDto(currency));
 	}

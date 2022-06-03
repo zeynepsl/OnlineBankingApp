@@ -3,6 +3,7 @@ package patika.bootcamp.onlinebanking.service.facade.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,20 +14,44 @@ import patika.bootcamp.onlinebanking.converter.PrepaidCardConverter;
 import patika.bootcamp.onlinebanking.dto.card.CreatePrepaidCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.PrepaidCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.model.enums.AccountType;
+import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.PrepaidCardService;
 import patika.bootcamp.onlinebanking.service.facade.PrepaidCardFacade;
+import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 
 @Service
 @RequiredArgsConstructor
-public class PrepaidCardFacadeImpl implements PrepaidCardFacade{
+public class PrepaidCardFacadeImpl implements PrepaidCardFacade {
 	private final PrepaidCardService prepaidCardService;
+	private final CustomerService customerService;
 	private final PrepaidCardConverter prepaidCardConverter;
 
 	@Override
 	public ResponseEntity<PrepaidCardResponseDto> create(CreatePrepaidCardRequestDto createPrepaidCardRequestDto)
 			throws BaseException {
 		PrepaidCard prepaidCard = prepaidCardConverter.toPrepaidCard(createPrepaidCardRequestDto);
+
+		/*TO DO:
+		 * burada customerService e bagli olmamin sebebi Customer nesnesinin fieldlarina ihtiyacim olmasi.
+		 * converter da sunu yapiyordum:
+		 * Customer c = new Customer();
+		 * c.setId(createPrepaidCardRequestDto.getCustomerId())
+		 * prepaidCard.setCustomer(c);
+		 * 
+		 * bu yontem gayet iyi calisiyor fakat customer i sadece id si ile getiriyor, fakat benim customer in icindeki diger alanlara da ihtiyacim var.
+		 * FETCH_TYPE=EAGER ile de cozemedim, arastir*/
+		Customer customer = customerService.get(createPrepaidCardRequestDto.getCustomerId());
+		prepaidCard.setCustomer(customer);
+		
+		List<Account> accounts = customer.getAccounts().stream().filter(
+				a -> a.getAccountType() == AccountType.CHECKING_ACCOUNT && a.getCurrency().getCode().equals("TRY"))
+				.collect(Collectors.toList());
+		prepaidCard.setCardNumber(CardNumberGenerator.generate(accounts.get(0).getBranch().getBranchCode(), accounts.get(0).getAccountNumber()));
+		
 		prepaidCard = prepaidCardService.create(prepaidCard);
 		return new ResponseEntity<>(prepaidCardConverter.toPrepaidCardResponseDto(prepaidCard), HttpStatus.CREATED);
 	}
@@ -38,9 +63,8 @@ public class PrepaidCardFacadeImpl implements PrepaidCardFacade{
 	}
 
 	@Override
-	public ResponseEntity<PrepaidCardResponseDto> update(CreatePrepaidCardRequestDto createPrepaidCardRequestDto) {
-		PrepaidCard prepaidCard = prepaidCardConverter.toPrepaidCard(createPrepaidCardRequestDto);
-		prepaidCard = prepaidCardService.create(prepaidCard);
+	public ResponseEntity<PrepaidCardResponseDto> update(PrepaidCard prepaidCard) {
+		prepaidCard = prepaidCardService.update(prepaidCard);
 		return ResponseEntity.ok(prepaidCardConverter.toPrepaidCardResponseDto(prepaidCard));
 	}
 

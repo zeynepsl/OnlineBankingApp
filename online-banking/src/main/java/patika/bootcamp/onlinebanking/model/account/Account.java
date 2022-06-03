@@ -34,7 +34,7 @@ public class Account extends BaseExtendedModel{
 	
 	@PositiveOrZero
 	private BigDecimal lockedBalance = BigDecimal.ZERO;
-	private BigDecimal accountBalance = BigDecimal.ZERO;
+	private BigDecimal accountBalance = BigDecimal.valueOf(100);
 	
 	@Column(length = 5)
 	@Size(min = 5, max = 5)
@@ -72,7 +72,7 @@ public class Account extends BaseExtendedModel{
 	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
 	private BankCard bankCard;
 	
-	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL)
 	private Set<Transaction> transactions = new HashSet<>();
 	
 	/*@Transient

@@ -3,7 +3,10 @@ package patika.bootcamp.onlinebanking.converter.transaction;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import patika.bootcamp.onlinebanking.converter.AccountConverter;
 import patika.bootcamp.onlinebanking.converter.CurrencyConverter;
+import patika.bootcamp.onlinebanking.converter.CustomerConverter;
+import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionRequestDto;
@@ -18,8 +21,8 @@ import patika.bootcamp.onlinebanking.service.AccountService;
 @Component
 @RequiredArgsConstructor
 public class TransactionConverter {
-
-	private final AccountService accountService;
+	
+	private final AccountConverter accountConverter;
 	private final CurrencyConverter currencyConverter;
 	
 	public Transaction toTransaction(CreateTransactionRequestDto createTransactionRequestDto) {
@@ -40,12 +43,16 @@ public class TransactionConverter {
 
 	public TransactionResponseDto toTransactionResponseDto(Transaction transaction) {
 		TransactionResponseDto transactionResponseDto = new TransactionResponseDto();
+		transactionResponseDto.setId(transaction.getId());
 		transactionResponseDto.setAmount(transaction.getAmount());
 		transactionResponseDto.setModeOfPayment(transaction.getModeOfPayment());
 		transactionResponseDto.setRecipientIbanNo(transaction.getRecipientIbanNo());
 		
 		CurrencyResponseDto currencyResponseDto = currencyConverter.toCurrencyResponseDto(transaction.getSenderCurrency());
-		transactionResponseDto.setSenderCurrencyResponseDto(currencyResponseDto);
+		transactionResponseDto.setSenderCurrency(currencyResponseDto);
+		
+		AccountResponseDto accountResponseDto = accountConverter.toAccountResponseDto(transaction.getSenderAccount());
+		transactionResponseDto.setSenderAccount(accountResponseDto);
 		
 		transactionResponseDto.setSenderIbanNo(transaction.getSenderIbanNo());
 		transactionResponseDto.setTransactionDate(transaction.getTransactionDate());

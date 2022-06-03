@@ -33,8 +33,8 @@ public class CreditCardController {
 	}
 	
 	@PutMapping("/")
-	ResponseEntity<CreditCardResponseDto> update(CreateCreditCardRequestDto createCreditCardRequestDto){
-		return creditCardFacade.update(createCreditCardRequestDto);
+	ResponseEntity<CreditCardResponseDto> update(@RequestBody CreditCard creditCard){
+		return creditCardFacade.update(creditCard);
 	}
 	
 	@DeleteMapping("/{id}")

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchRequestDto;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.service.facade.BranchFacade;
 
 @RestController
@@ -22,8 +23,8 @@ public class BranchController {
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<BranchResponseDto> update(@RequestBody CreateBranchRequestDto createBankBranchRequestDto){
-		return bankBranchFacade.update(createBankBranchRequestDto);
+	public ResponseEntity<BranchResponseDto> update(@RequestBody Branch branch){
+		return bankBranchFacade.update(branch);
 	}
 	
 	@DeleteMapping("/{id}")

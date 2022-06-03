@@ -40,10 +40,8 @@ public class CustomerAddressFacadeImpl implements CustomerAddressFacade{
 	}
 
 	@Override
-	public ResponseEntity<CustomerAddressResponseDto> update(
-			CreateCustomerAddressRequestDto createCustomerAddressRequestDto) {
-		CustomerAddress customerAddress = customerAddressConverter.toCustomerAddress(createCustomerAddressRequestDto);
-		customerAddressService.create(customerAddress);
+	public ResponseEntity<CustomerAddressResponseDto> update(CustomerAddress customerAddress) {
+		customerAddress = customerAddressService.update(customerAddress);
 		return ResponseEntity.ok(customerAddressConverter.toCustomerAddressResponseDto(customerAddress));
 	}
 

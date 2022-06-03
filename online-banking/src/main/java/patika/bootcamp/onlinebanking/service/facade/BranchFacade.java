@@ -7,10 +7,11 @@ import org.springframework.http.ResponseEntity;
 import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
 
 public interface BranchFacade {
 	ResponseEntity<BranchResponseDto> create(CreateBranchRequestDto createBankBranchRequestDto) throws BaseException;
-	ResponseEntity<BranchResponseDto> update(CreateBranchRequestDto createBankBranchRequestDto);
+	ResponseEntity<BranchResponseDto> update(Branch branch);
 	ResponseEntity<?> delete(Long id);
 	ResponseEntity<BranchResponseDto> get(Long id);
 	

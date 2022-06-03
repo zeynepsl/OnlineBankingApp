@@ -41,10 +41,9 @@ public class BranchFacadeImpl implements BranchFacade{
 	}
 
 	@Override
-	public ResponseEntity<BranchResponseDto> update(CreateBranchRequestDto createBankBranchRequestDto) {
-		Branch bankBranch = bankBranchConverter.toBankBranch(createBankBranchRequestDto);
-		bankBranch = bankBranchService.update(bankBranch);
-		return ResponseEntity.ok(bankBranchConverter.toBankBranchResponseDto(bankBranch));
+	public ResponseEntity<BranchResponseDto> update(Branch branch) {
+		branch = bankBranchService.update(branch);
+		return ResponseEntity.ok(bankBranchConverter.toBankBranchResponseDto(branch));
 	}
 
 	@Override

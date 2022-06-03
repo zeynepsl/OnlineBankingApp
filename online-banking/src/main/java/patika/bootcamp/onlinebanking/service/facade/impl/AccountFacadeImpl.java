@@ -90,9 +90,8 @@ public class AccountFacadeImpl implements AccountFacade{
 	}
 
 	@Override
-	public ResponseEntity<AccountResponseDto> update(CreateAccountRequestDto createAccountRequestDto) {
-		Account account = accountConverter.toAccount(createAccountRequestDto);
-		accountService.update(account);
+	public ResponseEntity<AccountResponseDto> update(Account account) {
+		account = accountService.update(account);
 		return ResponseEntity.ok(accountConverter.toAccountResponseDto(account));
 	}
 

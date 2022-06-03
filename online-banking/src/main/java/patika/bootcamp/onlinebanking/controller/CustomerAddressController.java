@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerAddressRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerAddressResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.customer.CustomerAddress;
 import patika.bootcamp.onlinebanking.model.enums.AdressType;
 import patika.bootcamp.onlinebanking.service.facade.CustomerAddressFacade;
 
@@ -36,8 +37,8 @@ public class CustomerAddressController {
 	}
 	
 	@PutMapping("/")
-	ResponseEntity<CustomerAddressResponseDto> update(@RequestBody CreateCustomerAddressRequestDto createCustomerAddressRequestDto){
-		return customerAddressFacade.update(createCustomerAddressRequestDto);
+	ResponseEntity<CustomerAddressResponseDto> update(@RequestBody CustomerAddress customerAddress){
+		return customerAddressFacade.update(customerAddress);
 	}
 	
 	@DeleteMapping("/{id}")

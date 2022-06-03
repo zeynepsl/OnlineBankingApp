@@ -21,4 +21,9 @@ public class CuurencyConverterController {
 	public ResponseEntity<?> get(@PathVariable String rate, @PathVariable String base) throws IOException{
 		return ResponseEntity.ok(currencyConverter.converter(rate, base));
 	}
+	
+	@GetMapping("/deneme/{to}/{from}")
+	public ResponseEntity<?> getdeneme(@PathVariable String to, @PathVariable String from) throws IOException{
+		return ResponseEntity.ok(currencyConverter.deneme(from, to));
+	}
 }

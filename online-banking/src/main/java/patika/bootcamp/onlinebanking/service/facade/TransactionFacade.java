@@ -13,9 +13,9 @@ import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
 public interface TransactionFacade {
-	ResponseEntity<?> monenyTransaction(CreateTransactionRequestDto createTransactionRequestDto) throws IOException;
-	ResponseEntity<?> moneyTransactionToAccount(CreateTransactionToAccountRequestDto transactionToAccountRequestDto) throws IOException;
-	ResponseEntity<?> moneyTransactionToCard(CreateTransactionToCardRequestDto transactionToCardRequestDto) throws IOException;
+	ResponseEntity<TransactionResponseDto> monenyTransaction(CreateTransactionRequestDto createTransactionRequestDto) throws IOException;
+	ResponseEntity<TransactionResponseDto> moneyTransactionToAccount(CreateTransactionToAccountRequestDto transactionToAccountRequestDto) throws IOException;
+	ResponseEntity<TransactionResponseDto> moneyTransactionToCard(CreateTransactionToCardRequestDto transactionToCardRequestDto) throws IOException;
 	
 	ResponseEntity<List<TransactionResponseDto>> findByTransactionDate(Date transacionDate);
 	ResponseEntity<List<TransactionResponseDto>> findByModeOfPayment(ModeOfPayment modeOfPayment);

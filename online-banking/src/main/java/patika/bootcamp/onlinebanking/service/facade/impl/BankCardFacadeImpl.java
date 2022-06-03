@@ -27,7 +27,7 @@ public class BankCardFacadeImpl implements BankCardFacade{
 	public ResponseEntity<BankCardResponseDto> create(CreateBankCardRequestDto createBankCardRequestDto)
 			throws BaseException {
 		BankCard bankCard = bankCardConverter.toBankCard(createBankCardRequestDto);
-		bankCardService.create(bankCard);
+		bankCard = bankCardService.create(bankCard);
 		return new ResponseEntity<>(bankCardConverter.toBankCardResponseDto(bankCard), HttpStatus.CREATED);
 	}
 
@@ -38,9 +38,8 @@ public class BankCardFacadeImpl implements BankCardFacade{
 	}
 
 	@Override
-	public ResponseEntity<BankCardResponseDto> update(CreateBankCardRequestDto createBankCardRequestDto) {
-		BankCard bankCard = bankCardConverter.toBankCard(createBankCardRequestDto);
-		bankCardService.create(bankCard);
+	public ResponseEntity<BankCardResponseDto> update(BankCard bankCard) {
+		bankCard = bankCardService.update(bankCard);
 		return ResponseEntity.ok(bankCardConverter.toBankCardResponseDto(bankCard));
 	}
 

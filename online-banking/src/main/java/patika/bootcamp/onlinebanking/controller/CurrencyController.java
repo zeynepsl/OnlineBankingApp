@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
 import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
+import patika.bootcamp.onlinebanking.model.account.Currency;
 import patika.bootcamp.onlinebanking.service.facade.CurrencyFacade;
 
 @RestController
@@ -24,8 +25,8 @@ public class CurrencyController {
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<CurrencyResponseDto> update(@RequestBody CreateCurrencyRequestDto createCurrencyRequestDto){
-		return currencyFacade.update(createCurrencyRequestDto);
+	public ResponseEntity<CurrencyResponseDto> update(@RequestBody Currency currency){
+		return currencyFacade.update(currency);
 	}
 	
 	@DeleteMapping("/{id}")

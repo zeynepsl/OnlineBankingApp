@@ -15,5 +15,5 @@ public class CreateOnlineTransferByCardRequestDto {
 	private BigDecimal amount;
 	private String cvv;
 	private Date dueDate;
-	private String to;
+	private String toAccountNumber;
 }

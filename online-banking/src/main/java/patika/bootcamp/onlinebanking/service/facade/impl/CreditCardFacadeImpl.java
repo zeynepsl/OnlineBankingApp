@@ -18,9 +18,13 @@ import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestD
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
+import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.service.AccountService;
+import patika.bootcamp.onlinebanking.service.BranchService;
 import patika.bootcamp.onlinebanking.service.CreditCardService;
+import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.facade.CreditCardFacade;
 import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 
@@ -28,7 +32,9 @@ import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 @RequiredArgsConstructor
 public class CreditCardFacadeImpl implements CreditCardFacade {
 	private final AccountService accountService;
+	private final CustomerService customerService;
 	private final CreditCardService creditCardService;
+	private final BranchService branchService;
 	private final CreditCardConverter creditCardConverter;
 
 	@Override
@@ -36,9 +42,14 @@ public class CreditCardFacadeImpl implements CreditCardFacade {
 			throws BaseException {
 		CreditCard creditCard = creditCardConverter.toCreditCard(createCreditCardRequestDto);
 
-		// o subedeki tl hesabi (bu proje tasriminda 1 sube de 1 tl hesabi acilabilir)
-		String branchCode = creditCard.getBankBranch().getBranchCode();
-		List<Account> accounts = accountService.findByBranchCodeAndCustomerId(branchCode, creditCard.getCustomer().getId());
+		Customer customer = customerService.get(createCreditCardRequestDto.getCustomerId());
+		creditCard.setCustomer(customer);
+		
+		Branch branch = branchService.get(createCreditCardRequestDto.getBankBranchId());
+		creditCard.setBankBranch(branch);
+		
+		String branchCode = branch.getBranchCode();
+		List<Account> accounts = accountService.findByBranchCodeAndCustomerId(branchCode, customer.getId());
 		List<Account> tryAccounts = accounts
 				.stream()
 				.filter(a -> a.getCurrency().getCode().equals("TRY"))
@@ -56,8 +67,7 @@ public class CreditCardFacadeImpl implements CreditCardFacade {
 	}
 
 	@Override
-	public ResponseEntity<CreditCardResponseDto> update(CreateCreditCardRequestDto createCreditCardRequestDto) {
-		CreditCard creditCard = creditCardConverter.toCreditCard(createCreditCardRequestDto);
+	public ResponseEntity<CreditCardResponseDto> update(CreditCard creditCard) {
 		creditCard = creditCardService.update(creditCard);
 		return ResponseEntity.ok(creditCardConverter.toCreditCardResponseDto(creditCard));
 	}

@@ -14,7 +14,7 @@ public interface BankCardFacade {
 	
 	ResponseEntity<BankCardResponseDto> create(CreateBankCardRequestDto createBankCardRequestDto) throws BaseException;
 	ResponseEntity<BankCardResponseDto> get(Long id) throws BaseException;
-	ResponseEntity<BankCardResponseDto> update(CreateBankCardRequestDto createBankCardRequestDto);
+	ResponseEntity<BankCardResponseDto> update(BankCard bankCard);
 	ResponseEntity<?> delete(Long id) throws BaseException;
 	ResponseEntity<List<BankCardResponseDto>> getAll();
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.facade.CustomerFacade;
 
@@ -36,8 +37,8 @@ public class CustomerController {
 	}
 	
 	@PutMapping("/")
-	public ResponseEntity<?> update(@RequestBody CreateCustomerRequestDto createCustomerRequestDto){
-		return customerFacade.update(createCustomerRequestDto);
+	public ResponseEntity<?> update(@RequestBody Customer customer){
+		return customerFacade.update(customer);
 	}
 	
 	@GetMapping("/")

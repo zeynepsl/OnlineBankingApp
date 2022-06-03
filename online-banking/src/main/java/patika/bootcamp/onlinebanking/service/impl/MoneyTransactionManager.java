@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.TransactionServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.Account;
@@ -23,6 +24,7 @@ import patika.bootcamp.onlinebanking.util.converter.CurrencyConverter;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MoneyTransactionManager implements TransactionService {
 
 	private final TransactionRepository transactionRepository;
@@ -32,33 +34,41 @@ public class MoneyTransactionManager implements TransactionService {
 
 	@Override
 	@Transactional(isolation = Isolation.READ_COMMITTED)
-	public void monenyTransaction(Transaction transaction) throws IOException {
+	public Transaction monenyTransaction(Transaction transaction) throws IOException {
 		Account from = accountService.findByIban(transaction.getSenderIbanNo());
-		Account to = accountService.findByAccountNumber(transaction.getRecipientIbanNo());
-
+		Account to = accountService.findByIban(transaction.getRecipientIbanNo());
+		log.info("1. gonderici hesabi: {}", from.getIban());
 		validateAccountType(from.getAccountType());
-
+		log.info("2.");
 		BigDecimal fromBalance = from.getAccountBalance();
 		BigDecimal toBalance = to.getAccountBalance();
-		
+		log.info("gonderren toplam bakiye: {}", fromBalance);
+		log.info("alici toplam bakiye: {}", toBalance);
 		boolean useAllBalance = transaction.getUseAllBalance();
 		if (useAllBalance) {
 			deductFromAccount(from, fromBalance);
 		} else {
 			deductFromAccount(from, transaction.getAmount());
 		}
+		log.info("4.");
 
-		BigDecimal lockedBalance = from.getLockedBalance();
+		BigDecimal transactionAmount = from.getLockedBalance();//locked balance artik transfer yapacagimiz miktar oldu
 		
+		log.info("----------------------------bakiye kontrol yapilacak----------------------------");
+		validateBalance(fromBalance, transactionAmount);
+		log.info("locked balance: {}", transactionAmount);
 		//para birimi donustor
 		String fromCurrency = from.getCurrency().getCode();
 		String toCurrency = to.getCurrency().getCode();
+			
+		BigDecimal newTransactionAmount = transactionAmount;
+		if( currenciesAreNotEqual(fromCurrency, toCurrency) ) {
+			log.info("hesap tipleri farkliymis converter a gecilecek......");
+			newTransactionAmount = calculateAmountWithToCurrency(transactionAmount, toCurrency, fromCurrency);
+		}
 		
-		fromBalance = validateCurrency(fromBalance, fromCurrency, toCurrency);
-		validateBalance(fromBalance, lockedBalance);
-
-		from.setAccountBalance(fromBalance.subtract(lockedBalance));
-		to.setAccountBalance(toBalance.add(lockedBalance));
+		from.setAccountBalance(fromBalance.subtract(transactionAmount));
+		to.setAccountBalance(toBalance.add(newTransactionAmount));
 		from.setLockedBalance(BigDecimal.ZERO);
 
 		accountService.update(to);
@@ -66,27 +76,44 @@ public class MoneyTransactionManager implements TransactionService {
 		
 		transaction.setTransactionDate(new Date());
 		transaction.setSenderAccount(from);
-		create(transaction);
+		transaction = create(transaction);
+		return transaction;
 	}
 
-	public BigDecimal validateCurrency(BigDecimal fromBalance, String fromCurrency, String toCurrency) throws IOException {
+	private BigDecimal calculateAmountWithToCurrency(BigDecimal transactionAmount, String toCurrency, String fromCurrency) throws IOException {
+		log.info("farkli cikan para birimleri arasinda donustürme yapilacak");
+		log.info("tutar: (donusumden once) {}",transactionAmount);
+		Double currency = currencyConverter.converter(toCurrency, fromCurrency);
+		transactionAmount = transactionAmount.multiply(BigDecimal.valueOf(currency));
+		log.info("tutar: (donusumden sonra) {}",transactionAmount);
+		return transactionAmount;
+	}
+
+	private boolean currenciesAreNotEqual(String fromCurrency, String toCurrency) {
+		log.info("para birimleri kontrol");
 		if( !(fromCurrency.equals(toCurrency)) ) {
-			Double currency = currencyConverter.converter(toCurrency, fromCurrency);
-			fromBalance = fromBalance.multiply(BigDecimal.valueOf(currency));
+			return true;
 		}
-		return fromBalance;
+		return false;
 	}
 
 	@Override
 	public void validateAccountType(AccountType fromAccountType) {
+		log.info("hesap tipi kontrol...");
+		log.info("gonderici hesap tipi: {}", fromAccountType);
 		if (fromAccountType == AccountType.SAVINGS_ACCOUNT) {
 			throw new TransactionServiceOperationException.UnSupportedAccountType(
 					"Money transfer cannot be made from savings account.");
 		}
-	}
+	} 
 
 	@Override
 	public void validateBalance(BigDecimal accountBalance, BigDecimal amount) throws BaseException {
+		log.info("bakiye kontrol...");
+		log.info("bakiye: {}", accountBalance);
+		log.info("tutar {}", amount);
+		
+		//accountBalance.compareTo(amount) != 0 ??
 		if (accountBalance.compareTo(amount) < 0) {
 			throw new TransactionServiceOperationException.InsufficientBalance(
 					"insufficient balance in your bank account");
@@ -96,10 +123,13 @@ public class MoneyTransactionManager implements TransactionService {
 	// isolation read commited
 	@Override
 	public void deductFromAccount(Account from, BigDecimal amount) {
+		log.info("daha transfer yapilmadi, lockedBalance i guncelleyecegiz");
 		BigDecimal lockedBalance = from.getLockedBalance();
-		lockedBalance.add(amount);
+		log.info("guncellenmeden once lockedbalance: {}", lockedBalance);
+		lockedBalance = lockedBalance.add(amount);
 		from.setLockedBalance(lockedBalance);
 		accountService.update(from);
+		log.info("guncellenmeden sonra lockedbalance: {}", lockedBalance);
 	}
 	
 	@Override

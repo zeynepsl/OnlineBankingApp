@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.service.impl;
+ package patika.bootcamp.onlinebanking.service.impl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -57,6 +57,8 @@ public class CreditCardServiceImpl implements CreditCardService {
 		if (creditCard.getAmountOfDebt().compareTo(BigDecimal.ZERO) > 0) {
 			throw new CreditCardServiceOperationException.CreditCardCannotDeleted("a card with debt cannot be deleted");
 		}
+		creditCard = creditCard.removeBankBranch(creditCard.getBankBranch());
+		creditCard = creditCard.removeCustomer(creditCard.getCustomer());
 		creditCardRepository.delete(creditCard);
 	}
 
@@ -123,6 +125,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
 		creditCard.setAvailableLimit(limit.subtract(newPeriodExpenditures));
 		creditCard.setAmountOfDebt(creditCard.getAmountOfDebt().add(amount));
+		creditCard.setPeriodExpenditures(newPeriodExpenditures);
 		update(creditCard);
 	}
 	
@@ -165,7 +168,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 		BigDecimal amount = onlineTransferByCardRequestDto.getAmount();
 		String cvv = onlineTransferByCardRequestDto.getCvv();
 		Date dueDate = onlineTransferByCardRequestDto.getDueDate();
-		String to = onlineTransferByCardRequestDto.getTo();
+		String to = onlineTransferByCardRequestDto.getToAccountNumber();
 
 		CreditCard creditCard = findByCardNumber(cardNo);
 

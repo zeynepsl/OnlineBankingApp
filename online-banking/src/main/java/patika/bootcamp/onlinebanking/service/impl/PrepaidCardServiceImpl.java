@@ -11,6 +11,7 @@ import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.PrepaidCardServiceOperationException;
 import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 import patika.bootcamp.onlinebanking.repository.card.PrepaidCardRepository;
+import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.PrepaidCardService;
 
 @Service
@@ -18,7 +19,6 @@ import patika.bootcamp.onlinebanking.service.PrepaidCardService;
 @Transactional
 public class PrepaidCardServiceImpl implements PrepaidCardService{
 	private final PrepaidCardRepository prepaidCardRepository;
-
 	@Override
 	public PrepaidCard create(PrepaidCard prepaidCard) throws BaseException {
 		prepaidCard = prepaidCardRepository.save(prepaidCard);
@@ -41,6 +41,7 @@ public class PrepaidCardServiceImpl implements PrepaidCardService{
 	@Override
 	public void delete(Long id) throws BaseException {
 		PrepaidCard prepaidCard = get(id);
+		prepaidCard.removeCustomer(prepaidCard.getCustomer());
 		prepaidCardRepository.delete(prepaidCard);
 	}
 

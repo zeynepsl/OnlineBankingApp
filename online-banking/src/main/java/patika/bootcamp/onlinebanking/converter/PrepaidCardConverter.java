@@ -1,5 +1,7 @@
 package patika.bootcamp.onlinebanking.converter;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,8 @@ import patika.bootcamp.onlinebanking.dto.card.PrepaidCardResponseDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.service.CustomerService;
+import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 
 @Component
 @RequiredArgsConstructor
@@ -17,18 +21,17 @@ public class PrepaidCardConverter {
 	
 	public PrepaidCard toPrepaidCard(CreatePrepaidCardRequestDto createPrepaidCardRequestDto) {
 		PrepaidCard prepaidCard = new PrepaidCard();
-		
-		Customer customer = new Customer();
-		customer.setId(createPrepaidCardRequestDto.getCustomerId());
-		prepaidCard.setCustomer(customer);
-		
 		prepaidCard.setPassword(createPrepaidCardRequestDto.getPassword());
-		
+		prepaidCard.setCreatedAt(new Date());
+		prepaidCard.setCreatedBy("");
+		prepaidCard.setUpdatedAt(new Date());
+		prepaidCard.setUpdatedBy("");
 		return prepaidCard;
 	}
 
 	public PrepaidCardResponseDto toPrepaidCardResponseDto(PrepaidCard prepaidCard) {
 		PrepaidCardResponseDto prepaidCardResponseDto = new PrepaidCardResponseDto();
+		prepaidCardResponseDto.setId(prepaidCard.getId());
 		prepaidCardResponseDto.setAccountBalance(prepaidCard.getBalance());
 		prepaidCardResponseDto.setCardNumber(prepaidCard.getCardNumber());
 		

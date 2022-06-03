@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -27,43 +28,43 @@ public class TransactionController {
 	private final TransactionFacade transactionFacade;
 	
 	@PostMapping("/")
-	ResponseEntity<?> monenyTransaction(@RequestBody CreateTransactionRequestDto createTransactionRequestDto) throws IOException{
+	public ResponseEntity<TransactionResponseDto> monenyTransaction(@RequestBody CreateTransactionRequestDto createTransactionRequestDto) throws IOException{
 		return transactionFacade.monenyTransaction(createTransactionRequestDto);
 	}
 	
 	@PostMapping("/toAccount")
-	ResponseEntity<?> moneyTransactionToAccount(@RequestBody CreateTransactionToAccountRequestDto transactionToAccountRequestDto) throws IOException{
+	public ResponseEntity<TransactionResponseDto> moneyTransactionToAccount(@RequestBody CreateTransactionToAccountRequestDto transactionToAccountRequestDto) throws IOException{
 		return transactionFacade.moneyTransactionToAccount(transactionToAccountRequestDto);
 	}
 	
 	@PostMapping("/toCard")
-	ResponseEntity<?> moneyTransactionToCard(@RequestBody CreateTransactionToCardRequestDto transactionToCardRequestDto) throws IOException{
+	public ResponseEntity<TransactionResponseDto> moneyTransactionToCard(@RequestBody CreateTransactionToCardRequestDto transactionToCardRequestDto) throws IOException{
 		return transactionFacade.moneyTransactionToCard(transactionToCardRequestDto);
 	}
 	
 	
 	@GetMapping("/date/{transactionDate}")
-	ResponseEntity<List<TransactionResponseDto>> findByTransactionDate(@PathVariable Date transactionDate){
+	public ResponseEntity<List<TransactionResponseDto>> findByTransactionDate(@PathVariable Date transactionDate){
 		return transactionFacade.findByTransactionDate(transactionDate);
 	}
 	
 	@GetMapping("/modeOfPayment/{modeOfPayment}")
-	ResponseEntity<List<TransactionResponseDto>> findByModeOfPayment(@PathVariable ModeOfPayment modeOfPayment){
+	public ResponseEntity<List<TransactionResponseDto>> findByModeOfPayment(@PathVariable ModeOfPayment modeOfPayment){
 		return transactionFacade.findByModeOfPayment(modeOfPayment);
 	}
 	
-	@GetMapping("/sender/{iban}")
-	ResponseEntity<List<TransactionResponseDto>> findBySenderIbanNo(@PathVariable String iban){
+	@GetMapping("/senderiban/{iban}")
+	public ResponseEntity<List<TransactionResponseDto>> findBySenderIbanNo(@PathVariable String iban){
 		return transactionFacade.findBySenderIbanNo(iban);
 	}
 	
-	@GetMapping("/recipient/{iban}")
-	ResponseEntity<List<TransactionResponseDto>> findByRecipientIbanNo(@PathVariable String iban){
+	@GetMapping("/recipientiban/")
+	public ResponseEntity<List<TransactionResponseDto>> findByRecipientIbanNo(@RequestParam String iban){
 		return transactionFacade.findByRecipientIbanNo(iban);
 	}
 	
-	@GetMapping("/sender/{accountId}")
-	ResponseEntity<List<TransactionResponseDto>> findBySenderAccountId(@PathVariable Long accountId){
+	@GetMapping("/sender")
+	public ResponseEntity<List<TransactionResponseDto>> findBySenderAccountId(@RequestParam Long accountId){
 		return transactionFacade.findBySenderAccountId(accountId);
 	}
 }

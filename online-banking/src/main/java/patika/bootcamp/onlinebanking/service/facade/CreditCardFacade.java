@@ -16,7 +16,7 @@ import patika.bootcamp.onlinebanking.model.card.CreditCard;
 public interface CreditCardFacade {
 	ResponseEntity<CreditCardResponseDto> create(CreateCreditCardRequestDto createCreditCardRequestDto) throws BaseException;
 	ResponseEntity<CreditCardResponseDto> get(Long id) throws BaseException;
-	ResponseEntity<CreditCardResponseDto> update(CreateCreditCardRequestDto createCreditCardRequestDto);
+	ResponseEntity<CreditCardResponseDto> update(CreditCard creditCard);
 	ResponseEntity<?> delete(Long id) throws BaseException;
 	ResponseEntity<List<CreditCardResponseDto>> getAll();
 	

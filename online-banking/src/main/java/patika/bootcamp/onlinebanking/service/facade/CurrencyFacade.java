@@ -7,10 +7,11 @@ import org.springframework.http.ResponseEntity;
 import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
 import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.account.Currency;
 
 public interface CurrencyFacade {
 	ResponseEntity<CurrencyResponseDto> create(CreateCurrencyRequestDto createCurrencyRequestDto);
-	ResponseEntity<CurrencyResponseDto> update(CreateCurrencyRequestDto createCurrencyRequestDto);
+	ResponseEntity<CurrencyResponseDto> update(Currency currency);
 	ResponseEntity<?> delete(Long id);
 	ResponseEntity<CurrencyResponseDto> get(Long id);
 	

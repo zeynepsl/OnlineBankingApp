@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -31,33 +32,33 @@ public class TransactionFacadeImpl implements TransactionFacade{
 	private final TransactionConverter transactionConverter;
 
 	@Override
-	public ResponseEntity<?> monenyTransaction(CreateTransactionRequestDto createTransactionRequestDto) throws IOException {
+	public ResponseEntity<TransactionResponseDto> monenyTransaction(CreateTransactionRequestDto createTransactionRequestDto) throws IOException {
 		Transaction transaction = transactionConverter.toTransaction(createTransactionRequestDto);
-		transactionService.monenyTransaction(transaction);
+		transaction = transactionService.monenyTransaction(transaction);
 		
-		return ResponseEntity.ok().build();
+		return new ResponseEntity<>(transactionConverter.toTransactionResponseDto(transaction), HttpStatus.CREATED);
 	}
 	
 	@Override
-	public ResponseEntity<?> moneyTransactionToAccount(CreateTransactionToAccountRequestDto transactionToAccountRequestDto) throws IOException {
+	public ResponseEntity<TransactionResponseDto> moneyTransactionToAccount(CreateTransactionToAccountRequestDto transactionToAccountRequestDto) throws IOException {
 		Account from = accountService.findByAccountNumber(transactionToAccountRequestDto.getFromAccountNumber());
 		Account to = accountService.findByAccountNumber(transactionToAccountRequestDto.getToAccountNumber());
 		
 		Transaction transaction = transactionConverter.toTransaction(transactionToAccountRequestDto, from, to);
-		transactionService.monenyTransaction(transaction);
+		transaction = transactionService.monenyTransaction(transaction);
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(transactionConverter.toTransactionResponseDto(transaction));
 	}
 	
 	@Override
-	public ResponseEntity<?> moneyTransactionToCard(CreateTransactionToCardRequestDto transactionToCardRequestDto) throws IOException {
+	public ResponseEntity<TransactionResponseDto> moneyTransactionToCard(CreateTransactionToCardRequestDto transactionToCardRequestDto) throws IOException {
 		Account from = accountService.findByAccountNumber(transactionToCardRequestDto.getFromAccountNumber());
 		Account to = (bankCardService.findByCardNumber(transactionToCardRequestDto.getToCardNumber())).getAccount();
 		
 		Transaction transaction = transactionConverter.toTransaction(transactionToCardRequestDto, from, to);
-		transactionService.monenyTransaction(transaction);
+		transaction = transactionService.monenyTransaction(transaction);
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(transactionConverter.toTransactionResponseDto(transaction));
 	}
 
 	@Override

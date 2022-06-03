@@ -14,7 +14,7 @@ import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 
 public interface TransactionService extends BaseService<Transaction> {
 
-	void monenyTransaction(Transaction transaction) throws IOException;
+	Transaction monenyTransaction(Transaction transaction) throws IOException;
 
 	void validateBalance(BigDecimal accountBalance, BigDecimal amount) throws BaseException;
 

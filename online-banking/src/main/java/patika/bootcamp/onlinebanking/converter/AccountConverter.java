@@ -46,7 +46,7 @@ public class AccountConverter {
 		accountResponseDto.setAccountNumber(account.getAccountNumber());
 		accountResponseDto.setAccountStatus(account.getAccountStatus());
 		accountResponseDto.setBankCode(account.getBankCode());
-		
+		accountResponseDto.setAccountType(account.getAccountType());
 		
 		accountResponseDto.setBranchId(account.getBranch().getId());
 		

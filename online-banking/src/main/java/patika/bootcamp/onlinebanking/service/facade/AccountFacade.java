@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CreateAccountRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 
@@ -15,7 +16,7 @@ public interface AccountFacade {
 	
 	ResponseEntity<?> create(CreateAccountRequestDto accountRequestDto) throws BaseException;
 	ResponseEntity<AccountResponseDto> get(Long id) throws BaseException;
-	ResponseEntity<AccountResponseDto> update(CreateAccountRequestDto createAccountRequestDto);
+	ResponseEntity<AccountResponseDto> update(Account account);
 	ResponseEntity<?> delete(Long id) throws BaseException;
 	ResponseEntity<BigDecimal> getBalance(Long accountId) throws BaseException;
 	

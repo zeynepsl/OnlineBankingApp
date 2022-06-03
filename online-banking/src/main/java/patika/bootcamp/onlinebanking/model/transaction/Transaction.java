@@ -31,7 +31,7 @@ public class Transaction extends BaseModel{
 	private Boolean useAllBalance = false;
 	private BigDecimal amount;
 	
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date transactionDate = new Date();
 	
 	@Enumerated(EnumType.STRING)

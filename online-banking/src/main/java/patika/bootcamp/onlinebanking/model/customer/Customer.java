@@ -46,15 +46,24 @@ public class Customer extends BaseExtendedModel{
 	@OneToMany(mappedBy = "customer")
 	private Set<CustomerAddress> customerAddresses = new HashSet<>();
 	
-	//, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true
+
+	//fetch = FetchType.EAGER 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
 	
-	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(mappedBy = "customer", orphanRemoval = true)
 	private CreditCard creditCard;
 	
-	@OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	//, cascade = CascadeType.ALL
+	@OneToOne(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
 	private PrepaidCard prepaidCard;
+	
+	/*@SuppressWarnings("null")
+	public Customer removePrepaidCard(PrepaidCard prepaidCard) {
+		prepaidCard = null;
+		prepaidCard.setCustomer(null);
+		return this;
+	}*/
 	
 	@Transient
 	private String getFullName() {
