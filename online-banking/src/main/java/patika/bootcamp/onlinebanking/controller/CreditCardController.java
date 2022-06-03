@@ -57,11 +57,6 @@ public class CreditCardController {
 		return creditCardFacade.findByCardNumber(cardNumber);
 	}
 	
-	@GetMapping("/cuttOffDate/{accountCutOffDate}")
-	ResponseEntity<List<CreditCardResponseDto>> findByAccountCutOffDate(@RequestParam Date accountCutOffDate){
-		return creditCardFacade.findByAccountCutOffDate(accountCutOffDate);
-	}
-	
 	@GetMapping("/cardsWithDebt")
 	ResponseEntity<List<CreditCardResponseDto>> findCardsThatHaveDebt(){
 		return creditCardFacade.findCardsThatHaveDebt();
@@ -87,9 +82,9 @@ public class CreditCardController {
 		return creditCardFacade.getAmountOfDebt(creditCardId);
 	}
 	
-	@PatchMapping("/transfer")
-	ResponseEntity<?> moneyTransfer(@RequestBody CreditCard creditCard, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount) throws BaseException, IOException{
-		return creditCardFacade.moneyTransfer(creditCard, password, to, amount);
+	@PutMapping("/transfer/{senderCustomerId}/{to}/{amount}")
+	ResponseEntity<?> moneyTransfer(@PathVariable Long senderCustomerId, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount) throws BaseException, IOException{
+		return creditCardFacade.moneyTransfer(senderCustomerId, password, to, amount);
 	}
 	
 	@PatchMapping("/onlineTransfer")
@@ -97,12 +92,12 @@ public class CreditCardController {
 		return creditCardFacade.onlineMoneyTransfer(onlineTransferByCardRequestDto);
 	}
 	
-	@PatchMapping("/paymentDebtWithCashMachine")
+	@PutMapping("/paymentDebtWithCashMachine")
 	ResponseEntity<?> paymentDebtFromCashMachine(@RequestBody CreditCard creditCard, @RequestParam String password) throws BaseException, IOException{
 		return creditCardFacade.paymentDebtFromCashMachine(creditCard, password);
 	}
 	
-	@PatchMapping("/paymentDebtWithAccoun/{accountId}")
+	@PutMapping("/paymentDebtWithAccoun/{accountId}")
 	ResponseEntity<?> paymentDebtFromAccount(@PathVariable Long accountId){
 		return creditCardFacade.paymentDebtFromAccount(accountId);
 	}

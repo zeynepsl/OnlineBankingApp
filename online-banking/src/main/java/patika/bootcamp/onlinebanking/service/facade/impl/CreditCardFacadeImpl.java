@@ -142,9 +142,9 @@ public class CreditCardFacadeImpl implements CreditCardFacade {
 	}
 
 	@Override
-	public ResponseEntity<?> moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount)
+	public ResponseEntity<?> moneyTransfer(Long customerId, String password, String to, BigDecimal amount)
 			throws BaseException, IOException {
-		creditCardService.moneyTransfer(creditCard, password, to, amount);
+		creditCardService.moneyTransfer(customerId, password, to, amount);
 		return ResponseEntity.ok().build();
 	}
 

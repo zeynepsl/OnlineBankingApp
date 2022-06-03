@@ -80,7 +80,8 @@ public class MoneyTransactionManager implements TransactionService {
 		return transaction;
 	}
 
-	private BigDecimal calculateAmountWithToCurrency(BigDecimal transactionAmount, String toCurrency, String fromCurrency) throws IOException {
+	@Override
+	public BigDecimal calculateAmountWithToCurrency(BigDecimal transactionAmount, String toCurrency, String fromCurrency) throws IOException {
 		log.info("farkli cikan para birimleri arasinda donustürme yapilacak");
 		log.info("tutar: (donusumden once) {}",transactionAmount);
 		Double currency = currencyConverter.converter(toCurrency, fromCurrency);
@@ -89,7 +90,8 @@ public class MoneyTransactionManager implements TransactionService {
 		return transactionAmount;
 	}
 
-	private boolean currenciesAreNotEqual(String fromCurrency, String toCurrency) {
+	@Override
+	public boolean currenciesAreNotEqual(String fromCurrency, String toCurrency) {
 		log.info("para birimleri kontrol");
 		if( !(fromCurrency.equals(toCurrency)) ) {
 			return true;

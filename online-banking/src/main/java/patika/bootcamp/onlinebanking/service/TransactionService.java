@@ -27,6 +27,11 @@ public interface TransactionService extends BaseService<Transaction> {
 	List<Transaction> findBySenderIbanNo(String ibanNo);
 	List<Transaction> findByRecipientIbanNo(String ibanNo);
 	List<Transaction> findBySenderAccountId(Long id);
+
+	BigDecimal calculateAmountWithToCurrency(BigDecimal transactionAmount, String toCurrency, String fromCurrency)
+			throws IOException;
+
+	boolean currenciesAreNotEqual(String fromCurrency, String toCurrency);
 	
 	// doviz donusumu
 
