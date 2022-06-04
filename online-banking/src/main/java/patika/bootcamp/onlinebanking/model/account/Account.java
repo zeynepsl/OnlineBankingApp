@@ -34,13 +34,13 @@ public class Account extends BaseExtendedModel{
 	
 	@PositiveOrZero
 	private BigDecimal lockedBalance = BigDecimal.ZERO;
-	private BigDecimal accountBalance = BigDecimal.valueOf(100);
+	private BigDecimal accountBalance = BigDecimal.ZERO;
 	
 	@Column(length = 5)
 	@Size(min = 5, max = 5)
 	private String bankCode;
 	
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne(cascade = CascadeType.ALL)//merge den all 
 	@JoinColumn(name = "branch_id")
 	private Branch branch;
 	
@@ -59,7 +59,7 @@ public class Account extends BaseExtendedModel{
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType = AccountType.CHECKING_ACCOUNT;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name =  "customer_id")
 	private Customer customer;
 	
