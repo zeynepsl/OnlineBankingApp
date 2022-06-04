@@ -44,6 +44,8 @@ public class BankCardServiceImpl implements BankCardService{
 	@Override
 	public void delete(Long id) throws BaseException {
 		BankCard bankCard = get(id);
+		bankCard.removeAccount(bankCard.getAccount());
+		bankCard.removeCustomer(bankCard.getCustomer());
 		bankCardRepository.delete(bankCard);
 	}
 

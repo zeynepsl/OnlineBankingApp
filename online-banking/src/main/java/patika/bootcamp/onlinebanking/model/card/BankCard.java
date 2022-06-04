@@ -18,7 +18,17 @@ public class BankCard extends Card{
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
+	public BankCard removeCustomer(Customer customer) {
+		this.setCustomer(null);
+		return this;
+	}
+	
 	@OneToOne
 	@JoinColumn(name = "account_id")
 	private Account account;
+	
+	public BankCard removeAccount(Account account) {
+		this.setAccount(null);
+		return this;
+	}
 }

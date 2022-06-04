@@ -11,8 +11,10 @@ import org.springframework.validation.annotation.Validated;
 
 import lombok.Getter;
 import lombok.Setter;
+import patika.bootcamp.onlinebanking.model.User;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
+import patika.bootcamp.onlinebanking.model.card.BankCard;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 import patika.bootcamp.onlinebanking.model.enums.Gender;
@@ -29,9 +31,8 @@ public class Customer extends BaseExtendedModel{
 	private String firstName;
 	private String lastName;
 	private Long identityNumber;
-	private String password;
 	private Integer age;
-	private String customerNumber;// genellikle 8 hane
+	private String customerNumber;
 	
 	@Past
 	@Temporal(TemporalType.DATE)
@@ -46,7 +47,6 @@ public class Customer extends BaseExtendedModel{
 	@OneToMany(mappedBy = "customer")
 	private Set<CustomerAddress> customerAddresses = new HashSet<>();
 	
-
 	//fetch = FetchType.EAGER 
 	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
@@ -58,12 +58,12 @@ public class Customer extends BaseExtendedModel{
 	@OneToOne(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
 	private PrepaidCard prepaidCard;
 	
-	/*@SuppressWarnings("null")
-	public Customer removePrepaidCard(PrepaidCard prepaidCard) {
-		prepaidCard = null;
-		prepaidCard.setCustomer(null);
-		return this;
-	}*/
+	@OneToOne(mappedBy = "customer", orphanRemoval = true)
+	private BankCard bankCard;
+	
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 	@Transient
 	private String getFullName() {

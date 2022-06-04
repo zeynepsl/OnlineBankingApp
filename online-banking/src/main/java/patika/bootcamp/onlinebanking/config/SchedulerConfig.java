@@ -13,8 +13,6 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 import patika.bootcamp.onlinebanking.service.CreditCardService;
 
-//@Configuration --> ?
-
 @EnableAsync
 @EnableScheduling
 public class SchedulerConfig implements SchedulingConfigurer {

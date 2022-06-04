@@ -17,14 +17,11 @@ import patika.bootcamp.onlinebanking.exception.CreditCardServiceOperationExcepti
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
-import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.card.CreditCardRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.CreditCardService;
-import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.TransactionService;
-import patika.bootcamp.onlinebanking.util.converter.CurrencyConverter;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +29,7 @@ import patika.bootcamp.onlinebanking.util.converter.CurrencyConverter;
 public class CreditCardServiceImpl implements CreditCardService {
 	private final CreditCardRepository creditCardRepository;
 	private final AccountService accountService;
-	private final CustomerService customerService;
-	private final CurrencyConverter currencyConverter;
 	private final TransactionService transactionService;
-	//private final String fromCurrency = "TRY";
 
 	@Override
 	public CreditCard create(CreditCard creditCard) throws BaseException {
@@ -109,9 +103,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 	}
 
 	@Override
-	public void moneyTransfer(Long customerId, String password, String to, BigDecimal amount) throws BaseException, IOException {
-		Customer customer = customerService.get(customerId);
-		CreditCard creditCard = customer.getCreditCard();
+	public void moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException {
 		creditCardPasswordValidate(creditCard.getPassword(), password);//password ler uyuşmalı uyuşmuyorsa hata ver --> burada ileride bcryptEncoder devreye girecek
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);//amount u periyodikHarcamalar ile topla, çıkan sonuç limiti aşıyorsa hata ver
 		updateToAccount(to, amount);//miktari alici hesabina aktar
@@ -261,7 +253,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 
 		validateBalance(accountBalance, amountOfDebt);
 		discountMoneyFromAccountAndUpdateDebt(creditCard, amountOfDebt, account);
-		
 	}
 
 	public void validateBalance(BigDecimal accountBalance, BigDecimal amountOfDebt) {

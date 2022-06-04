@@ -39,9 +39,7 @@ public class AccountServiceImpl implements AccountService {
 	//private final BankCardService bankCardService;
 
 	@Override
-	public Account create(Account account) throws BaseException {
-		
-		// eger olusturulan hesap vadesiz ise ve kullanıcı ilk defa vadesiz hesap oluşturuyorsa bir banka kartı oluştur:
+	public Account create(Account account) throws BaseException {	
 		
 		account = accountRepository.save(account);
 		return account;

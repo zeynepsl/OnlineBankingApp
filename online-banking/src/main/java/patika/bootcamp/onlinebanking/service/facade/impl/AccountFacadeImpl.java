@@ -50,8 +50,12 @@ public class AccountFacadeImpl implements AccountFacade{
 		
 		/*Branch bankBranch = new Branch();
 		bankBranch.setId(createAccountRequestDto.getBranchId());
-		account.setBranch(bankBranch); bu kullanim mantikli fakat ise yaramiyor sanirim fetchType=LAZY den kaynakli bir durum*/
+		account.setBranch(bankBranch); bu kullanim mantikli fakat ise yaramiyor, branch i sadece id si ile getiriyor, 
+		brach in diger alanlarini null olarak getiriyor
+		fakat benim branch in diger alanlarina da ihityacim var su an*/
 		
+		
+		 
 		Branch branch = branchService.get(createAccountRequestDto.getBranchId());
 		account.setBranch(branch);
 		

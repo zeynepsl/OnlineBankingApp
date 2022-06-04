@@ -11,7 +11,6 @@ import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.PrepaidCardServiceOperationException;
 import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 import patika.bootcamp.onlinebanking.repository.card.PrepaidCardRepository;
-import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.PrepaidCardService;
 
 @Service

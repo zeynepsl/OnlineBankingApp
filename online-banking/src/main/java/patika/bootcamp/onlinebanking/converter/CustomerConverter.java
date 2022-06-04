@@ -31,7 +31,6 @@ public class CustomerConverter {
 		
 		customer.setGender(createCustomerRequestDto.getGender());
 		customer.setIdentityNumber(createCustomerRequestDto.getIdentityNumber());
-		customer.setPassword(createCustomerRequestDto.getPassword());
 		
 		customer.setCreatedAt(new Date());
 		customer.setCreatedBy("Zeynep Salman");
@@ -52,11 +51,11 @@ public class CustomerConverter {
 		customerResponseDto.setConfirmedByAdmin(customer.isConfirmedByAdmin());
 		customerResponseDto.setGender(customer.getGender());
 		
-		/*ContactInformation contactInformation = customer.getContactInformation();
+		ContactInformation contactInformation = customer.getContactInformation();
 		customerResponseDto.setEmail(customer.getContactInformation().getPrimaryEmail());
 		customerResponseDto.setPhoneNumber(contactInformation.getPrimaryPhoneNumber());
 		customerResponseDto.setSecondaryEmail(contactInformation.getSecondaryEmail());
-		customerResponseDto.setSecondaryPhoneNumber(contactInformation.getSecondaryPhoneNumber());*/
+		customerResponseDto.setSecondaryPhoneNumber(contactInformation.getSecondaryPhoneNumber());
 		
 		customerResponseDto.setCustomerNumber(customer.getCustomerNumber());
 		

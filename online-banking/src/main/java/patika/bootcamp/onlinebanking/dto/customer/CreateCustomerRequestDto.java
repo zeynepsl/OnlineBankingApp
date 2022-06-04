@@ -33,9 +33,6 @@ public class CreateCustomerRequestDto {
 	private String firstName;
 	private String lastName;
 	
-	@NotBlank(message = "password cannot be null and empty")
-	private String password;
-	
 	@Min(value = 18, message = "Persons under the age of 18 cannot be bank customers.")
 	private Integer age;
 	

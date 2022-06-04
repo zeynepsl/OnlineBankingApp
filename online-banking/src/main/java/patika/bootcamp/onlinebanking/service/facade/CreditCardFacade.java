@@ -32,7 +32,7 @@ public interface CreditCardFacade {
 	ResponseEntity<BigDecimal> getPeriodExpenditures(Long creditCardId);
 	ResponseEntity<BigDecimal> getAmountOfDebt(Long creditCardId);
 	
-	ResponseEntity<?> moneyTransfer(Long customerId, String password, String to, BigDecimal amount) throws BaseException, IOException;
+	ResponseEntity<?> moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException;
 	ResponseEntity<?> onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException;
 	
 	ResponseEntity<?> paymentDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException;

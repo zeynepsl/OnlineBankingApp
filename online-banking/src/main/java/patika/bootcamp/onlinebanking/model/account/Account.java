@@ -27,7 +27,7 @@ import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 @Setter
 public class Account extends BaseExtendedModel{
 	
-	//private Long accountNumber;//branchCode + customerNumber + additional_account_number
+	//private Long accountNumber --> branchCode + customerNumber + additional_account_number
 	private String accountName;
 	private String accountNumber;
 	private String additionalAccountNumber;
@@ -40,12 +40,10 @@ public class Account extends BaseExtendedModel{
 	@Size(min = 5, max = 5)
 	private String bankCode;
 	
-	//private String branchCode;
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "branch_id")
 	private Branch branch;
 	
-	//@Pattern(regexp = "")
 	private String iban;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -69,18 +67,10 @@ public class Account extends BaseExtendedModel{
 	@JoinColumn(name = "currency_id")
 	private Currency currency;
 	
-	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(mappedBy = "account", orphanRemoval = true)
 	private BankCard bankCard;
 	
 	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL)
 	private Set<Transaction> transactions = new HashSet<>();
 	
-	/*@Transient
-	private String getAccountNumber() {
-		return branchCode + customer.getCustomerNumber() + additionalAccountNumber;
-	}*/
-	
-	//@Enumerated(EnumType.STRING)
-	//private CurrencyUnit currencyUnit;
-	//private boolean isActive = true; bunu AccountStatus ile yaptık yuk
 }

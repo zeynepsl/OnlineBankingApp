@@ -77,17 +77,17 @@ public class BaseControllerAdvice {
 		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, "ConstraintViolationException"));
 	}
 	
-	/*@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<Object> onIllegalArgumentException(IllegalArgumentException e){
 		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, "IllegalArgumentException"));
-	}*/
+	}
 
-	/*@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(RestClientException.class)
 	public ResponseEntity<Object> onRestClientException(RestClientException e){
 		return buildResponseEntity(new ApiError(HttpStatus.BAD_REQUEST, "RestClientException"));
-	}*/
+	}
 
 	
 	private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {

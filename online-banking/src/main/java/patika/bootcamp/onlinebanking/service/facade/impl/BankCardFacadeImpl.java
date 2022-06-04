@@ -13,20 +13,36 @@ import patika.bootcamp.onlinebanking.converter.BankCardConverter;
 import patika.bootcamp.onlinebanking.dto.card.BankCardResponseDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateBankCardRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.BankCardService;
+import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.facade.BankCardFacade;
+import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 
 @Service
 @RequiredArgsConstructor
 public class BankCardFacadeImpl implements BankCardFacade{
 	private final BankCardService bankCardService;
+	private final AccountService accountService;
+	private final CustomerService customerService;
 	private final BankCardConverter bankCardConverter;
 
 	@Override
 	public ResponseEntity<BankCardResponseDto> create(CreateBankCardRequestDto createBankCardRequestDto)
 			throws BaseException {
 		BankCard bankCard = bankCardConverter.toBankCard(createBankCardRequestDto);
+		
+		Account account = accountService.get(createBankCardRequestDto.getAccountId());
+		bankCard.setAccount(account);
+		
+		bankCard.setCardNumber(CardNumberGenerator.generate(account.getBranch().getBranchCode(), account.getAccountNumber()));
+		
+		Customer customer = customerService.get(createBankCardRequestDto.getCustomerId());
+		bankCard.setCustomer(customer);
+		
 		bankCard = bankCardService.create(bankCard);
 		return new ResponseEntity<>(bankCardConverter.toBankCardResponseDto(bankCard), HttpStatus.CREATED);
 	}

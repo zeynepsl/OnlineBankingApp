@@ -83,8 +83,8 @@ public class CreditCardController {
 	}
 	
 	@PutMapping("/transfer/{senderCustomerId}/{to}/{amount}")
-	ResponseEntity<?> moneyTransfer(@PathVariable Long senderCustomerId, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount) throws BaseException, IOException{
-		return creditCardFacade.moneyTransfer(senderCustomerId, password, to, amount);
+	ResponseEntity<?> moneyTransfer(@PathVariable CreditCard creditCard, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount) throws BaseException, IOException{
+		return creditCardFacade.moneyTransfer(creditCard, password, to, amount);
 	}
 	
 	@PatchMapping("/onlineTransfer")

@@ -21,18 +21,7 @@ public class BankCardConverter {
 	private final CustomerConverter customerConverter;
 
 	public BankCard toBankCard(CreateBankCardRequestDto createBankCardRequestDto) {
-		BankCard bankCard = new BankCard();
-		
-		Account account = new Account();
-		account.setId(createBankCardRequestDto.getAccountId());
-		bankCard.setAccount(account);
-		
-		bankCard.setCardNumber(CardNumberGenerator.generate(account.getBranch().getBranchCode(), account.getAccountNumber()));
-		
-		Customer customer = new Customer();
-		customer.setId(createBankCardRequestDto.getCustomerId());
-		bankCard.setCustomer(customer);
-		
+		BankCard bankCard = new BankCard();	
 		bankCard.setPassword(createBankCardRequestDto.getPassword());
 	
 		bankCard.setCreatedAt(new Date());
