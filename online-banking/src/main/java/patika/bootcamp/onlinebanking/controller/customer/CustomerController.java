@@ -10,14 +10,12 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
-import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.service.facade.CustomerFacade;
 
 @RestController
 @RequestMapping("api/customers")
 @RequiredArgsConstructor
 public class CustomerController {
-	private final CustomerService customerService;
 	private final CustomerFacade customerFacade;
 	
 	@PostMapping("/")
@@ -32,7 +30,7 @@ public class CustomerController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam Boolean hardDelete){
-		customerService.delete(id, hardDelete);
+		customerFacade.delete(id, hardDelete);
 		return ResponseEntity.ok().build();
 	}
 	
@@ -88,19 +86,19 @@ public class CustomerController {
 
 	@PatchMapping("/activate/{id}")
 	public ResponseEntity<?> activateCustomer(@PathVariable Long id){
-		customerService.activateCustomer(id);
+		customerFacade.activateCustomer(id);
 		return ResponseEntity.ok().build();
 	}
 	
 	@PatchMapping("/disable/{id}")
 	public ResponseEntity<?> disableCustomer(@PathVariable Long id){
-		customerService.disableCustomer(id);
+		customerFacade.disableCustomer(id);
 		return ResponseEntity.ok().build();
 	}
 	
 	@PatchMapping("/confirm/{id}")
 	public ResponseEntity<?> confirmCustomer(@PathVariable Long id){
-		customerService.confirmCustomer(id);
+		customerFacade.confirmCustomer(id);
 		return ResponseEntity.ok().build();
 	}
 

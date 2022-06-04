@@ -34,12 +34,8 @@ public interface CustomerFacade {
 
 	ResponseEntity<List<CustomerResponseDto>> findByIsConfirmedByAdminFalse();
 
-
-	/*
-	 * void delete(Long id, Boolean hardDelete) throws BaseException; void
-	 * activateCustomer(Long id) throws BaseException; void disableCustomer(Long id)
-	 * throws BaseException;
-	 * 
-	 * void confirmCustomer(Long id) throws BaseException;
-	 */
+	ResponseEntity<?> delete(Long id, Boolean hardDelete);
+	ResponseEntity<?> activateCustomer(Long id);
+	ResponseEntity<?> disableCustomer(Long id);
+	ResponseEntity<?> confirmCustomer(Long id);
 }

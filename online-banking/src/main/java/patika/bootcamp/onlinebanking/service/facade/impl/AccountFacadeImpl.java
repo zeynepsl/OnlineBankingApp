@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.converter.account.AccountConverter;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CreateAccountRequestDto;
+import patika.bootcamp.onlinebanking.exception.AccountServiceOperationException;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.account.Currency;
@@ -39,12 +40,15 @@ public class AccountFacadeImpl implements AccountFacade{
 	private final CustomerService customerService;
 	@Override
 	public ResponseEntity<AccountResponseDto> create(CreateAccountRequestDto createAccountRequestDto) throws BaseException {
+		Customer customer = customerService.get(createAccountRequestDto.getCustomerId());
+		if( !customer.isConfirmedByAdmin() ) {
+			throw new AccountServiceOperationException.UnconfirmedCustomer("Unconfirmed customer cannot open account");
+		}
 		Account account = accountConverter.toAccount(createAccountRequestDto);
 		
 		String additionalAccountNumber = AdditionalAccountNumberGenerator.generate();
 		account.setAdditionalAccountNumber(additionalAccountNumber);
 		
-		Customer customer = customerService.get(createAccountRequestDto.getCustomerId());
 		customer.addAccount(account);
 		account.setCustomer(customer);
 		
@@ -65,7 +69,7 @@ public class AccountFacadeImpl implements AccountFacade{
 		
 		Currency currency = new Currency();
 		currency.setId(createAccountRequestDto.getCurrencyId());
-		log.info("currency kodu: {}", currency.getCode());//mesela burasi null veriyor, yularidaki gibi currency nin bir fieldına ihityacım olsaydi service den tüm nesneyi getirmem gerekecekti
+		log.info("currency kodu: {}", currency.getCode());//mesela burasi null veriyor, yukaridaki gibi currency nin bir fieldına ihityacım olsaydi service den tüm nesneyi getirmem gerekecekti
 		account.setCurrency(currency);
 		
 		AccountType accountType = createAccountRequestDto.getAccountType();

@@ -94,4 +94,28 @@ public class CustomerFacadeImpl implements CustomerFacade{
 		});
 		return customerResponseDtoList;
 	}
+
+	@Override
+	public ResponseEntity<?> delete(Long id, Boolean hardDelete) {
+		customerService.delete(id, hardDelete);
+		return ResponseEntity.ok().build();
+	}
+
+	@Override
+	public ResponseEntity<?> activateCustomer(Long id) {
+		customerService.activateCustomer(id);
+		return ResponseEntity.ok().build();
+	}
+
+	@Override
+	public ResponseEntity<?> disableCustomer(Long id) {
+		customerService.disableCustomer(id);
+		return ResponseEntity.ok().build();
+	}
+
+	@Override
+	public ResponseEntity<?> confirmCustomer(Long id) {
+		customerService.confirmCustomer(id);
+		return ResponseEntity.ok().build();
+	}
 }

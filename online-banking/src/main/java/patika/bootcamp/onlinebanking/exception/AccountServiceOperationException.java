@@ -2,6 +2,14 @@ package patika.bootcamp.onlinebanking.exception;
 
 public final class AccountServiceOperationException {
 
+	public static class UnconfirmedCustomer extends BaseException {
+
+		public UnconfirmedCustomer(String message) {
+			super(message);
+		}
+
+	}
+
 	private AccountServiceOperationException() {
 	}
 	
