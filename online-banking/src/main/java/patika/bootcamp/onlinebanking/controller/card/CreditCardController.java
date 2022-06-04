@@ -1,8 +1,7 @@
-package patika.bootcamp.onlinebanking.controller;
+package patika.bootcamp.onlinebanking.controller.card;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;

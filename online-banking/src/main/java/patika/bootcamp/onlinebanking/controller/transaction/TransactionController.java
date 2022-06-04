@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.controller;
+package patika.bootcamp.onlinebanking.controller.transaction;
 
 import java.io.IOException;
 import java.util.Date;

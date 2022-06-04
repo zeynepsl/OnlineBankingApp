@@ -1,7 +1,6 @@
 package patika.bootcamp.onlinebanking.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -11,32 +10,21 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.exception.AccountServiceOperationException;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
-import patika.bootcamp.onlinebanking.model.account.Currency;
-import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
-import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.repository.account.AccountRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
-import patika.bootcamp.onlinebanking.service.BankCardService;
-import patika.bootcamp.onlinebanking.service.CustomerService;
-import patika.bootcamp.onlinebanking.util.generate.AccountNumberGenerator;
-import patika.bootcamp.onlinebanking.util.generate.AdditionalAccountNumberGenerator;
 import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
-import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class AccountServiceImpl implements AccountService {
 	private final AccountRepository accountRepository;
-	//private final BankCardService bankCardService;
 
 	@Override
 	public Account create(Account account) throws BaseException {	
@@ -58,7 +46,6 @@ public class AccountServiceImpl implements AccountService {
 		bankCard.setPassword(UUID.randomUUID().toString());
 		bankCard.setUpdatedAt(new Date());
 		bankCard.setUpdatedBy("Zeynep Salman");
-		//bankCard = bankCardService.create(bankCard);
 		return bankCard;
 	}
 

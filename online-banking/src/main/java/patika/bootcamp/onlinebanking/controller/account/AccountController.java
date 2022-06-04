@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.controller;
+package patika.bootcamp.onlinebanking.controller.account;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +23,7 @@ public class AccountController {
 	private final AccountFacade accountFacade;
 	
 	@PostMapping("/")
-	public ResponseEntity<?> create(@RequestBody CreateAccountRequestDto accountRequestDto){
+	public ResponseEntity<AccountResponseDto> create(@RequestBody CreateAccountRequestDto accountRequestDto){
 		log.info("id {}", accountRequestDto.getBranchId());
 		return accountFacade.create(accountRequestDto);
 	}

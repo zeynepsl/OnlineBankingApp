@@ -11,16 +11,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -54,39 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .authorizeRequests().antMatchers("/*").permitAll()
                 .and()
                 .csrf().disable();
-
     }
 
-
-   /*hoca: @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
-                .csrf()
-                .disable()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/swagger-ui.html#/**")
-                .permitAll()
-                .antMatchers("/oauth/token").permitAll()
-                .anyRequest()
-                .authenticated();
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    }*/
     
-    /*
-     * .antMatchers("/oauth/token").permitAll()
-     * http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests().antMatchers("/oauth/token").permitAll().
-    anyRequest().authenticated();*/
-    
-    
-    
-    
-    
-   /* //orbidden alıyıruz: 
+   /* //forbidden alıyıruz: 
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui.html",
@@ -116,13 +81,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     }*/
     
     
-    
-    
-    
-
- 
-    
-    //stacoverflow:
    /* @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/v2/api-docs",
@@ -132,26 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                                    "/swagger-ui.html",
                                    "/webjars/**");
     }*/
-    
-   /* @Override
-    antMatchers("/api/sign-in")
-    
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests().antMatchers("/*").permitAll()
-                .and()
-                .csrf().disable();
 
-    }*/
-
-    /*@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-    }
-
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*");
-    }*/
 
 }
 

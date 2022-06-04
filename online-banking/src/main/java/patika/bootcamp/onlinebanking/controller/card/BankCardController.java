@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.controller;
+package patika.bootcamp.onlinebanking.controller.card;
 
 import java.math.BigDecimal;
 import java.util.List;

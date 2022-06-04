@@ -23,4 +23,22 @@ public class Currency extends BaseModel{
 	@OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
 	
+	public Currency addAccount(Account account) {
+		if( accounts.contains(account) ) {
+			return this;
+		}
+		accounts.add(account);
+		account.setCurrency(this);
+		return this;
+	}
+	
+	public Currency removeAccount(Account account) {
+		if( !accounts.contains(account) ) {
+			return this;
+		}
+		accounts.remove(account);
+		account.setCurrency(null);
+		return this;
+	}
+	
 }

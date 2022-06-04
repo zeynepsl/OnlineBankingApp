@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.converter;
+package patika.bootcamp.onlinebanking.converter.account;
 
 import org.springframework.stereotype.Component;
 

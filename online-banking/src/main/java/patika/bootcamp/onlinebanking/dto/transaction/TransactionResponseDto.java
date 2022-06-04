@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
 @Getter

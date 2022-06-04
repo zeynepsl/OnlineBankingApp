@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import patika.bootcamp.onlinebanking.converter.AccountConverter;
+import patika.bootcamp.onlinebanking.converter.account.AccountConverter;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CreateAccountRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
@@ -37,24 +37,23 @@ public class AccountFacadeImpl implements AccountFacade{
 	private final AccountConverter accountConverter;
 	private final BranchService branchService;
 	private final CustomerService customerService;
-
 	@Override
-	public ResponseEntity<?> create(CreateAccountRequestDto createAccountRequestDto) throws BaseException {
+	public ResponseEntity<AccountResponseDto> create(CreateAccountRequestDto createAccountRequestDto) throws BaseException {
 		Account account = accountConverter.toAccount(createAccountRequestDto);
 		
 		String additionalAccountNumber = AdditionalAccountNumberGenerator.generate();
 		account.setAdditionalAccountNumber(additionalAccountNumber);
 		
 		Customer customer = customerService.get(createAccountRequestDto.getCustomerId());
+		customer.addAccount(account);
 		account.setCustomer(customer);
+		
 		
 		/*Branch bankBranch = new Branch();
 		bankBranch.setId(createAccountRequestDto.getBranchId());
 		account.setBranch(bankBranch); bu kullanim mantikli fakat ise yaramiyor, branch i sadece id si ile getiriyor, 
 		brach in diger alanlarini null olarak getiriyor
 		fakat benim branch in diger alanlarina da ihityacim var su an*/
-		
-		
 		 
 		Branch branch = branchService.get(createAccountRequestDto.getBranchId());
 		account.setBranch(branch);
@@ -71,13 +70,18 @@ public class AccountFacadeImpl implements AccountFacade{
 		
 		AccountType accountType = createAccountRequestDto.getAccountType();
 		if (accountType == AccountType.CHECKING_ACCOUNT) {
-			List<Account> accounts = null;
 			log.info("customer {}",createAccountRequestDto.getCustomerId());
-			accounts = accountService.findByAccountTypeAndCustomerId(accountType, createAccountRequestDto.getCustomerId());
-			if (accounts.isEmpty()) {
-				log.info("iverideyic :)");
+			int size = accountService.findByAccountTypeAndCustomerId(accountType, createAccountRequestDto.getCustomerId()).size();
+			log.info("size {}",size);
+			//isEmpty() ise yaramiyor, boyutu 1 olarak algiliyor ama liste bos :( , garip olan da test ederken size'ın sifir olarak algilanmasi
+			//yani; app calisirken size 1 mi, app'i test ederken 0 mi diye kontrol :| 
+			if ( size == 1 ) {
+				log.info("kullanici ilk defa vadesiz hesap olusturuyor");
 				BankCard bankCard = accountService.createBankCardWhileCreatingFirstCheckingAccount(account);
+				log.info("bankkCard id {}", bankCard);
 				account.setBankCard(bankCard);
+				bankCard.setAccount(account);
+				log.info("kullanicinin banka karti olusturuldu");
 				//accountRepository.save(account);
 				//update(account);
 			}

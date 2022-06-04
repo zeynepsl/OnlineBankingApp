@@ -1,14 +1,8 @@
 package patika.bootcamp.onlinebanking.dto.customer;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
-import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
-import patika.bootcamp.onlinebanking.dto.card.PrepaidCardResponseDto;
 import patika.bootcamp.onlinebanking.model.enums.Gender;
 
 @Getter
@@ -27,12 +21,5 @@ public class CustomerResponseDto {
 	private Gender gender;
 	private boolean isActive;
 	private boolean isConfirmedByAdmin;
-	
-	//private Set<AccountResponseDto> accountResponseDtos = new HashSet<>();
-	
-	//private Set<CustomerAddressResponseDto> customerAddressResponseDtos = new HashSet<>();
-	
-	//private CreditCardResponseDto creditCardResponseDto;
-	
-	//private PrepaidCardResponseDto prepaidCardResponseDto;
+
 }

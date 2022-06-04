@@ -47,9 +47,21 @@ public class Customer extends BaseExtendedModel{
 	@OneToMany(mappedBy = "customer")
 	private Set<CustomerAddress> customerAddresses = new HashSet<>();
 	
-	//fetch = FetchType.EAGER 
-	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+	//fetch = FetchType.EAGER --> test icin
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<Account> accounts = new HashSet<>();
+	
+	public Customer addAccount(Account account) {
+		accounts.add(account);
+		account.setCustomer(this);
+		return this;
+	}
+	
+	public Customer removeAccount(Account account) {
+		accounts.remove(account);
+		account.setCustomer(null);
+		return this;
+	}
 	
 	@OneToOne(mappedBy = "customer", orphanRemoval = true)
 	private CreditCard creditCard;
@@ -58,7 +70,7 @@ public class Customer extends BaseExtendedModel{
 	@OneToOne(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
 	private PrepaidCard prepaidCard;
 	
-	@OneToOne(mappedBy = "customer", orphanRemoval = true)
+	@OneToOne(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
 	private BankCard bankCard;
 	
 	@OneToOne

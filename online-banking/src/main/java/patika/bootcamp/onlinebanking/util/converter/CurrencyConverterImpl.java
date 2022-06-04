@@ -49,14 +49,8 @@ public class CurrencyConverterImpl implements CurrencyConverter {
          }
     }
 	 */
-	
-	/*public void deneme() {
-		URI url = new UriTemplate(FORECAST_URL).expand(city, country, apiKey);
-		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-        //return convertToWeatherForecast(response);
-	}*/
 
-	// bu metot anlasilmasi biraz zor olabilir ama calisma mantigi basittir :)
+	// bu metot gelen responsun icindeki hedef para birimini almayi amaclar:
 	public Double parseCurrencyFromString(String result) {
 		String[] sp = result.split(":");
 		for (int i = 0; i < sp.length; i++) {

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import patika.bootcamp.onlinebanking.controller.BranchController;
+import patika.bootcamp.onlinebanking.controller.bank.BranchController;
 import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchAddressRequestDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchRequestDto;

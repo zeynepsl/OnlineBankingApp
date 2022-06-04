@@ -1,28 +1,14 @@
-package patika.bootcamp.onlinebanking.converter;
+package patika.bootcamp.onlinebanking.converter.account;
 
 import java.util.Date;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CreateAccountRequestDto;
-import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
-import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Account;
-import patika.bootcamp.onlinebanking.model.account.Currency;
-import patika.bootcamp.onlinebanking.model.bank.Branch;
-import patika.bootcamp.onlinebanking.model.customer.Customer;
-import patika.bootcamp.onlinebanking.util.generate.AccountNumberGenerator;
-import patika.bootcamp.onlinebanking.util.generate.AdditionalAccountNumberGenerator;
-import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 
 @Component
-@RequiredArgsConstructor
-@Slf4j
 public class AccountConverter {
 	
 	public Account toAccount(CreateAccountRequestDto createAccountRequestDto) {

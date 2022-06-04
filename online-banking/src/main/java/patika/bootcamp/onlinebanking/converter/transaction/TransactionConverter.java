@@ -3,12 +3,10 @@ package patika.bootcamp.onlinebanking.converter.transaction;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.AccountConverter;
-import patika.bootcamp.onlinebanking.converter.CurrencyConverter;
-import patika.bootcamp.onlinebanking.converter.CustomerConverter;
+import patika.bootcamp.onlinebanking.converter.account.AccountConverter;
+import patika.bootcamp.onlinebanking.converter.account.CurrencyConverter;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionRequestDto;
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionToAccountRequestDto;
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionToCardRequestDto;
@@ -16,7 +14,6 @@ import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.account.Currency;
 import patika.bootcamp.onlinebanking.model.transaction.Transaction;
-import patika.bootcamp.onlinebanking.service.AccountService;
 
 @Component
 @RequiredArgsConstructor

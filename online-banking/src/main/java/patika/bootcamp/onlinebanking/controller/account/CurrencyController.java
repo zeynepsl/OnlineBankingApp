@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.controller;
+package patika.bootcamp.onlinebanking.controller.account;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

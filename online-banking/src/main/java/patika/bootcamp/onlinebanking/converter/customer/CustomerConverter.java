@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.converter;
+package patika.bootcamp.onlinebanking.converter.customer;
 
 import java.util.Date;
 
@@ -20,7 +20,6 @@ public class CustomerConverter {
 		customer.setLastName(createCustomerRequestDto.getLastName());
 		customer.setBirthDate(createCustomerRequestDto.getBirthDate());
 		customer.setCustomerNumber(CustomerNumberGenerator.generate());
-		
 		
 		ContactInformation contactInformation = new ContactInformation();
 		contactInformation.setPrimaryEmail(createCustomerRequestDto.getEmail());

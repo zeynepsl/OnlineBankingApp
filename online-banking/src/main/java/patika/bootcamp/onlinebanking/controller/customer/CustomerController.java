@@ -1,4 +1,4 @@
-package patika.bootcamp.onlinebanking.controller;
+package patika.bootcamp.onlinebanking.controller.customer;
 
 import java.util.List;
 

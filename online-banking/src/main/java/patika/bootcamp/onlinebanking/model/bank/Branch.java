@@ -29,6 +29,24 @@ public class Branch extends BaseModel{
 	@OneToMany(mappedBy = "branch",cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
 	
+	public Branch addAccount(Account account) {
+		if( accounts.contains(account) ) {
+			return this;
+		}
+		accounts.add(account);
+		account.setBranch(this);
+		return this;
+	}
+	
+	public Branch removeAccount(Account account) {
+		if( !accounts.contains(account) ) {
+			return this;
+		}
+		accounts.remove(account);
+		account.setBranch(null);
+		return this;
+	}
+	
 	@OneToMany(mappedBy = "bankBranch", orphanRemoval = true)
 	private Set<CreditCard> creditCards = new HashSet<>(); 
 }

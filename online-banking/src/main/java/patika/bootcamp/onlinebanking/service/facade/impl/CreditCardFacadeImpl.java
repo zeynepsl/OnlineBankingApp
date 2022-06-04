@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.CreditCardConverter;
+import patika.bootcamp.onlinebanking.converter.card.CreditCardConverter;
 import patika.bootcamp.onlinebanking.dto.card.CreateCreditCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
@@ -36,11 +37,13 @@ public class CreditCardFacadeImpl implements CreditCardFacade {
 	private final CreditCardService creditCardService;
 	private final BranchService branchService;
 	private final CreditCardConverter creditCardConverter;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public ResponseEntity<CreditCardResponseDto> create(CreateCreditCardRequestDto createCreditCardRequestDto)
 			throws BaseException {
 		CreditCard creditCard = creditCardConverter.toCreditCard(createCreditCardRequestDto);
+		creditCard.setPassword(passwordEncoder.encode(createCreditCardRequestDto.getPassword()));
 
 		Customer customer = customerService.get(createCreditCardRequestDto.getCustomerId());
 		creditCard.setCustomer(customer);

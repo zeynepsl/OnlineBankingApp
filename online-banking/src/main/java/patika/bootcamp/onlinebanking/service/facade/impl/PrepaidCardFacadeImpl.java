@@ -7,10 +7,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.PrepaidCardConverter;
+import patika.bootcamp.onlinebanking.converter.card.PrepaidCardConverter;
 import patika.bootcamp.onlinebanking.dto.card.CreatePrepaidCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.PrepaidCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
@@ -29,12 +30,13 @@ public class PrepaidCardFacadeImpl implements PrepaidCardFacade {
 	private final PrepaidCardService prepaidCardService;
 	private final CustomerService customerService;
 	private final PrepaidCardConverter prepaidCardConverter;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public ResponseEntity<PrepaidCardResponseDto> create(CreatePrepaidCardRequestDto createPrepaidCardRequestDto)
 			throws BaseException {
 		PrepaidCard prepaidCard = prepaidCardConverter.toPrepaidCard(createPrepaidCardRequestDto);
-
+		prepaidCard.setPassword(passwordEncoder.encode(createPrepaidCardRequestDto.getPassword()));
 		/*TO DO:
 		 * burada customerService e bagli olmamin sebebi Customer nesnesinin fieldlarina ihtiyacim olmasi.
 		 * converter da sunu yapiyordum:

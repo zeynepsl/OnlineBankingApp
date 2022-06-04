@@ -3,7 +3,6 @@ package patika.bootcamp.onlinebanking.converter.customer;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.CustomerConverter;
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerAddressRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerAddressResponseDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;

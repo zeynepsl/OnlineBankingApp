@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.CurrencyConverter;
+import patika.bootcamp.onlinebanking.converter.account.CurrencyConverter;
 import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
 import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;

@@ -5,8 +5,6 @@ import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
-import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
-import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 

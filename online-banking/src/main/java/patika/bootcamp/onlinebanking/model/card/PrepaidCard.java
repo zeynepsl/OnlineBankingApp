@@ -3,7 +3,6 @@ package patika.bootcamp.onlinebanking.model.card;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 

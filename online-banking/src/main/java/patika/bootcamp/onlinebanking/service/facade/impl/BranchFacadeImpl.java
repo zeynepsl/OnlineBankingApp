@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.BranchConverter;
+import patika.bootcamp.onlinebanking.converter.bank.BranchConverter;
 import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchRequestDto;
 import patika.bootcamp.onlinebanking.exception.BranchServiceOperationException;

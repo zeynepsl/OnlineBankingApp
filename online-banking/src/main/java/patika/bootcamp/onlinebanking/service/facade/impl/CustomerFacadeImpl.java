@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.converter.CustomerConverter;
+import patika.bootcamp.onlinebanking.converter.customer.CustomerConverter;
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;

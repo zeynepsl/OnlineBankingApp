@@ -1,17 +1,15 @@
-package patika.bootcamp.onlinebanking.converter;
+package patika.bootcamp.onlinebanking.converter.card;
 
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
+import patika.bootcamp.onlinebanking.converter.account.AccountConverter;
+import patika.bootcamp.onlinebanking.converter.customer.CustomerConverter;
 import patika.bootcamp.onlinebanking.dto.card.BankCardResponseDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateBankCardRequestDto;
-import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
-import patika.bootcamp.onlinebanking.model.customer.Customer;
-import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +20,6 @@ public class BankCardConverter {
 
 	public BankCard toBankCard(CreateBankCardRequestDto createBankCardRequestDto) {
 		BankCard bankCard = new BankCard();	
-		bankCard.setPassword(createBankCardRequestDto.getPassword());
 	
 		bankCard.setCreatedAt(new Date());
 		bankCard.setCreatedBy("Zeynep Salman");
