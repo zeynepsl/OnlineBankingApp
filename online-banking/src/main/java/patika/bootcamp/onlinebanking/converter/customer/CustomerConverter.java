@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
+import patika.bootcamp.onlinebanking.model.User;
 import patika.bootcamp.onlinebanking.model.customer.ContactInformation;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.util.generate.CustomerNumberGenerator;
@@ -20,6 +21,12 @@ public class CustomerConverter {
 		customer.setLastName(createCustomerRequestDto.getLastName());
 		customer.setBirthDate(createCustomerRequestDto.getBirthDate());
 		customer.setCustomerNumber(CustomerNumberGenerator.generate());
+		
+		User user = new User();
+		user.setPassword(createCustomerRequestDto.getPassword());
+		user.setEmail(createCustomerRequestDto.getEmail());
+		customer.setUser(user);
+		user.setCustomer(customer);
 		
 		ContactInformation contactInformation = new ContactInformation();
 		contactInformation.setPrimaryEmail(createCustomerRequestDto.getEmail());

@@ -34,6 +34,9 @@ public class TransactionFacadeImpl implements TransactionFacade{
 	@Override
 	public ResponseEntity<TransactionResponseDto> monenyTransaction(CreateTransactionRequestDto createTransactionRequestDto) throws IOException {
 		Transaction transaction = transactionConverter.toTransaction(createTransactionRequestDto);
+		Account account = accountService.findByIban(createTransactionRequestDto.getSenderIbanNo());
+		String customerNumber = account.getCustomer().getCustomerNumber();
+		transaction.setSenderCustomerNumber(customerNumber);
 		transaction = transactionService.monenyTransaction(transaction);
 		
 		return new ResponseEntity<>(transactionConverter.toTransactionResponseDto(transaction), HttpStatus.CREATED);

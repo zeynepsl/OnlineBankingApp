@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import patika.bootcamp.onlinebanking.core.service.BaseService;
+import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
+import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 import patika.bootcamp.onlinebanking.model.transaction.Transaction;

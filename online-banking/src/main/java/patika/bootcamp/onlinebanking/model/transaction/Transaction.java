@@ -8,7 +8,6 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.account.Account;
-import patika.bootcamp.onlinebanking.model.account.Currency;
 import patika.bootcamp.onlinebanking.model.base.BaseModel;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
@@ -17,10 +16,8 @@ import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 @Setter
 public class Transaction extends BaseModel{
 	
-	@ManyToOne
-	@JoinColumn(name = "sender_currency_id")
-	private Currency senderCurrency;
 	private String senderIbanNo;
+	private String senderCustomerNumber;//bir hesaba bagli olmayan kredi kartiyla transferde, gonderen tarafini belirtir.
 	
 	@ManyToOne
 	@JoinColumn(name = "sender_account_id")

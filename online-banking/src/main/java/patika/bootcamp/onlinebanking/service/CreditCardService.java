@@ -8,6 +8,7 @@ import patika.bootcamp.onlinebanking.core.service.BaseService;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
+import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 
 public interface CreditCardService extends BaseService<CreditCard>{
 	
@@ -23,8 +24,8 @@ public interface CreditCardService extends BaseService<CreditCard>{
 	BigDecimal getPeriodExpenditures(Long creditCardId);
 	BigDecimal getAmountOfDebt(Long creditCardId);//borc sorgulama
 	
-	void moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException;//alışveriş - market
-	void onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException;//online alışveriş
+	Transaction moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException;//alışveriş - market
+	Transaction onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException;//online alışveriş
 	
 	void payDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException;//bankamatik - , BigDecimal amount
 	void payDebtFromAccount(Long accountId);//hesaptan borç öde

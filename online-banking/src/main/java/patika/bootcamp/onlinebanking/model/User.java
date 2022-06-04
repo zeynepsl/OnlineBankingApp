@@ -9,11 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.base.BaseExtendedModel;
+import patika.bootcamp.onlinebanking.model.customer.Customer;
 
 @Entity
 @Getter
@@ -39,6 +41,9 @@ public class User extends BaseExtendedModel{
         roles.forEach(role -> role.setUsers(null));
         this.roles.removeAll(roles);
     }
+    
+    @OneToOne(mappedBy = "user")
+    private Customer customer;
 	/* 
 	  @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

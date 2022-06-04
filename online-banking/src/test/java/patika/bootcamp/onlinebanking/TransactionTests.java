@@ -2,16 +2,14 @@ package patika.bootcamp.onlinebanking;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Set;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import patika.bootcamp.onlinebanking.controller.account.AccountController;
 import patika.bootcamp.onlinebanking.controller.transaction.TransactionController;
-import patika.bootcamp.onlinebanking.converter.account.AccountConverter;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionRequestDto;
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
@@ -40,6 +38,9 @@ public class TransactionTests {
 	
 	@Autowired
 	CurrencyService currencyService;
+	
+	@Value("${bank.code}")
+	private String bankCode;
 
 	@Test
 	void should_create_success_transaction_in_different_currencies() throws IOException {
@@ -134,17 +135,14 @@ public class TransactionTests {
 		Branch branchFrom = new Branch();
 		branchFrom.setBranchCode("250");
 		branchFrom.setBranchName("Atakum Şubesi");
-		//branchFrom.setAccounts(Set.of(from));
 		from.setBranch(branchFrom);
 
-		String bankCode = "23232";
 		from.setCurrency(currencyService.findByCode("TRY"));
 		from.setAccountType(AccountType.CHECKING_ACCOUNT);
 		
 		Customer customerFrom = new Customer();
 		String customerNumber = CustomerNumberGenerator.generate();
 		customerFrom.setCustomerNumber(customerNumber);
-		//customerFrom.setAccounts(Set.of(from));
 		from.setCustomer(customerFrom);
 		
 		String additionalAccountNumber1 = AdditionalAccountNumberGenerator.generate();
@@ -220,12 +218,11 @@ public class TransactionTests {
 		Assertions.assertThat(transactionResponseDto.getRecipientIbanNo()).isEqualTo(to.getIban());
 		Assertions.assertThat(transactionResponseDto.getAmount()).isEqualTo(BigDecimal.valueOf(20));
 		
+		//100 tl bakiye vardi, 20 tl gonderdi, 80 tl kalmasi lazim
 		System.out.println("to bakiye: "+ to.getAccountBalance() + " -- from bakiye: " + from.getAccountBalance() + " -- from locked balance: " + from.getLockedBalance());
 		Assertions.assertThat(to.getAccountBalance()).isEqualByComparingTo(new BigDecimal(120));
 		Assertions.assertThat(from.getAccountBalance()).isEqualByComparingTo(new BigDecimal(80));
 		Assertions.assertThat(from.getLockedBalance()).isEqualByComparingTo(new BigDecimal(0));
-		
-		//100 tl bakiye vardi, 20 tl gonderdi, 80 tl kalmasi lazim
 		
 	}
 }

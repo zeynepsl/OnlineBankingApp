@@ -36,6 +36,8 @@ public class CreateCustomerRequestDto {
 	@Min(value = 18, message = "Persons under the age of 18 cannot be bank customers.")
 	private Integer age;
 	
+	private String password;
+	
 	@Past
 	private Date birthDate;
 	

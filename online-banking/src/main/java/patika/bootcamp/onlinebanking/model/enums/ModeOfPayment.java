@@ -6,5 +6,6 @@ public enum ModeOfPayment {
 	DigerKiralar,
 	ETicaretOdemeleri,
 	BorcOdeme,
+	KrediKartiIleOdeme,
 	DigerOdemeTurleri
 }

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,8 @@ import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
+import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
+import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 import patika.bootcamp.onlinebanking.repository.card.CreditCardRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.CreditCardService;
@@ -30,6 +33,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 	private final CreditCardRepository creditCardRepository;
 	private final AccountService accountService;
 	private final TransactionService transactionService;
+	private final BCryptPasswordEncoder passwordEncoder; 
 
 	@Override
 	public CreditCard create(CreditCard creditCard) throws BaseException {
@@ -103,14 +107,32 @@ public class CreditCardServiceImpl implements CreditCardService {
 	}
 
 	@Override
-	public void moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException {
+	public Transaction moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException {
 		creditCardPasswordValidate(creditCard.getPassword(), password);//password ler uyuşmalı uyuşmuyorsa hata ver --> burada ileride bcryptEncoder devreye girecek
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);//amount u periyodikHarcamalar ile topla, çıkan sonuç limiti aşıyorsa hata ver
 		updateToAccount(to, amount);//miktari alici hesabina aktar
+		
+		String fromCustomer = creditCard.getCustomer().getCustomerNumber();
+		Transaction transaction = createTransaction(fromCustomer, to, amount);
+		return transaction;
 	}
 
-	public void creditCardPasswordValidate(String inputPassword, String password) throws BaseException {
-		if ( !inputPassword.equals(password) ) {
+	public Transaction createTransaction(String fromCustomer, String to, BigDecimal amount) {
+		Transaction transaction = new Transaction();
+		transaction.setAmount(amount);
+		transaction.setModeOfPayment(ModeOfPayment.KrediKartiIleOdeme);
+		
+		Account toAccount = accountService.findByAccountNumber(to);
+		transaction.setRecipientIbanNo(toAccount.getIban());
+		transaction.setSenderCustomerNumber(fromCustomer);
+		transaction.setTransactionDate(new Date());
+		
+		return transaction;
+	}
+
+	public void creditCardPasswordValidate(String password, String inputPassword) throws BaseException {
+		
+		if ( !(passwordEncoder.encode(inputPassword)).equals(password)  ) {
 			throw new CreditCardServiceOperationException.PasswordWrong("The password you entered is incorrect");
 		}
 	}
@@ -156,7 +178,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 	}*/
 
 	@Override
-	public void onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException {
+	public Transaction onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException {
 
 		String cardNo = onlineTransferByCardRequestDto.getCardNo();
 		String firstName = onlineTransferByCardRequestDto.getFirstName();
@@ -171,6 +193,10 @@ public class CreditCardServiceImpl implements CreditCardService {
 		validateOnlineTransferInfo(firstName, lastName, cvv, dueDate, creditCard);
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);
 		updateToAccount(to, amount);
+		
+		String fromCustomer = creditCard.getCustomer().getCustomerNumber();
+		Transaction transaction = createTransaction(fromCustomer, to, amount);
+		return transaction;
 	}
 
 	public void validateOnlineTransferInfo(String firstName, String lastName, String cvv, Date dueDate,
