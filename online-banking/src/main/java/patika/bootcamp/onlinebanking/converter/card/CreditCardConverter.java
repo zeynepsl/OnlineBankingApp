@@ -21,7 +21,6 @@ public class CreditCardConverter {
 
 	public CreditCard toCreditCard(CreateCreditCardRequestDto createCreditCardRequestDto) {
 		CreditCard creditCard = new CreditCard();
-		
 		creditCard.setCardLimit(createCreditCardRequestDto.getCardLimit());
 		creditCard.setCreatedAt(new Date());
 		creditCard.setCreatedBy("Zeynep Salman");

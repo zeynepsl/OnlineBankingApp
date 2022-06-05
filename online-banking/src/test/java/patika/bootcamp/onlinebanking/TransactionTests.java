@@ -2,6 +2,8 @@ package patika.bootcamp.onlinebanking;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Set;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,6 +128,7 @@ public class TransactionTests {
 		transactionController.monenyTransaction(createTransactionRequestDto).getBody();
 	}
 	
+	//TO DO: bu test cascade leri All olarak istiyor, fakat account ve creditCard testleri de merge istiyor :|
 	@Test
 	void should_create_success_transaction() throws IOException {
 
@@ -135,13 +138,16 @@ public class TransactionTests {
 		Branch branchFrom = new Branch();
 		branchFrom.setBranchCode("250");
 		branchFrom.setBranchName("Atakum Şubesi");
+		//branchFrom.addAccount(from);
 		from.setBranch(branchFrom);
 
 		from.setCurrency(currencyService.findByCode("TRY"));
 		from.setAccountType(AccountType.CHECKING_ACCOUNT);
 		
 		Customer customerFrom = new Customer();
+		customerFrom.setConfirmedByAdmin(true);
 		String customerNumber = CustomerNumberGenerator.generate();
+		//customerFrom.addAccount(from);
 		customerFrom.setCustomerNumber(customerNumber);
 		from.setCustomer(customerFrom);
 		
@@ -159,6 +165,7 @@ public class TransactionTests {
 		branchTo.setBranchCode("250");
 		branchTo.setBranchName("Atakum Şubesi");
 		//branchTo.setAccounts(Set.of(to));
+		//branchTo.addAccount(to);
 		to.setBranch(branchTo);
 	
 		to.setCurrency(currencyService.findByCode("TRY"));
@@ -167,8 +174,9 @@ public class TransactionTests {
 		
 		Customer customerTo = new Customer();
 		String customerNumber2 = CustomerNumberGenerator.generate();
-		customerTo.setCustomerNumber(customerNumber2);
+		customerFrom.setConfirmedByAdmin(true);
 		//customerTo.setAccounts(Set.of(to));
+		customerTo.setCustomerNumber(customerNumber2);
 		to.setCustomer(customerTo);
 		
 		String additionalAccountNumber2 = AdditionalAccountNumberGenerator.generate();

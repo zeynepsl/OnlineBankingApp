@@ -9,6 +9,7 @@ import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionRequestDto
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionToAccountRequestDto;
 import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionToCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
+import patika.bootcamp.onlinebanking.dto.transaction.TransactionWithCardResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 
@@ -36,6 +37,7 @@ public class TransactionConverter {
 		transactionResponseDto.setAmount(transaction.getAmount());
 		transactionResponseDto.setModeOfPayment(transaction.getModeOfPayment());
 		transactionResponseDto.setRecipientIbanNo(transaction.getRecipientIbanNo());
+		transactionResponseDto.setSenderCustomerNUmber(transaction.getSenderCustomerNumber());
 		
 		AccountResponseDto senderAccountResponse = accountConverter.toAccountResponseDto(transaction.getSenderAccount());
 		transactionResponseDto.setSenderAccount(senderAccountResponse);
@@ -46,11 +48,23 @@ public class TransactionConverter {
 		
 		return transactionResponseDto;
 	}
+	
+	public TransactionWithCardResponseDto toTransactionWithCardResponseDto(Transaction transaction) {
+		TransactionWithCardResponseDto transactionWithCardResponseDto = new TransactionWithCardResponseDto();
+		transactionWithCardResponseDto.setId(transaction.getId());
+		transactionWithCardResponseDto.setAmount(transaction.getAmount());
+		transactionWithCardResponseDto.setModeOfPayment(transaction.getModeOfPayment());
+		transactionWithCardResponseDto.setRecipientIbanNo(transaction.getRecipientIbanNo());
+		transactionWithCardResponseDto.setSenderCustomerNUmber(transaction.getSenderCustomerNumber());
+		transactionWithCardResponseDto.setTransactionDate(transaction.getTransactionDate());
+		transactionWithCardResponseDto.setUseAllBalance(transaction.getUseAllBalance());
+		
+		return transactionWithCardResponseDto;
+	}
 
 	public Transaction toTransaction(CreateTransactionToAccountRequestDto transactionToAccountRequestDto, Account from, Account to) {
 		Transaction transaction = new Transaction();
 		transaction.setSenderIbanNo(from.getIban());
-		//transaction.setSenderCurrency(from.getCurrency());
 		transaction.setSenderAccount(from);
 		
 		transaction.setAmount(transactionToAccountRequestDto.getAmount());
@@ -62,7 +76,6 @@ public class TransactionConverter {
 	public Transaction toTransaction(CreateTransactionToCardRequestDto transactionToCardRequestDto, Account from, Account to) {
 		Transaction transaction = new Transaction();
 		transaction.setSenderIbanNo(from.getIban());
-		//transaction.setSenderCurrency(from.getCurrency());
 		transaction.setSenderAccount(from);
 		transaction.setRecipientIbanNo(to.getIban());
 		

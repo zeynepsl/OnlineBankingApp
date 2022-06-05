@@ -42,8 +42,20 @@ public class User extends BaseExtendedModel{
         this.roles.removeAll(roles);
     }
     
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade={CascadeType.MERGE, CascadeType.PERSIST})
     private Customer customer;
+    
+    public User addCustomer(Customer customer) {
+    	Customer oldCustomer = this.customer;
+    	if(oldCustomer != null) {
+    		oldCustomer.setUser(null);
+    	}
+    	if(customer != null) {
+    		customer.setUser(this);
+    	}
+    	return this;
+    }
+    
 	/* 
 	  @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -21,7 +21,6 @@ public class BranchConverter {
 		bankBranch.setBranchName(createBankBranchRequestDto.getBranchName());
 		
 		BranchAddress branchAddress = new BranchAddress();
-		branchAddress.setAdressDescription(createBankBranchRequestDto.getCreateBranchAddressRequestDto().getAdressDescription());
 		branchAddress.setCity(createBankBranchRequestDto.getCreateBranchAddressRequestDto().getCity());
 		branchAddress.setCountry(createBankBranchRequestDto.getCreateBranchAddressRequestDto().getCountry());
 		branchAddress.setDistrict(createBankBranchRequestDto.getCreateBranchAddressRequestDto().getDistrict());

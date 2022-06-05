@@ -25,7 +25,6 @@ public class BaseControllerAdvice {
 		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 	
-	//javax.validation.ConstraintViolationException: 
 	// [org.springframework.web.method.annotation.MethodArgumentTypeMismatchExceptio
 	
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)

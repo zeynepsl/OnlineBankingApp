@@ -52,7 +52,6 @@ public class AccountFacadeImpl implements AccountFacade{
 		customer.addAccount(account);
 		account.setCustomer(customer);
 		
-		
 		/*Branch bankBranch = new Branch();
 		bankBranch.setId(createAccountRequestDto.getBranchId());
 		account.setBranch(bankBranch); bu kullanim mantikli fakat ise yaramiyor, branch i sadece id si ile getiriyor, 
@@ -60,6 +59,7 @@ public class AccountFacadeImpl implements AccountFacade{
 		fakat benim branch in diger alanlarina da ihityacim var su an*/
 		 
 		Branch branch = branchService.get(createAccountRequestDto.getBranchId());
+		//branch.addAccount(account);
 		account.setBranch(branch);
 		
 		String accountNumber = AccountNumberGenerator.generate(branch.getBranchCode(), customer.getCustomerNumber(), additionalAccountNumber);
@@ -79,15 +79,12 @@ public class AccountFacadeImpl implements AccountFacade{
 			log.info("size {}",size);
 			//isEmpty() ise yaramiyor, boyutu 1 olarak algiliyor ama liste bos :( , garip olan da test ederken size'ın sifir olarak algilanmasi
 			//yani; app calisirken size 1 mi, app'i test ederken 0 mi diye kontrol :| 
-			if ( size == 1 ) {
+			if ( size == 0 ) {
 				log.info("kullanici ilk defa vadesiz hesap olusturuyor");
 				BankCard bankCard = accountService.createBankCardWhileCreatingFirstCheckingAccount(account);
 				log.info("bankkCard id {}", bankCard);
 				account.setBankCard(bankCard);
 				bankCard.setAccount(account);
-				log.info("kullanicinin banka karti olusturuldu");
-				//accountRepository.save(account);
-				//update(account);
 			}
 		}
 		

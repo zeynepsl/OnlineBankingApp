@@ -6,7 +6,6 @@ import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
-import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 
 @Getter
@@ -14,8 +13,8 @@ import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 public class TransactionResponseDto {
 	private Long id;
 	private String senderIbanNo;
-	private CurrencyResponseDto senderCurrency;
 	private AccountResponseDto senderAccount;
+	private String senderCustomerNUmber;
 	
 	private String recipientIbanNo;
 	private Date transactionDate;

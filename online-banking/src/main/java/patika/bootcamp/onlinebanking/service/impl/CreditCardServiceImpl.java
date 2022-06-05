@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CreditCardServiceOperationException;
@@ -29,11 +31,12 @@ import patika.bootcamp.onlinebanking.service.TransactionService;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CreditCardServiceImpl implements CreditCardService {
 	private final CreditCardRepository creditCardRepository;
 	private final AccountService accountService;
 	private final TransactionService transactionService;
-	private final BCryptPasswordEncoder passwordEncoder; 
+	private final PasswordEncoder passwordEncoder; 
 
 	@Override
 	public CreditCard create(CreditCard creditCard) throws BaseException {
@@ -107,35 +110,40 @@ public class CreditCardServiceImpl implements CreditCardService {
 	}
 
 	@Override
-	public Transaction moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount) throws BaseException, IOException {
-		creditCardPasswordValidate(creditCard.getPassword(), password);//password ler uyuşmalı uyuşmuyorsa hata ver --> burada ileride bcryptEncoder devreye girecek
+	public Transaction moneyTransfer(CreditCard creditCard, String inputPassword, String to, BigDecimal amount) throws BaseException, IOException {
+		String hashedPassword = creditCard.getPassword();
+		creditCardPasswordValidate(inputPassword, creditCard.getPassword());//password ler uyuşmalı uyuşmuyorsa hata ver --> burada ileride bcryptEncoder devreye girecek
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);//amount u periyodikHarcamalar ile topla, çıkan sonuç limiti aşıyorsa hata ver
 		updateToAccount(to, amount);//miktari alici hesabina aktar
 		
-		String fromCustomer = creditCard.getCustomer().getCustomerNumber();
-		Transaction transaction = createTransaction(fromCustomer, to, amount);
+		String fromCustomerNumber = creditCard.getCustomer().getCustomerNumber();
+		Transaction transaction = createTransaction(fromCustomerNumber, to, amount);
 		return transaction;
 	}
+	
+	public void creditCardPasswordValidate(String inputPassword, String encodedPass) throws BaseException {
+		//String encodedPass = creditCard.getPassword();
+		boolean isMatched = passwordEncoder.matches(inputPassword, encodedPass);
+		if ( !isMatched ) {
+			throw new CreditCardServiceOperationException.PasswordWrong("The password you entered is incorrect");
+		}
+		//if(PassEncoding.getInstance().passwordEncoder.matches(editUser.getPassword_1(), user.getPassword()))
+	}
 
-	public Transaction createTransaction(String fromCustomer, String to, BigDecimal amount) {
+	public Transaction createTransaction(String fromCustomerNumber, String to, BigDecimal amount) {
 		Transaction transaction = new Transaction();
 		transaction.setAmount(amount);
 		transaction.setModeOfPayment(ModeOfPayment.KrediKartiIleOdeme);
+		transaction.setSenderCustomerNumber(fromCustomerNumber);
+		transaction.setTransactionDate(new Date());
 		
 		Account toAccount = accountService.findByAccountNumber(to);
 		transaction.setRecipientIbanNo(toAccount.getIban());
-		transaction.setSenderCustomerNumber(fromCustomer);
-		transaction.setTransactionDate(new Date());
-		
+		//burada senderIbanNo'yu, krediKart herhangi bir hesab bagli olmadigi icin bos biraktik
+		//ay sonu otomatik borc odemede hangi hesap kullanilacaksa, bu transaction satirindaki senderIban, o Account un ibani ile gıncellenecek
 		return transaction;
 	}
 
-	public void creditCardPasswordValidate(String password, String inputPassword) throws BaseException {
-		
-		if ( !(passwordEncoder.encode(inputPassword)).equals(password)  ) {
-			throw new CreditCardServiceOperationException.PasswordWrong("The password you entered is incorrect");
-		}
-	}
 	
 	public void updateAvailableLimitAndDebtInCreditCard(CreditCard creditCard, BigDecimal amount) {
 		
@@ -169,7 +177,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 		accountService.update(toAccount);
 	}
 
-	
 
 	/*public BigDecimal calculateAmountWithNewCurrency(BigDecimal amount, String toCurrencyUnit, String fromCurrencyUnit) throws IOException {
 		Double rate = currencyConverter.converter(toCurrencyUnit, fromCurrencyUnit);
@@ -194,8 +201,8 @@ public class CreditCardServiceImpl implements CreditCardService {
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);
 		updateToAccount(to, amount);
 		
-		String fromCustomer = creditCard.getCustomer().getCustomerNumber();
-		Transaction transaction = createTransaction(fromCustomer, to, amount);
+		String fromCustomerNumber = creditCard.getCustomer().getCustomerNumber();
+		Transaction transaction = createTransaction(fromCustomerNumber, to, amount);
 		return transaction;
 	}
 
@@ -222,7 +229,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
 	@Override
 	public void payDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException {
-		creditCardPasswordValidate(creditCard.getPassword(), password);
+		creditCardPasswordValidate(password, creditCard.getPassword());
 		basePaymentDebt(creditCard, creditCard.getAmountOfDebt());
 	}
 

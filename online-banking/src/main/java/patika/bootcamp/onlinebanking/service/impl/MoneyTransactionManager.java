@@ -37,12 +37,10 @@ public class MoneyTransactionManager implements TransactionService {
 	public Transaction monenyTransaction(Transaction transaction) throws IOException {
 		Account from = accountService.findByIban(transaction.getSenderIbanNo());
 		Account to = accountService.findByIban(transaction.getRecipientIbanNo());
-		log.info("1. gonderici hesabi: {}", from.getIban());
 		validateAccountType(from.getAccountType());
-		log.info("2.");
 		BigDecimal fromBalance = from.getAccountBalance();
 		BigDecimal toBalance = to.getAccountBalance();
-		log.info("gonderren toplam bakiye: {}", fromBalance);
+		log.info("gonderen toplam bakiye: {}", fromBalance);
 		log.info("alici toplam bakiye: {}", toBalance);
 		boolean useAllBalance = transaction.getUseAllBalance();
 		if (useAllBalance) {
@@ -57,7 +55,6 @@ public class MoneyTransactionManager implements TransactionService {
 		log.info("----------------------------bakiye kontrol yapilacak----------------------------");
 		validateBalance(fromBalance, transactionAmount);
 		log.info("locked balance: {}", transactionAmount);
-		//para birimi donustor
 		String fromCurrency = from.getCurrency().getCode();
 		String toCurrency = to.getCurrency().getCode();
 			
@@ -76,6 +73,7 @@ public class MoneyTransactionManager implements TransactionService {
 		
 		transaction.setTransactionDate(new Date());
 		transaction.setSenderAccount(from);
+		transaction.setSenderCustomerNumber(from.getCustomer().getCustomerNumber());
 		transaction = create(transaction);
 		return transaction;
 	}

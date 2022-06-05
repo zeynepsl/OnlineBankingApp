@@ -17,7 +17,6 @@ public class CustomerAddressConverter {
 	public CustomerAddress toCustomerAddress(CreateCustomerAddressRequestDto createCustomerAddressRequestDto) {
 		CustomerAddress customerAddress = new CustomerAddress();
 		customerAddress.setAddressType(createCustomerAddressRequestDto.getAddressType());
-		customerAddress.setAdressDescription(createCustomerAddressRequestDto.getAdressDescription());
 		customerAddress.setCity(createCustomerAddressRequestDto.getCity());
 		customerAddress.setCountry(createCustomerAddressRequestDto.getCountry());
 		
@@ -35,7 +34,6 @@ public class CustomerAddressConverter {
 		CustomerAddressResponseDto customerAddressResponseDto = new CustomerAddressResponseDto();
 		customerAddressResponseDto.setId(customerAddress.getId());
 		customerAddressResponseDto.setAddressType(customerAddress.getAddressType());
-		customerAddressResponseDto.setAdressDescription(customerAddress.getAdressDescription());
 		customerAddressResponseDto.setCity(customerAddress.getCity());
 		customerAddressResponseDto.setCountry(customerAddress.getCountry());
 		customerAddressResponseDto.setDistrict(customerAddress.getDistrict());

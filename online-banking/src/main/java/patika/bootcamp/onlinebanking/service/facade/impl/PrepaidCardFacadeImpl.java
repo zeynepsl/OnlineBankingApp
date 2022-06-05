@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,8 @@ public class PrepaidCardFacadeImpl implements PrepaidCardFacade {
 	private final PrepaidCardService prepaidCardService;
 	private final CustomerService customerService;
 	private final PrepaidCardConverter prepaidCardConverter;
-	private final BCryptPasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
+	
 
 	@Override
 	public ResponseEntity<PrepaidCardResponseDto> create(CreatePrepaidCardRequestDto createPrepaidCardRequestDto)

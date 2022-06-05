@@ -5,23 +5,30 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.converter.card.CreditCardConverter;
+import patika.bootcamp.onlinebanking.converter.transaction.TransactionConverter;
 import patika.bootcamp.onlinebanking.dto.card.CreateCreditCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
+import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
+import patika.bootcamp.onlinebanking.dto.transaction.TransactionWithCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
+import patika.bootcamp.onlinebanking.exception.CreditCardServiceOperationException;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
+import patika.bootcamp.onlinebanking.model.enums.AccountType;
+import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.BranchService;
 import patika.bootcamp.onlinebanking.service.CreditCardService;
@@ -32,21 +39,40 @@ import patika.bootcamp.onlinebanking.util.generate.CardNumberGenerator;
 @Service
 @RequiredArgsConstructor
 public class CreditCardFacadeImpl implements CreditCardFacade {
+	private final CreditCardService creditCardService;
+	private final CreditCardConverter creditCardConverter;
 	private final AccountService accountService;
 	private final CustomerService customerService;
-	private final CreditCardService creditCardService;
 	private final BranchService branchService;
-	private final CreditCardConverter creditCardConverter;
-	private final BCryptPasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
+	private final TransactionConverter transactionConverter;
+	
 
 	@Override
 	public ResponseEntity<CreditCardResponseDto> create(CreateCreditCardRequestDto createCreditCardRequestDto)
 			throws BaseException {
-		CreditCard creditCard = creditCardConverter.toCreditCard(createCreditCardRequestDto);
-		creditCard.setPassword(passwordEncoder.encode(createCreditCardRequestDto.getPassword()));
-
 		Customer customer = customerService.get(createCreditCardRequestDto.getCustomerId());
+		Set<Account> customerAccounts = customer.getAccounts();
+		if(customerAccounts.isEmpty()) {
+			throw new CreditCardServiceOperationException.CustomerDoesNotHaveAnAccount("Customer without an account cannot create a credit card");
+		}
+		int accountSize = customerAccounts.size();
+		int savingsAccountSize = 0;
+		for(Account account : customerAccounts) {
+			if(account.getAccountType() == AccountType.SAVINGS_ACCOUNT) {
+				savingsAccountSize++;
+			}
+		}
+		if(accountSize == savingsAccountSize) {
+			throw new CreditCardServiceOperationException.CustomerOnlyHasSavingsAccount("A customer who only has a savings account cannot create a credit card.");
+		}
+		
+		CreditCard creditCard = creditCardConverter.toCreditCard(createCreditCardRequestDto);
+		
+		String password = createCreditCardRequestDto.getPassword();
+		creditCard.setPassword(passwordEncoder.encode(password));
 		creditCard.setCustomer(customer);
+		creditCard.setAvailableLimit(createCreditCardRequestDto.getCardLimit());//kart ilk olusturulurken kullanilabilirLimit, karta belirelenen limit kadaradir
 		
 		Branch branch = branchService.get(createCreditCardRequestDto.getBankBranchId());
 		creditCard.setBankBranch(branch);
@@ -145,16 +171,16 @@ public class CreditCardFacadeImpl implements CreditCardFacade {
 	}
 
 	@Override
-	public ResponseEntity<?> moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount)
+	public ResponseEntity<TransactionWithCardResponseDto> moneyTransfer(CreditCard creditCard, String password, String to, BigDecimal amount)
 			throws BaseException, IOException {
-		creditCardService.moneyTransfer(creditCard, password, to, amount);
-		return ResponseEntity.ok().build();
+		Transaction transaction = creditCardService.moneyTransfer(creditCard, password, to, amount);
+		return ResponseEntity.ok(transactionConverter.toTransactionWithCardResponseDto(transaction));
 	}
 
 	@Override
-	public ResponseEntity<?> onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException {
-		creditCardService.onlineMoneyTransfer(onlineTransferByCardRequestDto);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<TransactionWithCardResponseDto> onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException {
+		Transaction transaction = creditCardService.onlineMoneyTransfer(onlineTransferByCardRequestDto);
+		return ResponseEntity.ok(transactionConverter.toTransactionWithCardResponseDto(transaction));
 	}
 
 	@Override

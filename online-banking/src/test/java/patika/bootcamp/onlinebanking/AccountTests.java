@@ -44,17 +44,19 @@ public class AccountTests {
 	void should_create_success_bankcard_while_customer_s_first_checkingaccount() {
 		CreateCustomerRequestDto createCustomerRequestDto = new CreateCustomerRequestDto();
 		createCustomerRequestDto.setAge(45);
-		createCustomerRequestDto.setEmail("asd@asd.com");
+		createCustomerRequestDto.setEmail("asdasdasd@asd.com");
 		createCustomerRequestDto.setGender(Gender.MALE);
-		createCustomerRequestDto.setIdentityNumber(1323222L);
+		createCustomerRequestDto.setIdentityNumber(7893742374L);
 		createCustomerRequestDto.setPhoneNumber("+901111111111");
 		createCustomerRequestDto.setSecondaryPhoneNumber("+901111111111");
+		createCustomerRequestDto.setPassword("678");
 		CustomerResponseDto customerResponseDto = customerController.create(createCustomerRequestDto).getBody();
 		
 		Long customerId = customerResponseDto.getId();
+		customerController.confirmCustomer(customerId);
 		
 		Assertions.assertThat(customerId).isNotNull();
-		Assertions.assertThat(customerResponseDto.getEmail()).isEqualTo("asd@asd.com");
+		Assertions.assertThat(customerResponseDto.getEmail()).isEqualTo("asdasdasd@asd.com");
 		
 
 		CreateAccountRequestDto createAccountRequestDto = new CreateAccountRequestDto();

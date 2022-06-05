@@ -52,12 +52,18 @@ public class Customer extends BaseExtendedModel{
 	private Set<Account> accounts = new HashSet<>();
 	
 	public Customer addAccount(Account account) {
+		if( accounts.contains(account) ) {
+			return this;
+		}
 		accounts.add(account);
 		account.setCustomer(this);
 		return this;
 	}
 	
 	public Customer removeAccount(Account account) {
+		if( !accounts.contains(account) ) {
+			return this;
+		}
 		accounts.remove(account);
 		account.setCustomer(null);
 		return this;
@@ -73,7 +79,7 @@ public class Customer extends BaseExtendedModel{
 	@OneToOne(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
 	private BankCard bankCard;
 	
-	@OneToOne
+	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private User user;
 	

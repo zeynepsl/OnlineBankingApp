@@ -2,6 +2,22 @@ package patika.bootcamp.onlinebanking.exception;
 
 public final class CreditCardServiceOperationException {
 
+	public static class CustomerOnlyHasSavingsAccount extends BaseException {
+
+		public CustomerOnlyHasSavingsAccount(String message) {
+			super(message);
+		}
+
+	}
+
+	public static class CustomerDoesNotHaveAnAccount extends BaseException {
+
+		public CustomerDoesNotHaveAnAccount(String message) {
+			super(message);
+		}
+
+	}
+
 	public static class AmountMoreThanDebt extends BaseException {
 
 		public AmountMoreThanDebt(String message) {

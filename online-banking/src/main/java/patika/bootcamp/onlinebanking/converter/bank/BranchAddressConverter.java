@@ -15,13 +15,11 @@ public class BranchAddressConverter {
 		addressResponseDto.setCity(bankBranchAddress.getCity());
 		addressResponseDto.setDistrict(bankBranchAddress.getDistrict());
 		addressResponseDto.setNeighborhood(bankBranchAddress.getNeighborhood());
-		addressResponseDto.setAdressDescription(bankBranchAddress.getAdressDescription());
 		return addressResponseDto;
 	}
 
 	public BranchAddress toBranchAddress(CreateBranchAddressRequestDto createBranchAddressRequestDto) {
 		BranchAddress branchAddress = new BranchAddress();
-		branchAddress.setAdressDescription(createBranchAddressRequestDto.getAdressDescription());
 		branchAddress.setCity(createBranchAddressRequestDto.getCity());
 		branchAddress.setCountry(createBranchAddressRequestDto.getCountry());
 		branchAddress.setDistrict(createBranchAddressRequestDto.getDistrict());

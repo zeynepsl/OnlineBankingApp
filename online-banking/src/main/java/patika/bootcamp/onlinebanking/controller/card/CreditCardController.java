@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.card.CreateCreditCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
+import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
+import patika.bootcamp.onlinebanking.dto.transaction.TransactionWithCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.service.facade.CreditCardFacade;
@@ -81,13 +83,13 @@ public class CreditCardController {
 		return creditCardFacade.getAmountOfDebt(creditCardId);
 	}
 	
-	@PutMapping("/transfer/{senderCustomerId}/{to}/{amount}")
-	public ResponseEntity<?> moneyTransfer(@PathVariable CreditCard creditCard, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount) throws BaseException, IOException{
+	@PutMapping("/transfer/{to}/{amount}")
+	public ResponseEntity<TransactionWithCardResponseDto> moneyTransfer(@RequestBody CreditCard creditCard, @RequestParam String password, @PathVariable String to, @PathVariable BigDecimal amount) throws BaseException, IOException{
 		return creditCardFacade.moneyTransfer(creditCard, password, to, amount);
 	}
 	
 	@PatchMapping("/onlineTransfer")
-	public ResponseEntity<?> onlineMoneyTransfer(@RequestBody CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException{
+	public ResponseEntity<TransactionWithCardResponseDto> onlineMoneyTransfer(@RequestBody CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException{
 		return creditCardFacade.onlineMoneyTransfer(onlineTransferByCardRequestDto);
 	}
 	

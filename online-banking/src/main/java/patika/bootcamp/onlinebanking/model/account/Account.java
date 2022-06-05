@@ -41,7 +41,18 @@ public class Account extends BaseExtendedModel {
 	@ManyToOne(cascade = CascadeType.MERGE) // merge den all
 	@JoinColumn(name = "branch_id")
 	private Branch branch;
-
+	
+	public void setBranch(Branch branch) {
+		Branch oldBranch = this.branch;
+		this.branch = branch;
+		if(oldBranch != null) {
+			oldBranch.removeAccount(this);
+		}
+		if(branch != null) {
+			branch.addAccount(this);
+		}
+	}
+	
 	private String iban;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -60,12 +71,23 @@ public class Account extends BaseExtendedModel {
 	@ManyToOne(cascade = CascadeType.MERGE) // all dan
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
+	
+	public void setCustomer(Customer customer) {
+		Customer oldCustomer = this.customer;
+		this.customer = customer;
+		if(oldCustomer != null) {
+			oldCustomer.removeAccount(this);
+		}
+		if(customer != null) {
+			customer.addAccount(this);
+		}
+	}
 
 	@ManyToOne
 	@JoinColumn(name = "currency_id")
 	private Currency currency;
 
-	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private BankCard bankCard;
 
 	public Account addBankCard(BankCard bankCard) {
@@ -78,7 +100,7 @@ public class Account extends BaseExtendedModel {
 		return this;
 	}
 
-	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.MERGE)
 	private Set<Transaction> transactions = new HashSet<>();
 
 }

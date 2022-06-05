@@ -13,6 +13,5 @@ public abstract class Address extends BaseModel{
 	private String city;
 	private String district;
 	private String neighborhood;//mahalle
-	private String adressDescription;//cadde ismi, no vs..
 	
 }

@@ -6,10 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import patika.bootcamp.onlinebanking.core.service.BaseService;
-import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
-import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 import patika.bootcamp.onlinebanking.model.transaction.Transaction;
@@ -24,30 +22,16 @@ public interface TransactionService extends BaseService<Transaction> {
 
 	void deductFromAccount(Account from, BigDecimal amount);
 	
+	boolean currenciesAreNotEqual(String fromCurrency, String toCurrency);
+	
+	BigDecimal calculateAmountWithToCurrency(BigDecimal transactionAmount, String toCurrency, String fromCurrency)
+			throws IOException;
+	
 	List<Transaction> findByTransactionDate(Date transacionDate);
 	List<Transaction> findByModeOfPayment(ModeOfPayment modeOfPayment);
 	List<Transaction> findBySenderIbanNo(String ibanNo);
 	List<Transaction> findByRecipientIbanNo(String ibanNo);
 	List<Transaction> findBySenderAccountId(Long id);
 
-	BigDecimal calculateAmountWithToCurrency(BigDecimal transactionAmount, String toCurrency, String fromCurrency)
-			throws IOException;
-
-	boolean currenciesAreNotEqual(String fromCurrency, String toCurrency);
-	
-	// doviz donusumu
-
-	// kullanıcının İki hesabı arası para transferi yapılabilecek
-
-	// bunu yaptık: --> validateType()
-	// vadesiz mevduat hesabı başka hesaplara para transferi için
-	// kullanılabilecekken birikim hesabından doğrudan para transferi yapılamayacak.
-
-	/*
-	 * Bir müşteri farklı para birimlerinde açılan hesaplar arası transfer yapmak
-	 * isterse güncel para kuru ile dönüşüm yapılıp transfer öyle
-	 * gerçekleştirilemeli. Transfer işlemleri sadece IBAN üzerinden
-	 * gerçekleştirilebilecek.
-	 */
 
 }
