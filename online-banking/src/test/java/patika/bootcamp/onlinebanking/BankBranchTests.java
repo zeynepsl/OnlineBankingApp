@@ -28,7 +28,6 @@ public class BankBranchTests {
 		branchRequestDto.setBranchName("Fatih Sultan Mehmet Bulvari Subesi");
 		
 		CreateBranchAddressRequestDto branchAddressRequestDto = new CreateBranchAddressRequestDto();
-		branchAddressRequestDto.setAdressDescription("sube");
 		branchAddressRequestDto.setCity("bursa");
 		branchAddressRequestDto.setCountry("turkiye");
 		branchAddressRequestDto.setDistrict("nilufer");

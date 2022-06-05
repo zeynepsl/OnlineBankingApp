@@ -1,8 +1,9 @@
- package patika.bootcamp.onlinebanking.service.impl;
+package patika.bootcamp.onlinebanking.service.impl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,14 +37,14 @@ public class CreditCardServiceImpl implements CreditCardService {
 	private final CreditCardRepository creditCardRepository;
 	private final AccountService accountService;
 	private final TransactionService transactionService;
-	private final PasswordEncoder passwordEncoder; 
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public CreditCard create(CreditCard creditCard) throws BaseException {
 		creditCard = creditCardRepository.save(creditCard);
 		return creditCard;
 	}
-	
+
 	@Override
 	public CreditCard get(Long id) throws BaseException {
 		CreditCard creditCard = creditCardRepository.findById(id)
@@ -110,24 +111,25 @@ public class CreditCardServiceImpl implements CreditCardService {
 	}
 
 	@Override
-	public Transaction moneyTransfer(CreditCard creditCard, String inputPassword, String to, BigDecimal amount) throws BaseException, IOException {
-		String hashedPassword = creditCard.getPassword();
-		creditCardPasswordValidate(inputPassword, creditCard.getPassword());//password ler uyuşmalı uyuşmuyorsa hata ver --> burada ileride bcryptEncoder devreye girecek
-		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);//amount u periyodikHarcamalar ile topla, çıkan sonuç limiti aşıyorsa hata ver
-		updateToAccount(to, amount);//miktari alici hesabina aktar
-		
+	public Transaction moneyTransfer(CreditCard creditCard, String inputPassword, String to, BigDecimal amount)
+			throws BaseException, IOException {
+		creditCardPasswordValidate(inputPassword, creditCard.getPassword());// password ler uyuşmalı uyuşmuyorsa hata
+																			// ver --> burada ileride bcryptEncoder
+																			// devreye girecek
+		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);// amount u periyodikHarcamalar ile topla, çıkan
+																	// sonuç limiti aşıyorsa hata ver
+		updateToAccount(to, amount);// miktari alici hesabina aktar
+
 		String fromCustomerNumber = creditCard.getCustomer().getCustomerNumber();
 		Transaction transaction = createTransaction(fromCustomerNumber, to, amount);
 		return transaction;
 	}
-	
+
 	public void creditCardPasswordValidate(String inputPassword, String encodedPass) throws BaseException {
-		//String encodedPass = creditCard.getPassword();
 		boolean isMatched = passwordEncoder.matches(inputPassword, encodedPass);
-		if ( !isMatched ) {
+		if (!isMatched) {
 			throw new CreditCardServiceOperationException.PasswordWrong("The password you entered is incorrect");
 		}
-		//if(PassEncoding.getInstance().passwordEncoder.matches(editUser.getPassword_1(), user.getPassword()))
 	}
 
 	public Transaction createTransaction(String fromCustomerNumber, String to, BigDecimal amount) {
@@ -136,17 +138,18 @@ public class CreditCardServiceImpl implements CreditCardService {
 		transaction.setModeOfPayment(ModeOfPayment.KrediKartiIleOdeme);
 		transaction.setSenderCustomerNumber(fromCustomerNumber);
 		transaction.setTransactionDate(new Date());
-		
+
 		Account toAccount = accountService.findByAccountNumber(to);
 		transaction.setRecipientIbanNo(toAccount.getIban());
-		//burada senderIbanNo'yu, krediKart herhangi bir hesab bagli olmadigi icin bos biraktik
-		//ay sonu otomatik borc odemede hangi hesap kullanilacaksa, bu transaction satirindaki senderIban, o Account un ibani ile gıncellenecek
+		// burada senderIbanNo'yu, krediKart herhangi bir hesaba bagli olmadigi icin bos
+		// biraktik
+		// ay sonu otomatik borc odemede hangi hesap kullanilacaksa, bu transaction
+		// satirindaki senderIban, o Account un ibani ile gıncellenecek
 		return transaction;
 	}
 
-	
 	public void updateAvailableLimitAndDebtInCreditCard(CreditCard creditCard, BigDecimal amount) {
-		
+
 		BigDecimal limit = creditCard.getCardLimit();
 		BigDecimal newPeriodExpenditures = (creditCard.getPeriodExpenditures()).add(amount);
 
@@ -157,35 +160,29 @@ public class CreditCardServiceImpl implements CreditCardService {
 		creditCard.setPeriodExpenditures(newPeriodExpenditures);
 		update(creditCard);
 	}
-	
+
 	public void validateCreditCardLimit(BigDecimal limit, BigDecimal newPeriodExpenditures) throws BaseException {
 		if (newPeriodExpenditures.compareTo(limit) > 0) {
-			throw new CreditCardServiceOperationException.InsufficientCreditCardLimit("you are exceeding the credit card limit");
+			throw new CreditCardServiceOperationException.InsufficientCreditCardLimit(
+					"you are exceeding the credit card limit");
 		}
 	}
 
 	public void updateToAccount(String to, BigDecimal amount) throws IOException {
 		Account toAccount = accountService.findByAccountNumber(to);
-		
+
 		String toCurrency = toAccount.getCurrency().getCode();
-		
-		if( transactionService.currenciesAreNotEqual("TRY", toCurrency) ) {
+
+		if (transactionService.currenciesAreNotEqual("TRY", toCurrency)) {
 			amount = transactionService.calculateAmountWithToCurrency(amount, toCurrency, "TRY");
 		}
-		//amount = validateCurrencyTypeAndCalculateAmountWithNewCurrency(amount, toCurrency, "TRY");
 		toAccount.setAccountBalance(toAccount.getAccountBalance().add(amount));
 		accountService.update(toAccount);
 	}
 
-
-	/*public BigDecimal calculateAmountWithNewCurrency(BigDecimal amount, String toCurrencyUnit, String fromCurrencyUnit) throws IOException {
-		Double rate = currencyConverter.converter(toCurrencyUnit, fromCurrencyUnit);
-		amount = amount.multiply(BigDecimal.valueOf(rate));
-		return amount;
-	}*/
-
 	@Override
-	public Transaction onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto) throws IOException {
+	public Transaction onlineMoneyTransfer(CreateOnlineTransferByCardRequestDto onlineTransferByCardRequestDto)
+			throws IOException {
 
 		String cardNo = onlineTransferByCardRequestDto.getCardNo();
 		String firstName = onlineTransferByCardRequestDto.getFirstName();
@@ -200,7 +197,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 		validateOnlineTransferInfo(firstName, lastName, cvv, dueDate, creditCard);
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);
 		updateToAccount(to, amount);
-		
+
 		String fromCustomerNumber = creditCard.getCustomer().getCustomerNumber();
 		Transaction transaction = createTransaction(fromCustomerNumber, to, amount);
 		return transaction;
@@ -214,15 +211,17 @@ public class CreditCardServiceImpl implements CreditCardService {
 			throw new CreditCardServiceOperationException.WrongCardInformation("wrong card information");
 		}
 	}
-	
+
 	@Override
-	public void payDebtGivenFromAccount(CreditCard creditCard, BigDecimal amountOfPayment) throws BaseException, IOException {
+	public void payDebtGivenFromAccount(CreditCard creditCard, BigDecimal amountOfPayment)
+			throws BaseException, IOException {
 		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();
 
 		if (amountOfDebt.compareTo(amountOfPayment) < 0) {
-			throw new CreditCardServiceOperationException.AmountMoreThanDebt("The amount you will pay is more than the credit card debt");
+			throw new CreditCardServiceOperationException.AmountMoreThanDebt(
+					"The amount you will pay is more than the credit card debt");
 		}
-		
+
 		basePaymentDebt(creditCard, amountOfDebt);
 		update(creditCard);
 	}
@@ -236,22 +235,29 @@ public class CreditCardServiceImpl implements CreditCardService {
 	@Override
 	public void basePaymentDebt(CreditCard creditCard, BigDecimal amountOfDebt) throws BaseException, IOException {
 		Branch creditCardBankBranch = creditCard.getBankBranch();
-		// kredi kartı sahibinin kredi kart aldığı şubedeki hesaplari:
-		List<Account> accounts = accountService.findByBranchCodeAndCustomerId(creditCardBankBranch.getBranchCode(), creditCard.getCustomer().getId());
 
-		// o şubedeki hesapların arasından ilk once; vadesiz tl hesabına bakılır: vadesiz tl hesabı bakiyesi yeterliyse borç bu hesaptan ödenir:
+		// kredi kartı sahibinin kredi kart aldığı şubedeki hesaplari:
+		List<Account> accounts = accountService.findByBranchCodeAndCustomerId(creditCardBankBranch.getBranchCode(),
+				creditCard.getCustomer().getId());
+
+		// o şubedeki hesapların arasından ilk once; vadesiz tl hesabına bakılır:
+		// vadesiz tl hesabı bakiyesi yeterliyse borç bu hesaptan ödenir:
 		accounts.forEach(account -> {
-			if ((account.getAccountType() == AccountType.CHECKING_ACCOUNT) && (account.getCurrency().getName() == "TRY")) {
-				if ( (account.getAccountBalance()).compareTo(amountOfDebt) > 0) {
+			if ((account.getAccountType() == AccountType.CHECKING_ACCOUNT)
+					&& (account.getCurrency().getName() == "TRY")) {
+				if ((account.getAccountBalance()).compareTo(amountOfDebt) > 0) {
 					discountMoneyFromAccountAndUpdateDebt(creditCard, amountOfDebt, account);
+					updateTransaction(account);
 					return;
 				}
 			}
 		});
 
-		// vadesiz tl hesabında yeterli bakiye kalmamış, o zaman diğer para birimlerindeki hesaplara bak (forEach continue kabul etmedi :) )
+		// vadesiz tl hesabında yeterli bakiye kalmamış, o zaman diğer para
+		// birimlerindeki hesaplara bak (forEach continue kabul etmedi :) )
 		for (Account account : accounts) {
-			if ((account.getAccountType() == AccountType.CHECKING_ACCOUNT) && (account.getCurrency().getName() == "TRY")) {
+			if ((account.getAccountType() == AccountType.CHECKING_ACCOUNT)
+					&& (account.getCurrency().getName() == "TRY")) {
 				continue;
 			}
 			/*
@@ -260,15 +266,34 @@ public class CreditCardServiceImpl implements CreditCardService {
 			 */
 			String fromCurrency = account.getCurrency().getCode();
 			String toCurrency = "TRY";
-			 
+
 			BigDecimal newAmountOfDebt = transactionService.calculateAmountWithToCurrency(amountOfDebt, toCurrency, fromCurrency);
 			discountMoneyFromAccountAndUpdateDebt(creditCard, newAmountOfDebt, account);
+			updateTransaction(account);
 			return;
 		}
 		throw new CreditCardServiceOperationException.InsufficientBalance(
 				"Your credit card debt is not paid. you have insufficient balance");
 	}
-	
+
+	public void updateTransaction(Account senderAccount) {
+		Date date= new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int endMonth = cal.get(Calendar.MONTH) + 1;
+		int startMonth = endMonth - 1;
+		int year = cal.get(Calendar.YEAR);
+		List<Transaction> transactions = transactionService.findByTransactionDateBetweenAndSenderAccount_Id(
+				new Date(year, startMonth, 8), new Date(year, endMonth, 8), 1L);
+		for (Transaction transaction : transactions) {
+			if( transaction.getSenderAccount() == null && transaction.getSenderIbanNo() == null) {
+				transaction.setSenderAccount(senderAccount);
+				transaction.setSenderIbanNo(senderAccount.getIban());
+				transactionService.update(transaction);
+			}
+		}
+	}
+
 	public void discountMoneyFromAccountAndUpdateDebt(CreditCard creditCard, BigDecimal amountOfDebt, Account account) {
 		account.setAccountBalance(account.getAccountBalance().subtract(amountOfDebt));
 		accountService.update(account);
@@ -278,11 +303,11 @@ public class CreditCardServiceImpl implements CreditCardService {
 
 	@Override
 	public void payDebtFromAccount(Long accountId) {
-		Account account = accountService.get(accountId);//hesabı getir
-		BigDecimal accountBalance = account.getAccountBalance();//0
+		Account account = accountService.get(accountId);// hesabı getir
+		BigDecimal accountBalance = account.getAccountBalance();// 0
 
 		CreditCard creditCard = account.getCustomer().getCreditCard();
-		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();//152
+		BigDecimal amountOfDebt = creditCard.getAmountOfDebt();// 152
 
 		validateBalance(accountBalance, amountOfDebt);
 		discountMoneyFromAccountAndUpdateDebt(creditCard, amountOfDebt, account);

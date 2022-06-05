@@ -38,16 +38,16 @@ public class Account extends BaseExtendedModel {
 	@Size(min = 5, max = 5)
 	private String bankCode;
 
-	@ManyToOne(cascade = CascadeType.MERGE) // merge den all
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // merge den all
 	@JoinColumn(name = "branch_id")
 	private Branch branch;
 	
 	public void setBranch(Branch branch) {
-		Branch oldBranch = this.branch;
+		//Branch oldBranch = this.branch;
 		this.branch = branch;
-		if(oldBranch != null) {
+		/*if(oldBranch != null) {
 			oldBranch.removeAccount(this);
-		}
+		}*/
 		if(branch != null) {
 			branch.addAccount(this);
 		}
@@ -68,16 +68,16 @@ public class Account extends BaseExtendedModel {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType = AccountType.CHECKING_ACCOUNT;
 
-	@ManyToOne(cascade = CascadeType.MERGE) // all dan
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // all dan
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
 	public void setCustomer(Customer customer) {
-		Customer oldCustomer = this.customer;
+		//Customer oldCustomer = this.customer;
 		this.customer = customer;
-		if(oldCustomer != null) {
+		/*if(oldCustomer != null) {
 			oldCustomer.removeAccount(this);
-		}
+		}*/
 		if(customer != null) {
 			customer.addAccount(this);
 		}

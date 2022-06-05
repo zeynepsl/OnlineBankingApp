@@ -18,4 +18,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>{
 	List<Transaction> findByRecipientIbanNo(String ibanNo);
 	
 	List<Transaction> findBySenderAccount_Id(Long id);
+	
+	List<Transaction> findByTransactionDateBetweenAndSenderAccount_Id(Date startDate, Date endDate, Long senderAccountId);
 }

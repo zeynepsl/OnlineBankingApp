@@ -32,12 +32,11 @@ public class CustomerTests {
 		customer.setCustomerNumber(CustomerNumberGenerator.generate());
 		
 		CustomerAddress customerAddress = new CustomerAddress();
-		customerAddress.setAdressDescription("ev");
 		customerAddress.setCity("samsun");
 		customerAddress.setCountry("turkiye");
 		customerAddress.setDistrict("binevler");
 		customerAddress.setNeighborhood("mimar sinan");
-		customerAddress.setCustomer(customer);//**********
+		customerAddress.setCustomer(customer);
 		customer.setCustomerAddresses(Set.of(customerAddress));
 		customer.setFirstName("zeynep");
 		customer.setLastName("salman");

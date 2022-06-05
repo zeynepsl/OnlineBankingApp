@@ -20,9 +20,11 @@ public class BranchServiceImpl implements BranchService{
 	@Override
 	public Branch create(Branch bankBranch) {
 		//bir mahallede 1 sube olabilir:
-		boolean isExistBranch = existsByNeighborhood(bankBranch.getBankBranchAddress().getNeighborhood());
-		if(isExistBranch) {
-			throw new BranchServiceOperationException.BankBranchAlreadyExists("already exists");
+		if(bankBranch.getBankBranchAddress().getNeighborhood() != null) {
+			boolean isExistBranch = existsByNeighborhood(bankBranch.getBankBranchAddress().getNeighborhood());
+			if(isExistBranch) {
+				throw new BranchServiceOperationException.BankBranchAlreadyExists("already exists");
+			}
 		}
 		
 		bankBranch.getBankBranchAddress().getNeighborhood();

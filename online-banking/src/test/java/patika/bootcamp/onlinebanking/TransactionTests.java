@@ -17,11 +17,14 @@ import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionRequestDto
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
+import patika.bootcamp.onlinebanking.model.bank.BranchAddress;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 import patika.bootcamp.onlinebanking.service.AccountService;
+import patika.bootcamp.onlinebanking.service.BranchService;
 import patika.bootcamp.onlinebanking.service.CurrencyService;
+import patika.bootcamp.onlinebanking.service.CustomerService;
 import patika.bootcamp.onlinebanking.util.generate.AccountNumberGenerator;
 import patika.bootcamp.onlinebanking.util.generate.AdditionalAccountNumberGenerator;
 import patika.bootcamp.onlinebanking.util.generate.CustomerNumberGenerator;
@@ -40,6 +43,12 @@ public class TransactionTests {
 	
 	@Autowired
 	CurrencyService currencyService;
+	
+	@Autowired
+	BranchService branchService;
+	
+	@Autowired
+	CustomerService customerService;
 	
 	@Value("${bank.code}")
 	private String bankCode;
@@ -128,7 +137,6 @@ public class TransactionTests {
 		transactionController.monenyTransaction(createTransactionRequestDto).getBody();
 	}
 	
-	//TO DO: bu test cascade leri All olarak istiyor, fakat account ve creditCard testleri de merge istiyor :|
 	@Test
 	void should_create_success_transaction() throws IOException {
 
@@ -138,7 +146,7 @@ public class TransactionTests {
 		Branch branchFrom = new Branch();
 		branchFrom.setBranchCode("250");
 		branchFrom.setBranchName("Atakum Şubesi");
-		//branchFrom.addAccount(from);
+		branchFrom.addAccount(from);
 		from.setBranch(branchFrom);
 
 		from.setCurrency(currencyService.findByCode("TRY"));
@@ -147,7 +155,7 @@ public class TransactionTests {
 		Customer customerFrom = new Customer();
 		customerFrom.setConfirmedByAdmin(true);
 		String customerNumber = CustomerNumberGenerator.generate();
-		//customerFrom.addAccount(from);
+		customerFrom.addAccount(from);
 		customerFrom.setCustomerNumber(customerNumber);
 		from.setCustomer(customerFrom);
 		
@@ -165,7 +173,7 @@ public class TransactionTests {
 		branchTo.setBranchCode("250");
 		branchTo.setBranchName("Atakum Şubesi");
 		//branchTo.setAccounts(Set.of(to));
-		//branchTo.addAccount(to);
+		branchTo.addAccount(to);
 		to.setBranch(branchTo);
 	
 		to.setCurrency(currencyService.findByCode("TRY"));
@@ -177,7 +185,9 @@ public class TransactionTests {
 		customerFrom.setConfirmedByAdmin(true);
 		//customerTo.setAccounts(Set.of(to));
 		customerTo.setCustomerNumber(customerNumber2);
+		customerTo.addAccount(to);
 		to.setCustomer(customerTo);
+		
 		
 		String additionalAccountNumber2 = AdditionalAccountNumberGenerator.generate();
 		String accountNumber2 = AccountNumberGenerator.generate(branchTo.getBranchCode(), customerNumber2, additionalAccountNumber2);
