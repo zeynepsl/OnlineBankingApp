@@ -14,6 +14,7 @@ import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.service.facade.AccountFacade;
+import patika.bootcamp.onlinebanking.validator.Validator;
 
 @RestController
 @RequestMapping("api/accounts")
@@ -21,6 +22,7 @@ import patika.bootcamp.onlinebanking.service.facade.AccountFacade;
 @Slf4j
 public class AccountController {
 	private final AccountFacade accountFacade;
+	private final Validator<Long> idValidator;
 	
 	@PostMapping("/")
 	public ResponseEntity<AccountResponseDto> create(@RequestBody CreateAccountRequestDto accountRequestDto){
@@ -30,6 +32,7 @@ public class AccountController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<AccountResponseDto> get(@PathVariable Long id){
+		idValidator.validate(id);
 		return accountFacade.get(id);
 	}
 	
@@ -40,11 +43,13 @@ public class AccountController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id){
+		idValidator.validate(id);
 		return accountFacade.delete(id);
 	}
 	
 	@GetMapping("/balance/{accountId}")
 	public ResponseEntity<BigDecimal> getBalance(@PathVariable Long accountId){
+		idValidator.validate(accountId);
 		return accountFacade.getBalance(accountId);
 	}
 	
@@ -70,11 +75,13 @@ public class AccountController {
 	
 	@GetMapping("/customer/{customerId}")
 	public ResponseEntity<List<AccountResponseDto>> findByCustomerId(Long customerId){
+		idValidator.validate(customerId);
 		return accountFacade.findByCustomer_Id(customerId);
 	}
 	
 	@GetMapping("/currency/{currencyId}")
 	public ResponseEntity<List<AccountResponseDto>> findByCurrencyId(Long currencyId){
+		idValidator.validate(currencyId);
 		return accountFacade.findByCurrency_Id(currencyId);
 	}
 	
@@ -100,11 +107,13 @@ public class AccountController {
 	
 	@GetMapping("/branchName/{branchName}/customer/{customerId}")
 	public ResponseEntity<List<AccountResponseDto>> findByBranchCodeAndCustomerId(String branchCode, Long customerId){
+		idValidator.validate(customerId);
 		return accountFacade.findByBranchCodeAndCustomerId(branchCode, customerId);
 	}
 	
 	@GetMapping("/accountType/{accountType}/customer/{customerId}")
 	public ResponseEntity<List<AccountResponseDto>> findByAccountTypeAndCustomerId(AccountType accountType, Long customerId){
+		idValidator.validate(customerId);
 		return accountFacade.findByAccountTypeAndCustomerId(accountType, customerId);
 	}
 }

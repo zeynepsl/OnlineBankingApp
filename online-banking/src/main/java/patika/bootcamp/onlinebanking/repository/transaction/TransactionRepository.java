@@ -19,5 +19,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>{
 	
 	List<Transaction> findBySenderAccount_Id(Long id);
 	
-	List<Transaction> findByTransactionDateBetweenAndSenderAccount_Id(Date startDate, Date endDate, Long senderAccountId);
+	List<Transaction> findByTransactionDateBetweenAndSenderCustomerNumber(Date startDate, Date endDate, String senderCustomerNumber);
 }

@@ -20,12 +20,14 @@ import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionToCardRequ
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;
 import patika.bootcamp.onlinebanking.service.facade.TransactionFacade;
+import patika.bootcamp.onlinebanking.validator.Validator;
 
 @RestController
 @RequestMapping("api/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
 	private final TransactionFacade transactionFacade;
+	private final Validator<Long> idValidator;
 	
 	@PostMapping("/")
 	public ResponseEntity<TransactionResponseDto> monenyTransaction(@RequestBody CreateTransactionRequestDto createTransactionRequestDto) throws IOException{
@@ -65,6 +67,7 @@ public class TransactionController {
 	
 	@GetMapping("/sender")
 	public ResponseEntity<List<TransactionResponseDto>> findBySenderAccountId(@RequestParam Long accountId){
+		idValidator.validate(accountId);
 		return transactionFacade.findBySenderAccountId(accountId);
 	}
 }

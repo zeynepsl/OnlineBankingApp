@@ -68,6 +68,10 @@ public class AccountServiceImpl implements AccountService {
 		if (accountBalance.compareTo(BigDecimal.valueOf(0)) > 0) {
 			throw new AccountServiceOperationException.AccountCanNotDeleted("Account has balance so cannot deleted");
 		}
+		account.removeCurrency(account.getCurrency());
+		account.removeCustomer(account.getCustomer());
+		account.removeBranch(account.getBranch());
+		account.removeBankCard(account.getBankCard());
 		accountRepository.delete(account);
 	}
 	

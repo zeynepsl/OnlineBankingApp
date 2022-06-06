@@ -177,7 +177,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = customerRepository.findById(id)
 				.orElseThrow(() -> new CustomerServiceOperationException.CustomerNotFound("Customer not found"));
 		if (!customer.isActive()) {
-			throw new CustomerServiceOperationException.CustomerAlreadyPassive("the client is already disabled");
+			throw new CustomerServiceOperationException.CustomerAlreadyPassive("this customer is already disabled");
 		}
 		log.info("customer will be disable, isActive: {}", customer.isActive());
 		customer.setActive(false);

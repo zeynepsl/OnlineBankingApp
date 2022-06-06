@@ -14,6 +14,7 @@ import patika.bootcamp.onlinebanking.model.card.BankCard;
 import patika.bootcamp.onlinebanking.repository.card.BankCardRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.BankCardService;
+import patika.bootcamp.onlinebanking.validator.PasswordValidator;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,8 @@ import patika.bootcamp.onlinebanking.service.BankCardService;
 public class BankCardServiceImpl implements BankCardService{
 	private final BankCardRepository bankCardRepository;
 	private final AccountService accountService;
-
+	private final PasswordValidator passwordValidator;
+	
 	@Override
 	public BankCard create(BankCard bankCard) throws BaseException {
 		bankCard = bankCardRepository.save(bankCard);
@@ -44,8 +46,8 @@ public class BankCardServiceImpl implements BankCardService{
 	@Override
 	public void delete(Long id) throws BaseException {
 		BankCard bankCard = get(id);
-		bankCard.removeAccount(bankCard.getAccount());
-		bankCard.removeCustomer(bankCard.getCustomer());
+		bankCard = bankCard.removeAccount();
+		bankCard = bankCard.removeCustomer();
 		bankCardRepository.delete(bankCard);
 	}
 
@@ -76,7 +78,7 @@ public class BankCardServiceImpl implements BankCardService{
 
 	@Override
 	public void withdraw(BankCard bankCard, String password, BigDecimal amount) {
-		validatePassword(bankCard, password);
+		passwordValidator.validate(password, bankCard.getPassword());
 		
 		Account account = bankCard.getAccount();
 		BigDecimal accountBalance = account.getAccountBalance();
@@ -90,7 +92,7 @@ public class BankCardServiceImpl implements BankCardService{
 
 	@Override
 	public void deposit(BankCard bankCard, String password, BigDecimal amount) {
-		validatePassword(bankCard, password);
+		passwordValidator.validate(password, bankCard.getPassword());
 		Account account = bankCard.getAccount(); 
 		account.setAccountBalance(account.getAccountBalance().add(amount));
 		accountService.update(account);
@@ -98,15 +100,9 @@ public class BankCardServiceImpl implements BankCardService{
 
 	@Override
 	public String getIban(BankCard bankCard, String password) throws BaseException{
-		validatePassword(bankCard, password);
+		passwordValidator.validate(password, bankCard.getPassword());
 		return bankCard.getAccount().getIban();
 	}
-
-	public void validatePassword(BankCard bankCard, String password) throws BaseException{
-		if( !(bankCard.getPassword().equals(password)) ){
-			throw new BankCardServiceOperationException.PasswordWrong("wrong password");
-		}
-	} 
 	
 	public void validateBalance(BigDecimal amount, BigDecimal accountBalance) {
 		if( (amount.compareTo(accountBalance) > 0) ) {

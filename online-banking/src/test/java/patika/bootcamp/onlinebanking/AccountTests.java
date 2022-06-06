@@ -1,8 +1,6 @@
 package patika.bootcamp.onlinebanking;
 
 import java.math.BigDecimal;
-import java.util.Date;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +15,10 @@ import patika.bootcamp.onlinebanking.dto.customer.CreateCustomerRequestDto;
 import patika.bootcamp.onlinebanking.dto.customer.CustomerResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
-import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountStatus;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.model.enums.Gender;
 import patika.bootcamp.onlinebanking.service.AccountService;
-import patika.bootcamp.onlinebanking.service.CustomerService;
-import patika.bootcamp.onlinebanking.util.generate.CustomerNumberGenerator;
 
 @SpringBootTest
 public class AccountTests {
@@ -40,6 +35,9 @@ public class AccountTests {
 	@Value("${bank.code}")
 	private String bankCode;
 
+	//detached entity passes to persist
+	
+	
 	@Test
 	void should_create_success_bankcard_while_customer_s_first_checkingaccount() {
 		CreateCustomerRequestDto createCustomerRequestDto = new CreateCustomerRequestDto();
@@ -61,7 +59,6 @@ public class AccountTests {
 
 		CreateAccountRequestDto createAccountRequestDto = new CreateAccountRequestDto();
 		createAccountRequestDto.setAccountType(AccountType.CHECKING_ACCOUNT);
-		createAccountRequestDto.setBankCode(bankCode);
 		createAccountRequestDto.setBranchId(1L);
 		createAccountRequestDto.setCurrencyId(1L);// TRY
 		createAccountRequestDto.setCustomerId(customerId);

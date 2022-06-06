@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -27,6 +26,7 @@ public class Branch extends BaseModel{
 	@JoinColumn(name = "bank_branch_address_id")
 	private BranchAddress bankBranchAddress;
 	
+	//fetch = FetchType.EAGER
 	@OneToMany(mappedBy = "branch",cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<Account> accounts = new HashSet<>();
 	

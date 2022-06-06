@@ -18,7 +18,7 @@ public class BankCard extends Card{
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
-	public BankCard removeCustomer(Customer customer) {
+	public BankCard removeCustomer() {
 		this.setCustomer(null);
 		return this;
 	}
@@ -27,7 +27,7 @@ public class BankCard extends Card{
 	@JoinColumn(name = "account_id")
 	private Account account;
 	
-	public BankCard removeAccount(Account account) {
+	public BankCard removeAccount() {
 		this.setAccount(null);
 		return this;
 	}

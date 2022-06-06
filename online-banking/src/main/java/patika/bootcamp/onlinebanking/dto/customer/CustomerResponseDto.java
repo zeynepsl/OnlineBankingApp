@@ -1,6 +1,9 @@
 package patika.bootcamp.onlinebanking.dto.customer;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.model.enums.Gender;
@@ -17,6 +20,8 @@ public class CustomerResponseDto {
 	private String secondaryPhoneNumber;
 	private String customerNumber;
 	private Integer age;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date birthDate;
 	private Gender gender;
 	private boolean isActive;

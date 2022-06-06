@@ -25,7 +25,7 @@ import patika.bootcamp.onlinebanking.model.transaction.Transaction;
 @Setter
 public class Account extends BaseExtendedModel {
 
-	// private Long accountNumber --> branchCode + customerNumber + additional_account_number
+	//accountNumber --> branchCode + customerNumber + additional_account_number
 	private String accountName;
 	private String accountNumber;
 	private String additionalAccountNumber;
@@ -38,19 +38,20 @@ public class Account extends BaseExtendedModel {
 	@Size(min = 5, max = 5)
 	private String bankCode;
 
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // merge den all
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "branch_id")
 	private Branch branch;
 	
 	public void setBranch(Branch branch) {
-		//Branch oldBranch = this.branch;
 		this.branch = branch;
-		/*if(oldBranch != null) {
-			oldBranch.removeAccount(this);
-		}*/
 		if(branch != null) {
 			branch.addAccount(this);
 		}
+	}
+	
+	public Account removeBranch(Branch branch) {
+		this.setBranch(null);
+		return this;
 	}
 	
 	private String iban;
@@ -68,25 +69,32 @@ public class Account extends BaseExtendedModel {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType = AccountType.CHECKING_ACCOUNT;
 
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}) // all dan
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 	
 	public void setCustomer(Customer customer) {
-		//Customer oldCustomer = this.customer;
 		this.customer = customer;
-		/*if(oldCustomer != null) {
-			oldCustomer.removeAccount(this);
-		}*/
 		if(customer != null) {
 			customer.addAccount(this);
 		}
+	}
+	
+	public Account removeCustomer(Customer customer) {
+		customer.removeAccount(this);
+		this.setCustomer(null);
+		return this;
 	}
 
 	@ManyToOne
 	@JoinColumn(name = "currency_id")
 	private Currency currency;
-
+	
+	public Account removeCurrency(Currency currency) {
+		this.setCurrency(null);
+		return this;
+	}
+	
 	@OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private BankCard bankCard;
 
@@ -99,8 +107,12 @@ public class Account extends BaseExtendedModel {
 			bankCard.setAccount(this);
 		return this;
 	}
+	
+	public void removeBankCard(BankCard bankCard) {
+		this.setBankCard(null);
+	}
 
-	@OneToMany(mappedBy = "senderAccount", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "senderAccount", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
 	private Set<Transaction> transactions = new HashSet<>();
 
 }

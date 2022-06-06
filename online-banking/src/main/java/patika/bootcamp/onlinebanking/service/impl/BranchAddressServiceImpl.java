@@ -2,6 +2,8 @@ package patika.bootcamp.onlinebanking.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import patika.bootcamp.onlinebanking.service.BranchAddressService;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BranchAddressServiceImpl implements BranchAddressService{
 
 	private final BranchAddressRepository branchAddressRepository; 

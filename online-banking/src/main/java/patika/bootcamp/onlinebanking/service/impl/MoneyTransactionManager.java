@@ -186,10 +186,11 @@ public class MoneyTransactionManager implements TransactionService {
 	public List<Transaction> findByRecipientIbanNo(String ibanNo) {
 		return transactionRepository.findByRecipientIbanNo(ibanNo);
 	}
+
 	@Override
-	public List<Transaction> findByTransactionDateBetweenAndSenderAccount_Id(Date startDate, Date endDate,
-			Long senderAccountId) {
-		return transactionRepository.findByTransactionDateBetweenAndSenderAccount_Id(startDate, endDate, senderAccountId);
+	public List<Transaction> findByTransactionDateBetweenAndsenderCustomerNumber(Date startDate, Date endDate,
+			String senderCustomerNumber) {
+		return transactionRepository.findByTransactionDateBetweenAndSenderCustomerNumber(startDate, endDate, senderCustomerNumber);
 	}
 	
 }

@@ -15,9 +15,6 @@ public class CreateTransactionRequestDto {
 	@NotBlank
 	private String senderIbanNo;
 	
-	@NotNull
-	private Long senderCurrencyId;
-	
 	@NotBlank
 	private String recipientIbanNo;
 	

@@ -2,7 +2,6 @@ package patika.bootcamp.onlinebanking;
 
 import java.util.List;
 
-import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,6 @@ import patika.bootcamp.onlinebanking.controller.bank.BranchController;
 import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchAddressRequestDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchRequestDto;
-import patika.bootcamp.onlinebanking.model.bank.Branch;
-import patika.bootcamp.onlinebanking.model.bank.BranchAddress;
 
 @SpringBootTest
 public class BankBranchTests {

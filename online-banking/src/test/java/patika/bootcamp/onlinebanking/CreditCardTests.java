@@ -51,6 +51,7 @@ public class CreditCardTests {
 	@Value("${bank.code}")
 	private String bankCode;
 	
+	
 	@Test
 	void should_create_success_money_transfer_with_creditCard() throws BaseException, IOException {
 		CreateCustomerRequestDto createCustomerRequestDto = new CreateCustomerRequestDto();
@@ -70,7 +71,6 @@ public class CreditCardTests {
 		
 		CreateAccountRequestDto createAccountRequestDto = new CreateAccountRequestDto();
 		createAccountRequestDto.setAccountType(AccountType.CHECKING_ACCOUNT);
-		createAccountRequestDto.setBankCode(bankCode);
 		createAccountRequestDto.setBranchId(1L);
 		createAccountRequestDto.setCurrencyId(1L);// TRY
 		createAccountRequestDto.setCustomerId(customerId);
@@ -107,7 +107,6 @@ public class CreditCardTests {
 		
 		CreateAccountRequestDto toAccount = new CreateAccountRequestDto();
 		toAccount.setAccountType(AccountType.CHECKING_ACCOUNT);
-		toAccount.setBankCode(bankCode);
 		toAccount.setBranchId(1L);
 		toAccount.setCurrencyId(1L);// TRY
 		toAccount.setCustomerId(72L);

@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +35,16 @@ import patika.bootcamp.onlinebanking.util.generate.IbanGenerator;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class AccountFacadeImpl implements AccountFacade{
 	private final AccountService accountService;
 	private final AccountConverter accountConverter;
 	private final BranchService branchService;
 	private final CustomerService customerService;
+	
+	@Value("${bank.code}")
+	private String bankCode;
+	
 	@Override
 	public ResponseEntity<AccountResponseDto> create(CreateAccountRequestDto createAccountRequestDto) throws BaseException {
 		Customer customer = customerService.get(createAccountRequestDto.getCustomerId());
@@ -59,17 +66,17 @@ public class AccountFacadeImpl implements AccountFacade{
 		fakat benim branch in diger alanlarina da ihityacim var su an*/
 		 
 		Branch branch = branchService.get(createAccountRequestDto.getBranchId());
-		//branch.addAccount(account);
+		branch.addAccount(account);
 		account.setBranch(branch);
 		
 		String accountNumber = AccountNumberGenerator.generate(branch.getBranchCode(), customer.getCustomerNumber(), additionalAccountNumber);
 		account.setAccountNumber(accountNumber);
 		
-		account.setIban(IbanGenerator.generate(createAccountRequestDto.getBankCode(), accountNumber));
+		account.setIban(IbanGenerator.generate(bankCode, accountNumber));
 		
 		Currency currency = new Currency();
 		currency.setId(createAccountRequestDto.getCurrencyId());
-		log.info("currency kodu: {}", currency.getCode());//mesela burasi null veriyor, yukaridaki gibi currency nin bir fieldına ihityacım olsaydi service den tüm nesneyi getirmem gerekecekti
+		log.info("currency kodu: {}", currency.getCode());//mesela burasi null veriyor, yukaridaki gibi currency nin bir fieldına ihtiyacim olsaydi service den tüm nesneyi getirmem gerekecekti
 		account.setCurrency(currency);
 		
 		AccountType accountType = createAccountRequestDto.getAccountType();
@@ -79,7 +86,7 @@ public class AccountFacadeImpl implements AccountFacade{
 			log.info("size {}",size);
 			//isEmpty() ise yaramiyor, boyutu 1 olarak algiliyor ama liste bos :( , garip olan da test ederken size'ın sifir olarak algilanmasi
 			//yani; app calisirken size 1 mi, app'i test ederken 0 mi diye kontrol :| 
-			if ( size == 0 ) {
+			if ( size == 1 ) {
 				log.info("kullanici ilk defa vadesiz hesap olusturuyor");
 				BankCard bankCard = accountService.createBankCardWhileCreatingFirstCheckingAccount(account);
 				log.info("bankkCard id {}", bankCard);

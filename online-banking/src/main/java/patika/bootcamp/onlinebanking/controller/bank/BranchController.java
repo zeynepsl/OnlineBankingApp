@@ -10,12 +10,14 @@ import patika.bootcamp.onlinebanking.dto.bank.BranchResponseDto;
 import patika.bootcamp.onlinebanking.dto.bank.CreateBranchRequestDto;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
 import patika.bootcamp.onlinebanking.service.facade.BranchFacade;
+import patika.bootcamp.onlinebanking.validator.Validator;
 
 @RestController
 @RequestMapping("api/bankbranches")
 @RequiredArgsConstructor
 public class BranchController {
 	private final BranchFacade bankBranchFacade;
+	private final Validator<Long> idValidator;
 	
 	@PostMapping("/")
 	public ResponseEntity<BranchResponseDto> create(@RequestBody CreateBranchRequestDto createBankBranchRequestDto){
@@ -29,11 +31,13 @@ public class BranchController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id){
+		idValidator.validate(id);
 		return bankBranchFacade.delete(id);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<BranchResponseDto> get(@PathVariable Long id){
+		idValidator.validate(id);
 		return bankBranchFacade.get(id);
 	}
 	

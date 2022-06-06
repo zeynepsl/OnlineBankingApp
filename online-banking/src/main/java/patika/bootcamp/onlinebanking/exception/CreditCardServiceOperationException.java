@@ -2,6 +2,14 @@ package patika.bootcamp.onlinebanking.exception;
 
 public final class CreditCardServiceOperationException {
 
+	public static class CreditCardAlreadyExists extends BaseException {
+
+		public CreditCardAlreadyExists(String message) {
+			super(message);
+		}
+
+	}
+
 	public static class CustomerOnlyHasSavingsAccount extends BaseException {
 
 		public CustomerOnlyHasSavingsAccount(String message) {

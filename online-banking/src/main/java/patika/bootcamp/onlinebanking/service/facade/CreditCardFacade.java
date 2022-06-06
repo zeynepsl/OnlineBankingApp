@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import patika.bootcamp.onlinebanking.dto.card.CreateCreditCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
-import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionWithCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;

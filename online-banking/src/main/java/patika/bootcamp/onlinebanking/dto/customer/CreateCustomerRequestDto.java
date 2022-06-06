@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import patika.bootcamp.onlinebanking.customvalidation.PhoneNumber;
@@ -39,6 +41,7 @@ public class CreateCustomerRequestDto {
 	private String password;
 	
 	@Past
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date birthDate;
 	
 	@NotNull

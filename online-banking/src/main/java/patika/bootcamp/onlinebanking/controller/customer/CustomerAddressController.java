@@ -11,12 +11,14 @@ import patika.bootcamp.onlinebanking.dto.customer.CustomerAddressResponseDto;
 import patika.bootcamp.onlinebanking.model.customer.CustomerAddress;
 import patika.bootcamp.onlinebanking.model.enums.AdressType;
 import patika.bootcamp.onlinebanking.service.facade.CustomerAddressFacade;
+import patika.bootcamp.onlinebanking.validator.Validator;
 
 @RestController
 @RequestMapping("api/customeraddresses")
 @RequiredArgsConstructor
 public class CustomerAddressController {
 	private final CustomerAddressFacade customerAddressFacade;
+	private final Validator<Long> idvalidator;
 	
 	@PostMapping("/")
 	ResponseEntity<CustomerAddressResponseDto> create(@RequestBody CreateCustomerAddressRequestDto createCustomerAddressRequestDto){
@@ -25,6 +27,7 @@ public class CustomerAddressController {
 	
 	@GetMapping("/{id}")
 	ResponseEntity<CustomerAddressResponseDto> get(@PathVariable Long id){
+		idvalidator.validate(id);
 		return customerAddressFacade.get(id);
 	}
 	
@@ -35,6 +38,7 @@ public class CustomerAddressController {
 	
 	@DeleteMapping("/{id}")
 	ResponseEntity<?> delete(@PathVariable Long id){
+		idvalidator.validate(id);
 		return customerAddressFacade.delete(id);
 	}
 	
@@ -45,11 +49,13 @@ public class CustomerAddressController {
 	
 	@GetMapping("/customer/{customerId}")
 	ResponseEntity<List<CustomerAddressResponseDto>> findByCustomer_Id(@PathVariable Long customerId){
+		idvalidator.validate(customerId);
 		return customerAddressFacade.findByCustomer_Id(customerId);
 	}
 	
 	@GetMapping("/customer/{customerId}/addressType/{addressType}")
 	ResponseEntity<List<CustomerAddressResponseDto>> findByCustomer_IdAndAdressType(@PathVariable Long customerId, @PathVariable AdressType addressType){
+		idvalidator.validate(customerId);
 		return customerAddressFacade.findByCustomer_IdAndAdressType(customerId, addressType);
 	}
 	

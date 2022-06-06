@@ -2,8 +2,6 @@ package patika.bootcamp.onlinebanking;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Set;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import patika.bootcamp.onlinebanking.dto.transaction.CreateTransactionRequestDto
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.bank.Branch;
-import patika.bootcamp.onlinebanking.model.bank.BranchAddress;
 import patika.bootcamp.onlinebanking.model.customer.Customer;
 import patika.bootcamp.onlinebanking.model.enums.AccountType;
 import patika.bootcamp.onlinebanking.model.enums.ModeOfPayment;

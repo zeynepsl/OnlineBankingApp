@@ -14,5 +14,4 @@ public class CustomerAddressResponseDto {
 	private String city;
 	private String district;
 	private String neighborhood;
-	private String adressDescription;
 }

@@ -19,7 +19,6 @@ import patika.bootcamp.onlinebanking.converter.transaction.TransactionConverter;
 import patika.bootcamp.onlinebanking.dto.card.CreateCreditCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
-import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionWithCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CreditCardServiceOperationException;
@@ -52,6 +51,10 @@ public class CreditCardFacadeImpl implements CreditCardFacade {
 	public ResponseEntity<CreditCardResponseDto> create(CreateCreditCardRequestDto createCreditCardRequestDto)
 			throws BaseException {
 		Customer customer = customerService.get(createCreditCardRequestDto.getCustomerId());
+		if(customer.getCreditCard() != null) {
+			throw new CreditCardServiceOperationException.CreditCardAlreadyExists("this customer already has a credit card");
+		}
+		
 		Set<Account> customerAccounts = customer.getAccounts();
 		if(customerAccounts.isEmpty()) {
 			throw new CreditCardServiceOperationException.CustomerDoesNotHaveAnAccount("Customer without an account cannot create a credit card");

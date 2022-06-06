@@ -11,17 +11,18 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.dto.card.CreateCreditCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.CreditCardResponseDto;
-import patika.bootcamp.onlinebanking.dto.transaction.TransactionResponseDto;
 import patika.bootcamp.onlinebanking.dto.transaction.TransactionWithCardResponseDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 import patika.bootcamp.onlinebanking.service.facade.CreditCardFacade;
+import patika.bootcamp.onlinebanking.validator.Validator;
 
 @RestController
 @RequestMapping("api/creditcards")
 @RequiredArgsConstructor
 public class CreditCardController {
 	private final CreditCardFacade creditCardFacade;
+	private final Validator<Long> idValidator;
 	
 	@PostMapping("/")
 	public ResponseEntity<CreditCardResponseDto> create(@RequestBody CreateCreditCardRequestDto createCreditCardRequestDto){
@@ -30,6 +31,7 @@ public class CreditCardController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<CreditCardResponseDto> get(@PathVariable Long id){
+		idValidator.validate(id);
 		return creditCardFacade.get(id);
 	}
 	
@@ -40,6 +42,7 @@ public class CreditCardController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id){
+		idValidator.validate(id);
 		return creditCardFacade.delete(id);
 	}
 	
@@ -50,6 +53,7 @@ public class CreditCardController {
 	
 	@GetMapping("/customer/{customerId}")
 	public ResponseEntity<CreditCardResponseDto> findByCustomer_Id(@PathVariable Long customerId){
+		idValidator.validate(customerId);
 		return creditCardFacade.findByCustomer_Id(customerId);
 	}
 	
@@ -65,21 +69,25 @@ public class CreditCardController {
 	
 	@GetMapping("/cardLimit/{creditCardId}")
 	public ResponseEntity<BigDecimal> getCardLimit(@PathVariable Long creditCardId){
+		idValidator.validate(creditCardId);
 		return creditCardFacade.getCardLimit(creditCardId);
 	}
 	
 	@GetMapping("/availableLimit/{creditCardId}")
 	public ResponseEntity<BigDecimal> getAvailableLimit(@PathVariable Long creditCardId){
+		idValidator.validate(creditCardId);
 		return creditCardFacade.getAvailableLimit(creditCardId);
 	}
 	
 	@GetMapping("/periodExpenditures/{creditCardId}")
 	public ResponseEntity<BigDecimal> getPeriodExpenditures(@PathVariable Long creditCardId){
+		idValidator.validate(creditCardId);
 		return creditCardFacade.getPeriodExpenditures(creditCardId);
 	}
 	
 	@GetMapping("/amountOfDebt/{creditCardId}")
 	public ResponseEntity<BigDecimal> getAmountOfDebt(@PathVariable Long creditCardId){
+		idValidator.validate(creditCardId);
 		return creditCardFacade.getAmountOfDebt(creditCardId);
 	}
 	
@@ -100,6 +108,7 @@ public class CreditCardController {
 	
 	@PutMapping("/paymentDebtWithAccoun/{accountId}")
 	public ResponseEntity<?> paymentDebtFromAccount(@PathVariable Long accountId){
+		idValidator.validate(accountId);
 		return creditCardFacade.paymentDebtFromAccount(accountId);
 	}
 }

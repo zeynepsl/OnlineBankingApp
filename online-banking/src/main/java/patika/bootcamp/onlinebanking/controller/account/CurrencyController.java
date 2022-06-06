@@ -10,6 +10,7 @@ import patika.bootcamp.onlinebanking.dto.account.CreateCurrencyRequestDto;
 import patika.bootcamp.onlinebanking.dto.account.CurrencyResponseDto;
 import patika.bootcamp.onlinebanking.model.account.Currency;
 import patika.bootcamp.onlinebanking.service.facade.CurrencyFacade;
+import patika.bootcamp.onlinebanking.validator.Validator;
 
 @RestController
 @RequestMapping("api/currencies")
@@ -17,6 +18,7 @@ import patika.bootcamp.onlinebanking.service.facade.CurrencyFacade;
 @Api(value = "Currency Api documentation")
 public class CurrencyController {
 	private final CurrencyFacade currencyFacade;
+	private final Validator<Long> idValidator;
 	
 	@PostMapping("/")
 	public ResponseEntity<CurrencyResponseDto> create(@RequestBody CreateCurrencyRequestDto createCurrencyRequestDto){
@@ -31,11 +33,13 @@ public class CurrencyController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id){
+		idValidator.validate(id);
 		return currencyFacade.delete(id);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<CurrencyResponseDto> get(@PathVariable Long id){
+		idValidator.validate(id);
 		return currencyFacade.get(id);
 	}
 	

@@ -2,6 +2,7 @@ package patika.bootcamp.onlinebanking.converter.account;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import patika.bootcamp.onlinebanking.dto.account.AccountResponseDto;
@@ -11,11 +12,14 @@ import patika.bootcamp.onlinebanking.model.account.Account;
 @Component
 public class AccountConverter {
 	
+	@Value("${bank.code}")
+	private String bankCode;
+	
 	public Account toAccount(CreateAccountRequestDto createAccountRequestDto) {
 		Account account = new Account();
 	
 		account.setAccountType(createAccountRequestDto.getAccountType());
-		account.setBankCode(createAccountRequestDto.getBankCode());
+		account.setBankCode(bankCode);
 		account.setAccountType(createAccountRequestDto.getAccountType());
 		
 		account.setCreatedAt(new Date());

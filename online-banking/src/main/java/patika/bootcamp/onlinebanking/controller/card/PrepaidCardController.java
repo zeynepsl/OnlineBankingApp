@@ -11,12 +11,14 @@ import patika.bootcamp.onlinebanking.dto.card.CreatePrepaidCardRequestDto;
 import patika.bootcamp.onlinebanking.dto.card.PrepaidCardResponseDto;
 import patika.bootcamp.onlinebanking.model.card.PrepaidCard;
 import patika.bootcamp.onlinebanking.service.facade.PrepaidCardFacade;
+import patika.bootcamp.onlinebanking.validator.Validator;
 
 @RestController
 @RequestMapping("api/prepaidcards")
 @RequiredArgsConstructor
 public class PrepaidCardController {
 	private final PrepaidCardFacade prepaidCardFacade;
+	private final Validator<Long> idValidator;
 	
 	@PostMapping("/")
 	ResponseEntity<PrepaidCardResponseDto> create(@RequestBody CreatePrepaidCardRequestDto createPrepaidCardRequestDto){
@@ -25,6 +27,7 @@ public class PrepaidCardController {
 	
 	@GetMapping("/{id}")
 	ResponseEntity<PrepaidCardResponseDto> get(@PathVariable Long id){
+		idValidator.validate(id);
 		return prepaidCardFacade.get(id);
 	}
 	
@@ -35,6 +38,7 @@ public class PrepaidCardController {
 	
 	@DeleteMapping("/{id}")
 	ResponseEntity<?> delete(@PathVariable Long id){
+		idValidator.validate(id);
 		return prepaidCardFacade.delete(id);
 	}
 	
@@ -50,6 +54,7 @@ public class PrepaidCardController {
 	
 	@GetMapping("/balance/{id}")
 	ResponseEntity<BigDecimal> getBalance(@PathVariable Long id){
+		idValidator.validate(id);
 		return prepaidCardFacade.getBalance(id);
 	}
 }

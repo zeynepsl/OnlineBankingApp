@@ -8,13 +8,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import patika.bootcamp.onlinebanking.dto.card.CreateOnlineTransferByCardRequestDto;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.exception.CreditCardServiceOperationException;
@@ -28,16 +25,16 @@ import patika.bootcamp.onlinebanking.repository.card.CreditCardRepository;
 import patika.bootcamp.onlinebanking.service.AccountService;
 import patika.bootcamp.onlinebanking.service.CreditCardService;
 import patika.bootcamp.onlinebanking.service.TransactionService;
+import patika.bootcamp.onlinebanking.validator.PasswordValidator;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class CreditCardServiceImpl implements CreditCardService {
 	private final CreditCardRepository creditCardRepository;
 	private final AccountService accountService;
 	private final TransactionService transactionService;
-	private final PasswordEncoder passwordEncoder;
+	private final PasswordValidator passwordValidator;
 
 	@Override
 	public CreditCard create(CreditCard creditCard) throws BaseException {
@@ -113,9 +110,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 	@Override
 	public Transaction moneyTransfer(CreditCard creditCard, String inputPassword, String to, BigDecimal amount)
 			throws BaseException, IOException {
-		creditCardPasswordValidate(inputPassword, creditCard.getPassword());// password ler uyuşmalı uyuşmuyorsa hata
-																			// ver --> burada ileride bcryptEncoder
-																			// devreye girecek
+		passwordValidator.validate(inputPassword, creditCard.getPassword());// password ler uyuşmalı uyuşmuyorsa hata
 		updateAvailableLimitAndDebtInCreditCard(creditCard, amount);// amount u periyodikHarcamalar ile topla, çıkan
 																	// sonuç limiti aşıyorsa hata ver
 		updateToAccount(to, amount);// miktari alici hesabina aktar
@@ -125,12 +120,6 @@ public class CreditCardServiceImpl implements CreditCardService {
 		return transaction;
 	}
 
-	public void creditCardPasswordValidate(String inputPassword, String encodedPass) throws BaseException {
-		boolean isMatched = passwordEncoder.matches(inputPassword, encodedPass);
-		if (!isMatched) {
-			throw new CreditCardServiceOperationException.PasswordWrong("The password you entered is incorrect");
-		}
-	}
 
 	public Transaction createTransaction(String fromCustomerNumber, String to, BigDecimal amount) {
 		Transaction transaction = new Transaction();
@@ -145,6 +134,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 		// biraktik
 		// ay sonu otomatik borc odemede hangi hesap kullanilacaksa, bu transaction
 		// satirindaki senderIban, o Account un ibani ile gıncellenecek
+		transaction = transactionService.create(transaction);
 		return transaction;
 	}
 
@@ -228,7 +218,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
 	@Override
 	public void payDebtFromCashMachine(CreditCard creditCard, String password) throws BaseException, IOException {
-		creditCardPasswordValidate(password, creditCard.getPassword());
+		passwordValidator.validate(password, creditCard.getPassword());
 		basePaymentDebt(creditCard, creditCard.getAmountOfDebt());
 	}
 
@@ -240,6 +230,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 		List<Account> accounts = accountService.findByBranchCodeAndCustomerId(creditCardBankBranch.getBranchCode(),
 				creditCard.getCustomer().getId());
 
+		String customerNumber = creditCard.getCustomer().getCustomerNumber();
 		// o şubedeki hesapların arasından ilk once; vadesiz tl hesabına bakılır:
 		// vadesiz tl hesabı bakiyesi yeterliyse borç bu hesaptan ödenir:
 		accounts.forEach(account -> {
@@ -247,7 +238,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 					&& (account.getCurrency().getName() == "TRY")) {
 				if ((account.getAccountBalance()).compareTo(amountOfDebt) > 0) {
 					discountMoneyFromAccountAndUpdateDebt(creditCard, amountOfDebt, account);
-					updateTransaction(account);
+					updateTransaction(account, customerNumber);
 					return;
 				}
 			}
@@ -269,22 +260,22 @@ public class CreditCardServiceImpl implements CreditCardService {
 
 			BigDecimal newAmountOfDebt = transactionService.calculateAmountWithToCurrency(amountOfDebt, toCurrency, fromCurrency);
 			discountMoneyFromAccountAndUpdateDebt(creditCard, newAmountOfDebt, account);
-			updateTransaction(account);
+			updateTransaction(account, customerNumber);
 			return;
 		}
 		throw new CreditCardServiceOperationException.InsufficientBalance(
 				"Your credit card debt is not paid. you have insufficient balance");
 	}
 
-	public void updateTransaction(Account senderAccount) {
+	public void updateTransaction(Account senderAccount, String senderCustomerNumber) {
 		Date date= new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		int endMonth = cal.get(Calendar.MONTH) + 1;
 		int startMonth = endMonth - 1;
 		int year = cal.get(Calendar.YEAR);
-		List<Transaction> transactions = transactionService.findByTransactionDateBetweenAndSenderAccount_Id(
-				new Date(year, startMonth, 8), new Date(year, endMonth, 8), 1L);
+		List<Transaction> transactions = transactionService.findByTransactionDateBetweenAndsenderCustomerNumber(
+				new Date(year, startMonth, 8), new Date(year, endMonth, 8), senderCustomerNumber);
 		for (Transaction transaction : transactions) {
 			if( transaction.getSenderAccount() == null && transaction.getSenderIbanNo() == null) {
 				transaction.setSenderAccount(senderAccount);

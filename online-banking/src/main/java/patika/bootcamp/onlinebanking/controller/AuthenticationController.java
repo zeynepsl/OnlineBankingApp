@@ -23,8 +23,7 @@ import patika.bootcamp.onlinebanking.security.model.AuthenticationResponse;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthenticationController {
-
-
+	
     private final AuthenticationManager authenticationManager;
     private final JWTHelper jwtHelper;
 

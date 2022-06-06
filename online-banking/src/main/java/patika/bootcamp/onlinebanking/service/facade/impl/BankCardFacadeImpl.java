@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import patika.bootcamp.onlinebanking.converter.card.BankCardConverter;
 import patika.bootcamp.onlinebanking.dto.card.BankCardResponseDto;
 import patika.bootcamp.onlinebanking.dto.card.CreateBankCardRequestDto;
+import patika.bootcamp.onlinebanking.exception.BankCardServiceOperationException;
 import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.account.Account;
 import patika.bootcamp.onlinebanking.model.card.BankCard;
@@ -35,15 +36,20 @@ public class BankCardFacadeImpl implements BankCardFacade{
 	@Override
 	public ResponseEntity<BankCardResponseDto> create(CreateBankCardRequestDto createBankCardRequestDto)
 			throws BaseException {
+		Customer customer = customerService.get(createBankCardRequestDto.getCustomerId());
+		if(customer.getBankCard() != null) {
+			throw new BankCardServiceOperationException.BankCardAlreadyExists("this customer already has a bank card");
+		}
+		
 		BankCard bankCard = bankCardConverter.toBankCard(createBankCardRequestDto);
-		bankCard.setPassword(passwordEncoder.encode(createBankCardRequestDto.getPassword()));
+		
+		String password = createBankCardRequestDto.getPassword();
+		bankCard.setPassword(passwordEncoder.encode(password));
 		
 		Account account = accountService.get(createBankCardRequestDto.getAccountId());
 		bankCard.setAccount(account);
 		
 		bankCard.setCardNumber(CardNumberGenerator.generate(account.getBranch().getBranchCode(), account.getAccountNumber()));
-		
-		Customer customer = customerService.get(createBankCardRequestDto.getCustomerId());
 		bankCard.setCustomer(customer);
 		
 		bankCard = bankCardService.create(bankCard);

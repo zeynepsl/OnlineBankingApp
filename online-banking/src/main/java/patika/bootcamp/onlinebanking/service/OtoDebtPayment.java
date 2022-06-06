@@ -13,7 +13,7 @@ import patika.bootcamp.onlinebanking.exception.BaseException;
 import patika.bootcamp.onlinebanking.model.card.CreditCard;
 
 @Component
-public class OtoPaymentDebt {
+public class OtoDebtPayment {
 	
 	@Autowired
 	private CreditCardService creditCardService;
@@ -21,8 +21,6 @@ public class OtoPaymentDebt {
 	@Autowired
 	private AsyncTaskExecutor taskExecuter;
 	
-	/*@Scheduled(cron = "0 10 10 15 * ?")
-	 */
 	@Async
 	public void paymentDebt(CreditCard card) throws BaseException, IOException {
         System.out.println("A - " + Thread.currentThread().getName());
